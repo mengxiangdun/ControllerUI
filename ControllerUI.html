@@ -159,7 +159,7 @@
     var auto_start=false;
     var auto_stop=true;
     var ip_addr = document.location.hostname;
-    console.log("ip address"+ip_addr);
+    console.log("ip address"+ip_addr+"/ControllerUI");
     gameInstance.SendMessage("empt","ReceiveDataFromJs",ip_addr);
     document.getElementById("serverIP").onchange=function(){
         var str=document.getElementById("serverIP").value;
