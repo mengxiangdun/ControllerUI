@@ -1,0 +1,843 @@
+<object type="ControlServer">
+    <master type="EthercatController">
+        <slave_pool type="SlavePoolObject">
+            <m0 type="EthercatMotion" phy_id="0" vendor_id="0x000002e1" product_code="0x00000000" revision_num="0x00029001" dc_assign_activate="0x00000300" max_pos="2.96706" min_pos="-2.96706" max_vel="5.4105210000000001" min_vel="-5.4105210000000001" max_acc="26.179939000000001" min_acc="-26.179939000000001" max_pos_following_error="0.10000000000000001" max_vel_following_error="0.5" pos_factor="1689721.292776" pos_offset="0" home_pos="0">
+                <sm_pool type="SyncManagerPoolObject">
+                    <sm type="SyncManager" is_tx="false"/>
+                    <sm type="SyncManager" is_tx="true"/>
+                    <sm type="SyncManager" is_tx="false">
+                        <index_1600 type="Pdo" default_child_type="PdoEntry" index="0x1600">
+                            <control_word type="PdoEntry" index="0x6040" subindex="0x00" size="16"/>
+                            <mode_of_operation type="PdoEntry" index="0x6060" subindex="0x00" size="8"/>
+                            <target_pos type="PdoEntry" index="0x607a" subindex="0x00" size="32"/>
+                            <target_vel type="PdoEntry" index="0x60ff" subindex="0x00" size="32"/>
+                            <targer_tor type="PdoEntry" index="0x6071" subindex="0x00" size="16"/>
+                        </index_1600>
+                    </sm>
+                    <sm type="SyncManager" is_tx="true">
+                        <index_1a00 type="Pdo" default_child_type="PdoEntry" index="0x1a00">
+                            <status_word type="PdoEntry" index="0x6041" subindex="0x00" size="16"/>
+                            <mode_of_display type="PdoEntry" index="0x6061" subindex="0x00" size="8"/>
+                            <pos_actual_value type="PdoEntry" index="0x6064" subindex="0x00" size="32"/>
+                            <vel_actual_value type="PdoEntry" index="0x606c" subindex="0x00" size="32"/>
+                            <cur_actual_value type="PdoEntry" index="0x6078" subindex="0x00" size="16"/>
+                        </index_1a00>
+                    </sm>
+                </sm_pool>
+                <sdo_pool type="SdoPoolObject" default_child_type="Sdo"/>
+            </m0>
+            <m1 type="EthercatMotion" phy_id="1" vendor_id="0x000002e1" product_code="0x00000000" revision_num="0x00029001" dc_assign_activate="0x00000300" max_pos="2.2689279999999998" min_pos="-1.4660770000000001" max_vel="4.18879" min_vel="-4.18879" max_acc="26.179939000000001" min_acc="-26.179939000000001" max_pos_following_error="0.10000000000000001" max_vel_following_error="0.5" pos_factor="1689721.292776" pos_offset="0" home_pos="0">
+                <sm_pool type="SyncManagerPoolObject">
+                    <sm type="SyncManager" is_tx="false"/>
+                    <sm type="SyncManager" is_tx="true"/>
+                    <sm type="SyncManager" is_tx="false">
+                        <index_1600 type="Pdo" default_child_type="PdoEntry" index="0x1600">
+                            <control_word type="PdoEntry" index="0x6040" subindex="0x00" size="16"/>
+                            <mode_of_operation type="PdoEntry" index="0x6060" subindex="0x00" size="8"/>
+                            <target_pos type="PdoEntry" index="0x607a" subindex="0x00" size="32"/>
+                            <target_vel type="PdoEntry" index="0x60ff" subindex="0x00" size="32"/>
+                            <targer_tor type="PdoEntry" index="0x6071" subindex="0x00" size="16"/>
+                        </index_1600>
+                    </sm>
+                    <sm type="SyncManager" is_tx="true">
+                        <index_1a00 type="Pdo" default_child_type="PdoEntry" index="0x1a00">
+                            <status_word type="PdoEntry" index="0x6041" subindex="0x00" size="16"/>
+                            <mode_of_display type="PdoEntry" index="0x6061" subindex="0x00" size="8"/>
+                            <pos_actual_value type="PdoEntry" index="0x6064" subindex="0x00" size="32"/>
+                            <vel_actual_value type="PdoEntry" index="0x606c" subindex="0x00" size="32"/>
+                            <cur_actual_value type="PdoEntry" index="0x6078" subindex="0x00" size="16"/>
+                        </index_1a00>
+                    </sm>
+                </sm_pool>
+                <sdo_pool type="SdoPoolObject" default_child_type="Sdo"/>
+            </m1>
+            <m2 type="EthercatMotion" phy_id="2" vendor_id="0x000002e1" product_code="0x00000000" revision_num="0x00029001" dc_assign_activate="0x00000300" max_pos="0.87266500000000002" min_pos="-3.2812190000000001" max_vel="5.4105210000000001" min_vel="-5.4105210000000001" max_acc="26.179939000000001" min_acc="-26.179939000000001" max_pos_following_error="0.10000000000000001" max_vel_following_error="0.5" pos_factor="1689721.292776" pos_offset="0" home_pos="0">
+                <sm_pool type="SyncManagerPoolObject">
+                    <sm type="SyncManager" is_tx="false"/>
+                    <sm type="SyncManager" is_tx="true"/>
+                    <sm type="SyncManager" is_tx="false">
+                        <index_1600 type="Pdo" default_child_type="PdoEntry" index="0x1600">
+                            <control_word type="PdoEntry" index="0x6040" subindex="0x00" size="16"/>
+                            <mode_of_operation type="PdoEntry" index="0x6060" subindex="0x00" size="8"/>
+                            <target_pos type="PdoEntry" index="0x607a" subindex="0x00" size="32"/>
+                            <target_vel type="PdoEntry" index="0x60ff" subindex="0x00" size="32"/>
+                            <targer_tor type="PdoEntry" index="0x6071" subindex="0x00" size="16"/>
+                        </index_1600>
+                    </sm>
+                    <sm type="SyncManager" is_tx="true">
+                        <index_1a00 type="Pdo" default_child_type="PdoEntry" index="0x1a00">
+                            <status_word type="PdoEntry" index="0x6041" subindex="0x00" size="16"/>
+                            <mode_of_display type="PdoEntry" index="0x6061" subindex="0x00" size="8"/>
+                            <pos_actual_value type="PdoEntry" index="0x6064" subindex="0x00" size="32"/>
+                            <vel_actual_value type="PdoEntry" index="0x606c" subindex="0x00" size="32"/>
+                            <cur_actual_value type="PdoEntry" index="0x6078" subindex="0x00" size="16"/>
+                        </index_1a00>
+                    </sm>
+                </sm_pool>
+                <sdo_pool type="SdoPoolObject" default_child_type="Sdo"/>
+            </m2>
+            <m3 type="EthercatMotion" phy_id="3" vendor_id="0x000002e1" product_code="0x00000000" revision_num="0x00029001" dc_assign_activate="0x00000300" max_pos="2.96706" min_pos="-2.96706" max_vel="4.3633230000000003" min_vel="-4.3633230000000003" max_acc="30.543261999999999" min_acc="-30.543261999999999" max_pos_following_error="0.10000000000000001" max_vel_following_error="0.5" pos_factor="1519852.15096" pos_offset="0" home_pos="0">
+                <sm_pool type="SyncManagerPoolObject">
+                    <sm type="SyncManager" is_tx="false"/>
+                    <sm type="SyncManager" is_tx="true"/>
+                    <sm type="SyncManager" is_tx="false">
+                        <index_1600 type="Pdo" default_child_type="PdoEntry" index="0x1600">
+                            <control_word type="PdoEntry" index="0x6040" subindex="0x00" size="16"/>
+                            <mode_of_operation type="PdoEntry" index="0x6060" subindex="0x00" size="8"/>
+                            <target_pos type="PdoEntry" index="0x607a" subindex="0x00" size="32"/>
+                            <target_vel type="PdoEntry" index="0x60ff" subindex="0x00" size="32"/>
+                            <targer_tor type="PdoEntry" index="0x6071" subindex="0x00" size="16"/>
+                        </index_1600>
+                    </sm>
+                    <sm type="SyncManager" is_tx="true">
+                        <index_1a00 type="Pdo" default_child_type="PdoEntry" index="0x1a00">
+                            <status_word type="PdoEntry" index="0x6041" subindex="0x00" size="16"/>
+                            <mode_of_display type="PdoEntry" index="0x6061" subindex="0x00" size="8"/>
+                            <pos_actual_value type="PdoEntry" index="0x6064" subindex="0x00" size="32"/>
+                            <vel_actual_value type="PdoEntry" index="0x606c" subindex="0x00" size="32"/>
+                            <cur_actual_value type="PdoEntry" index="0x6078" subindex="0x00" size="16"/>
+                        </index_1a00>
+                    </sm>
+                </sm_pool>
+                <sdo_pool type="SdoPoolObject" default_child_type="Sdo"/>
+            </m3>
+            <m4 type="EthercatMotion" phy_id="4" vendor_id="0x000002e1" product_code="0x00000000" revision_num="0x00029001" dc_assign_activate="0x00000300" max_pos="2.0420349999999998" min_pos="-2.0420349999999998" max_vel="5.1487210000000001" min_vel="-5.1487210000000001" max_acc="26.179939000000001" min_acc="-26.179939000000001" max_pos_following_error="0.10000000000000001" max_vel_following_error="0.5" pos_factor="1689721.292776" pos_offset="0" home_pos="0">
+                <sm_pool type="SyncManagerPoolObject">
+                    <sm type="SyncManager" is_tx="false"/>
+                    <sm type="SyncManager" is_tx="true"/>
+                    <sm type="SyncManager" is_tx="false">
+                        <index_1600 type="Pdo" default_child_type="PdoEntry" index="0x1600">
+                            <control_word type="PdoEntry" index="0x6040" subindex="0x00" size="16"/>
+                            <mode_of_operation type="PdoEntry" index="0x6060" subindex="0x00" size="8"/>
+                            <target_pos type="PdoEntry" index="0x607a" subindex="0x00" size="32"/>
+                            <target_vel type="PdoEntry" index="0x60ff" subindex="0x00" size="32"/>
+                            <targer_tor type="PdoEntry" index="0x6071" subindex="0x00" size="16"/>
+                        </index_1600>
+                    </sm>
+                    <sm type="SyncManager" is_tx="true">
+                        <index_1a00 type="Pdo" default_child_type="PdoEntry" index="0x1a00">
+                            <status_word type="PdoEntry" index="0x6041" subindex="0x00" size="16"/>
+                            <mode_of_display type="PdoEntry" index="0x6061" subindex="0x00" size="8"/>
+                            <pos_actual_value type="PdoEntry" index="0x6064" subindex="0x00" size="32"/>
+                            <vel_actual_value type="PdoEntry" index="0x606c" subindex="0x00" size="32"/>
+                            <cur_actual_value type="PdoEntry" index="0x6078" subindex="0x00" size="16"/>
+                        </index_1a00>
+                    </sm>
+                </sm_pool>
+                <sdo_pool type="SdoPoolObject" default_child_type="Sdo"/>
+            </m4>
+            <m5 type="EthercatMotion" phy_id="5" vendor_id="0x000002e1" product_code="0x00000000" revision_num="0x00029001" dc_assign_activate="0x00000300" max_pos="6.2831849999999996" min_pos="-6.2831849999999996" max_vel="8.7266460000000006" min_vel="-8.7266460000000006" max_acc="43.633231000000002" min_acc="-43.633231000000002" max_pos_following_error="0.10000000000000001" max_vel_following_error="0.5" pos_factor="1043037.835047" pos_offset="0" home_pos="0">
+                <sm_pool type="SyncManagerPoolObject">
+                    <sm type="SyncManager" is_tx="false"/>
+                    <sm type="SyncManager" is_tx="true"/>
+                    <sm type="SyncManager" is_tx="false">
+                        <index_1600 type="Pdo" default_child_type="PdoEntry" index="0x1600">
+                            <control_word type="PdoEntry" index="0x6040" subindex="0x00" size="16"/>
+                            <mode_of_operation type="PdoEntry" index="0x6060" subindex="0x00" size="8"/>
+                            <target_pos type="PdoEntry" index="0x607a" subindex="0x00" size="32"/>
+                            <target_vel type="PdoEntry" index="0x60ff" subindex="0x00" size="32"/>
+                            <targer_tor type="PdoEntry" index="0x6071" subindex="0x00" size="16"/>
+                        </index_1600>
+                    </sm>
+                    <sm type="SyncManager" is_tx="true">
+                        <index_1a00 type="Pdo" default_child_type="PdoEntry" index="0x1a00">
+                            <status_word type="PdoEntry" index="0x6041" subindex="0x00" size="16"/>
+                            <mode_of_display type="PdoEntry" index="0x6061" subindex="0x00" size="8"/>
+                            <pos_actual_value type="PdoEntry" index="0x6064" subindex="0x00" size="32"/>
+                            <vel_actual_value type="PdoEntry" index="0x606c" subindex="0x00" size="32"/>
+                            <cur_actual_value type="PdoEntry" index="0x6078" subindex="0x00" size="16"/>
+                        </index_1a00>
+                    </sm>
+                </sm_pool>
+                <sdo_pool type="SdoPoolObject" default_child_type="Sdo"/>
+            </m5>
+        </slave_pool>
+        <mout_pipe type="Pipe"/>
+        <lout_pipe type="Pipe"/>
+    </master>
+    <model type="Model" time="0">
+        <environment type="Environment" gravity="{0 , -9.8 , 0 , 0 , 0 , 0}"/>
+        <variable_pool type="VariablePoolElement"/>
+        <part_pool type="PartPoolElement">
+            <ground type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_0_j type="Marker" active="true" pe="{1 , 0 , 0 , 1.5707963267949 , 2.86025790229433 , -0}"/>
+                    <joint_3_j type="Marker" active="true" pe="{1 , 0 , 0 , 4.71238898038469 , 2.95190110156741 , 3.14159265358979}"/>
+                    <joint_6_j type="Marker" active="true" pe="{0 , 0 , 1.732 , 1.5707963267949 , 1.41464720186784 , -0}"/>
+                    <joint_9_j type="Marker" active="true" pe="{0 , 0 , 1.732 , 1.5707963267949 , 1.72694545172195 , -0}"/>
+                    <joint_12_j type="Marker" active="true" pe="{-1 , 0 , 0 , 4.71238898038469 , 0.189691552022381 , 3.14159265358979}"/>
+                    <joint_15_j type="Marker" active="true" pe="{-1 , 0 , 0 , 1.5707963267949 , 0.281334751295461 , -0}"/>
+                    <ee_makJ type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement"/>
+            </ground>
+            <p1a type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{1 , 0 , 0 , -0.24973648839286 , 0.581327731520922 , 0.290101325550693 , 0.718004857813422}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_0_i type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                    <joint_1_j type="Marker" active="true" pe="{0 , 0 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pa.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p1a>
+            <p1b type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{-0.120116185017684 , 1.12011618501768 , -0.0338059113743598 , -0.24973648839286 , 0.581327731520922 , 0.290101325550693 , 0.718004857813422}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_1_i type="Marker" active="true" pe="{0 , -1.04092314797972 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                    <joint_2_i type="Marker" active="true" pe="{0 , 0 , 0 , 4.99372373168015 , 1.5707963267949 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pb.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p1b>
+            <p2a type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{1 , 0 , 0 , -0.152720773755942 , 0.742438335198219 , 0.292425333965377 , 0.583051548104214}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_3_i type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                    <joint_4_j type="Marker" active="true" pe="{0 , 0 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pa.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p2a>
+            <p2b type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{0.157068542958052 , 1.16147205510783 , 0.380256062955696 , -0.152720773755942 , 0.742438335198219 , 0.292425333965377 , 0.583051548104214}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_4_i type="Marker" active="true" pe="{0 , -0.763698893543784 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                    <joint_5_i type="Marker" active="true" pe="{0 , 0 , 0 , 4.52269742836231 , 1.5707963267949 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pb.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p2b>
+            <p3a type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{0 , 0 , 1.732 , -0.418394667310211 , -0.0644008234413272 , -0.0187139817215726 , 0.905785969859647}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_6_i type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                    <joint_7_j type="Marker" active="true" pe="{0 , 0 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pa.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p3a>
+            <p3b type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{0.157068542958052 , 1.16147205510783 , 0.380256062955696 , -0.418394667310211 , -0.0644008234413272 , -0.0187139817215726 , 0.905785969859647}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_7_i type="Marker" active="true" pe="{0 , -1.60755839707303 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                    <joint_8_i type="Marker" active="true" pe="{0 , 0 , 0 , 0.156149124927058 , 1.5707963267949 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pb.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p3b>
+            <p4a type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{0 , 0 , 1.732 , -0.530518830403411 , 0.0350461822380836 , -0.00854313009793085 , 0.846905278426143}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_9_i type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                    <joint_10_j type="Marker" active="true" pe="{0 , 0 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pa.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p4a>
+            <p4b type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{-0.0373679848781454 , 0.718827386812262 , 0.252740831424289 , -0.530518830403411 , 0.0350461822380836 , -0.00854313009793085 , 0.846905278426143}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_10_i type="Marker" active="true" pe="{0 , -1.60755839707303 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                    <joint_11_i type="Marker" active="true" pe="{0 , 0 , 0 , 6.12703618225253 , 1.5707963267949 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pb.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p4b>
+            <p5a type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{-1 , 0 , 0 , -0.270906918864637 , -0.694184032459281 , -0.36586354625156 , 0.557549850608961}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_12_i type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                    <joint_13_j type="Marker" active="true" pe="{0 , 0 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pa.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p5a>
+            <p5b type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{-0.0373679848781454 , 0.718827386812262 , 0.252740831424289 , -0.270906918864637 , -0.694184032459281 , -0.36586354625156 , 0.557549850608961}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_13_i type="Marker" active="true" pe="{0 , -0.763698893543784 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                    <joint_14_i type="Marker" active="true" pe="{0 , 0 , 0 , 1.76048787881728 , 1.5707963267949 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pb.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p5b>
+            <p6a type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{-1 , 0 , 0 , -0.212736719136229 , -0.586840401007746 , -0.248312777997349 , 0.740744352904198}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_15_i type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                    <joint_16_j type="Marker" active="true" pe="{0 , 0 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pa.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p6a>
+            <p6b type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{-0.120116185017684 , 1.12011618501768 , -0.0338059113743598 , -0.212736719136229 , -0.586840401007746 , -0.248312777997349 , 0.740744352904198}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_16_i type="Marker" active="true" pe="{0 , -1.04092314797972 , 0 , 3.14159265358979 , 1.5707963267949 , 3.14159265358979}"/>
+                    <joint_17_i type="Marker" active="true" pe="{0 , 0 , 0 , 1.28946157549944 , 1.5707963267949 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/pb.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </p6b>
+            <up type="Part" active="true" vel="{0 , 0 , 0 , 0 , 0 , 0}" acc="{0 , 0 , 0 , 0 , 0 , 0}" inertia="{1 , 0 , 0 , 0 , 1 , 1 , 1 , 0 , 0 , 0}" pq="{0 , 1 , 0.2 , 0.304650898983874 , 0.0517622696647285 , 0.550349107024767 , 0.775644478859042}">
+                <marker_pool type="MarkerPoolElement">
+                    <joint_2_j type="Marker" active="true" pe="{0 , 0 , -0.289 , -0 , 0 , -0}"/>
+                    <joint_5_j type="Marker" active="true" pe="{0.25 , 0 , 0.144 , -0 , 0 , -0}"/>
+                    <joint_8_j type="Marker" active="true" pe="{0.25 , 0 , 0.144 , -0 , 0 , -0}"/>
+                    <joint_11_j type="Marker" active="true" pe="{-0.25 , 0 , 0.144 , -0 , 0 , -0}"/>
+                    <joint_14_j type="Marker" active="true" pe="{-0.25 , 0 , 0.144 , -0 , 0 , -0}"/>
+                    <joint_17_j type="Marker" active="true" pe="{0 , 0 , -0.289 , -0 , 0 , -0}"/>
+                    <ee_makI type="Marker" active="true" pe="{0 , 0 , 0 , -0 , 0 , -0}"/>
+                </marker_pool>
+                <geometry_pool type="GeometryPoolElement">
+                    <test type="ParasolidGeometry" graphic_file_path="/RobotGallery/AnyRobot/WebPlayer/up.data" pq="{0 , 0 , 0 , 0 , 0 , -0 , 1}"/>
+                </geometry_pool>
+            </up>
+        </part_pool>
+        <joint_pool type="JointPoolElement">
+            <joint_0 type="UniversalJoint" active="true" prt_m="p1a" prt_n="ground" mak_i="joint_0_i" mak_j="joint_0_j" cf="{0 , 0 , 0 , 0}"/>
+            <joint_1 type="PrismaticJoint" active="true" prt_m="p1b" prt_n="p1a" mak_i="joint_1_i" mak_j="joint_1_j" cf="{0 , 0 , 0 , 0 , 0}"/>
+            <joint_2 type="SphericalJoint" active="true" prt_m="p1b" prt_n="up" mak_i="joint_2_i" mak_j="joint_2_j" cf="{0 , 0 , 0}"/>
+            <joint_3 type="UniversalJoint" active="true" prt_m="p2a" prt_n="ground" mak_i="joint_3_i" mak_j="joint_3_j" cf="{0 , 0 , 0 , 0}"/>
+            <joint_4 type="PrismaticJoint" active="true" prt_m="p2b" prt_n="p2a" mak_i="joint_4_i" mak_j="joint_4_j" cf="{0 , 0 , 0 , 0 , 0}"/>
+            <joint_5 type="SphericalJoint" active="true" prt_m="p2b" prt_n="up" mak_i="joint_5_i" mak_j="joint_5_j" cf="{0 , 0 , 0}"/>
+            <joint_6 type="UniversalJoint" active="true" prt_m="p3a" prt_n="ground" mak_i="joint_6_i" mak_j="joint_6_j" cf="{0 , 0 , 0 , 0}"/>
+            <joint_7 type="PrismaticJoint" active="true" prt_m="p3b" prt_n="p3a" mak_i="joint_7_i" mak_j="joint_7_j" cf="{0 , 0 , 0 , 0 , 0}"/>
+            <joint_8 type="SphericalJoint" active="true" prt_m="p3b" prt_n="up" mak_i="joint_8_i" mak_j="joint_8_j" cf="{0 , 0 , 0}"/>
+            <joint_9 type="UniversalJoint" active="true" prt_m="p4a" prt_n="ground" mak_i="joint_9_i" mak_j="joint_9_j" cf="{0 , 0 , 0 , 0}"/>
+            <joint_10 type="PrismaticJoint" active="true" prt_m="p4b" prt_n="p4a" mak_i="joint_10_i" mak_j="joint_10_j" cf="{0 , 0 , 0 , 0 , 0}"/>
+            <joint_11 type="SphericalJoint" active="true" prt_m="p4b" prt_n="up" mak_i="joint_11_i" mak_j="joint_11_j" cf="{0 , 0 , 0}"/>
+            <joint_12 type="UniversalJoint" active="true" prt_m="p5a" prt_n="ground" mak_i="joint_12_i" mak_j="joint_12_j" cf="{0 , 0 , 0 , 0}"/>
+            <joint_13 type="PrismaticJoint" active="true" prt_m="p5b" prt_n="p5a" mak_i="joint_13_i" mak_j="joint_13_j" cf="{0 , 0 , 0 , 0 , 0}"/>
+            <joint_14 type="SphericalJoint" active="true" prt_m="p5b" prt_n="up" mak_i="joint_14_i" mak_j="joint_14_j" cf="{0 , 0 , 0}"/>
+            <joint_15 type="UniversalJoint" active="true" prt_m="p6a" prt_n="ground" mak_i="joint_15_i" mak_j="joint_15_j" cf="{0 , 0 , 0 , 0}"/>
+            <joint_16 type="PrismaticJoint" active="true" prt_m="p6b" prt_n="p6a" mak_i="joint_16_i" mak_j="joint_16_j" cf="{0 , 0 , 0 , 0 , 0}"/>
+            <joint_17 type="SphericalJoint" active="true" prt_m="p6b" prt_n="up" mak_i="joint_17_i" mak_j="joint_17_j" cf="{0 , 0 , 0}"/>
+        </joint_pool>
+        <motion_pool type="MotionPoolElement">
+            <motion_0 type="Motion" active="true" prt_m="p1b" prt_n="p1a" mak_i="joint_1_i" mak_j="joint_1_j" cf="{0}" frc_coe="{0 , 0 , 0}" component="2" mp="0.54352103706467714" mv="0" ma="0"/>
+            <motion_1 type="Motion" active="true" prt_m="p2b" prt_n="p2a" mak_i="joint_4_i" mak_j="joint_4_j" cf="{0}" frc_coe="{0 , 0 , 0}" component="2" mp="0.7209375769370665" mv="0" ma="0"/>
+            <motion_2 type="Motion" active="true" prt_m="p3b" prt_n="p3a" mak_i="joint_7_i" mak_j="joint_7_j" cf="{0}" frc_coe="{0 , 0 , 0}" component="2" mp="0.18154739446625573" mv="0" ma="0"/>
+            <motion_3 type="Motion" active="true" prt_m="p4b" prt_n="p4a" mak_i="joint_10_i" mak_j="joint_10_j" cf="{0}" frc_coe="{0 , 0 , 0}" component="2" mp="0.037530313647612883" mv="0" ma="0"/>
+            <motion_4 type="Motion" active="true" prt_m="p5b" prt_n="p5a" mak_i="joint_13_i" mak_j="joint_13_j" cf="{0}" frc_coe="{0 , 0 , 0}" component="2" mp="0.4640026729771467" mv="0" ma="0"/>
+            <motion_5 type="Motion" active="true" prt_m="p6b" prt_n="p6a" mak_i="joint_16_i" mak_j="joint_16_j" cf="{0}" frc_coe="{0 , 0 , 0}" component="2" mp="0.38385705803462067" mv="0" ma="0"/>
+        </motion_pool>
+        <general_motion_pool type="GeneralMotionPoolElement">
+            <ee type="GeneralMotion" active="false" prt_m="up" prt_n="ground" mak_i="ee_makI" mak_j="ee_makJ" cf="{0 , 0 , 0 , 0 , 0 , 0}"/>
+        </general_motion_pool>
+        <force_pool type="ForcePoolElement"/>
+        <solver_pool type="SolverPoolElement">
+            <stewart_inverse_solver type="StewartInverseSolver" max_iter_count="1" max_error="0"/>
+            <forward_kinematic_solver type="ForwardKinematicSolver" max_iter_count="100" max_error="1e-10"/>
+            <inverse_dynamic_solver type="InverseDynamicSolver" max_iter_count="100" max_error="1e-10"/>
+            <forward_dynamic_solver type="ForwardDynamicSolver" max_iter_count="100" max_error="1e-10"/>
+        </solver_pool>
+        <simulator_pool type="SimulatorPoolElement"/>
+        <sim_result_pool type="SimResultPoolElement"/>
+        <calibrator_pool type="CalibratorPoolElement"/>
+        <plan_pool type="ElementPoolElement"/>
+    </model>
+    <plan_root type="PlanRoot">
+        <plan_pool_object type="PlanPoolObject">
+            <enable_plan type="EnablePlan">
+                <en type="Command" default_child_type="Param">
+                    <group type="GroupParam" default_child_type="Param">
+                        <limit_time type="Param" default="5000"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="all">
+                            <all type="Param" abbreviation="a"/>
+                            <none type="Param" abbreviation="n"/>
+                            <motion_id type="Param" abbreviation="m" default="0"/>
+                            <physical_id type="Param" abbreviation="p" default="0"/>
+                            <slave_id type="Param" abbreviation="s" default="0"/>
+                        </unique>
+                        <unique type="UniqueParam" default_child_type="Param" default="check_none">
+                            <check_all type="Param"/>
+                            <check_none type="Param"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <unique type="UniqueParam" default_child_type="Param" default="check_pos">
+                                    <check_pos type="Param"/>
+                                    <not_check_pos type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_max">
+                                            <check_pos_max type="Param"/>
+                                            <not_check_pos_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_min">
+                                            <check_pos_min type="Param"/>
+                                            <not_check_pos_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous">
+                                            <check_pos_continuous type="Param"/>
+                                            <not_check_pos_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_at_start">
+                                            <check_pos_continuous_at_start type="Param"/>
+                                            <not_check_pos_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order">
+                                            <check_pos_continuous_second_order type="Param"/>
+                                            <not_check_pos_continuous_second_order type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order_at_start">
+                                            <check_pos_continuous_second_order_at_start type="Param"/>
+                                            <not_check_pos_continuous_second_order_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_following_error">
+                                            <check_pos_following_error type="Param"/>
+                                            <not_check_pos_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                                <unique type="UniqueParam" default_child_type="Param" default="check_vel">
+                                    <check_vel type="Param"/>
+                                    <not_check_vel type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_max">
+                                            <check_vel_max type="Param"/>
+                                            <not_check_vel_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_min">
+                                            <check_vel_min type="Param"/>
+                                            <not_check_vel_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous">
+                                            <check_vel_continuous type="Param"/>
+                                            <not_check_vel_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous_at_start">
+                                            <check_vel_continuous_at_start type="Param"/>
+                                            <not_check_vel_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_following_error">
+                                            <check_vel_following_error type="Param"/>
+                                            <not_check_vel_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                            </group>
+                        </unique>
+                    </group>
+                </en>
+            </enable_plan>
+            <enable_plan type="EnablePlan">
+                <ds type="Command" default_child_type="Param">
+                    <group type="GroupParam" default_child_type="Param">
+                        <limit_time type="Param" default="5000"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="all">
+                            <all type="Param" abbreviation="a"/>
+                            <none type="Param" abbreviation="n"/>
+                            <motion_id type="Param" abbreviation="m" default="0"/>
+                            <physical_id type="Param" abbreviation="p" default="0"/>
+                            <slave_id type="Param" abbreviation="s" default="0"/>
+                        </unique>
+                        <unique type="UniqueParam" default_child_type="Param" default="check_none">
+                            <check_all type="Param"/>
+                            <check_none type="Param"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <unique type="UniqueParam" default_child_type="Param" default="check_pos">
+                                    <check_pos type="Param"/>
+                                    <not_check_pos type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_max">
+                                            <check_pos_max type="Param"/>
+                                            <not_check_pos_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_min">
+                                            <check_pos_min type="Param"/>
+                                            <not_check_pos_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous">
+                                            <check_pos_continuous type="Param"/>
+                                            <not_check_pos_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_at_start">
+                                            <check_pos_continuous_at_start type="Param"/>
+                                            <not_check_pos_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order">
+                                            <check_pos_continuous_second_order type="Param"/>
+                                            <not_check_pos_continuous_second_order type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order_at_start">
+                                            <check_pos_continuous_second_order_at_start type="Param"/>
+                                            <not_check_pos_continuous_second_order_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_following_error">
+                                            <check_pos_following_error type="Param"/>
+                                            <not_check_pos_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                                <unique type="UniqueParam" default_child_type="Param" default="check_vel">
+                                    <check_vel type="Param"/>
+                                    <not_check_vel type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_max">
+                                            <check_vel_max type="Param"/>
+                                            <not_check_vel_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_min">
+                                            <check_vel_min type="Param"/>
+                                            <not_check_vel_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous">
+                                            <check_vel_continuous type="Param"/>
+                                            <not_check_vel_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous_at_start">
+                                            <check_vel_continuous_at_start type="Param"/>
+                                            <not_check_vel_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_following_error">
+                                            <check_vel_following_error type="Param"/>
+                                            <not_check_vel_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                            </group>
+                        </unique>
+                    </group>
+                </ds>
+            </enable_plan>
+            <mode_plan type="ModePlan">
+                <md type="Command" default_child_type="Param">
+                    <group type="GroupParam" default_child_type="Param">
+                        <limit_time type="Param" default="5000"/>
+                        <mode type="Param" abbreviation="d" default="8"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="all">
+                            <all type="Param" abbreviation="a"/>
+                            <none type="Param" abbreviation="n"/>
+                            <motion_id type="Param" abbreviation="m" default="0"/>
+                            <physical_id type="Param" abbreviation="p" default="0"/>
+                            <slave_id type="Param" abbreviation="s" default="0"/>
+                        </unique>
+                        <unique type="UniqueParam" default_child_type="Param" default="check_none">
+                            <check_all type="Param"/>
+                            <check_none type="Param"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <unique type="UniqueParam" default_child_type="Param" default="check_pos">
+                                    <check_pos type="Param"/>
+                                    <not_check_pos type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_max">
+                                            <check_pos_max type="Param"/>
+                                            <not_check_pos_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_min">
+                                            <check_pos_min type="Param"/>
+                                            <not_check_pos_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous">
+                                            <check_pos_continuous type="Param"/>
+                                            <not_check_pos_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_at_start">
+                                            <check_pos_continuous_at_start type="Param"/>
+                                            <not_check_pos_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order">
+                                            <check_pos_continuous_second_order type="Param"/>
+                                            <not_check_pos_continuous_second_order type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order_at_start">
+                                            <check_pos_continuous_second_order_at_start type="Param"/>
+                                            <not_check_pos_continuous_second_order_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_following_error">
+                                            <check_pos_following_error type="Param"/>
+                                            <not_check_pos_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                                <unique type="UniqueParam" default_child_type="Param" default="check_vel">
+                                    <check_vel type="Param"/>
+                                    <not_check_vel type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_max">
+                                            <check_vel_max type="Param"/>
+                                            <not_check_vel_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_min">
+                                            <check_vel_min type="Param"/>
+                                            <not_check_vel_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous">
+                                            <check_vel_continuous type="Param"/>
+                                            <not_check_vel_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous_at_start">
+                                            <check_vel_continuous_at_start type="Param"/>
+                                            <not_check_vel_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_following_error">
+                                            <check_vel_following_error type="Param"/>
+                                            <not_check_vel_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                            </group>
+                        </unique>
+                    </group>
+                </md>
+            </mode_plan>
+            <recover_plan type="RecoverPlan">
+                <rc type="Command" default_child_type="Param"/>
+            </recover_plan>
+            <sleep_plan type="SleepPlan">
+                <sl type="Command" default_child_type="Param">
+                    <count type="Param" abbreviation="c" default="1000"/>
+                </sl>
+            </sleep_plan>
+            <reset_plan type="ResetPlan">
+                <rs type="Command" default_child_type="Param">
+                    <group type="GroupParam" default_child_type="Param">
+                        <pos type="Param" abbreviation="p" default="{0.5,0.392523364485981,0.789915966386555,0.5,0.5,0.5}"/>
+                        <acc type="Param" abbreviation="a" default="0.3"/>
+                        <vel type="Param" abbreviation="v" default="0.3"/>
+                        <dec type="Param" abbreviation="d" default="0.3"/>
+                        <unique_check type="UniqueParam" default_child_type="Param" default="check_all">
+                            <check_all type="Param"/>
+                            <check_none type="Param"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <unique type="UniqueParam" default_child_type="Param" default="check_pos">
+                                    <check_pos type="Param"/>
+                                    <not_check_pos type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_max">
+                                            <check_pos_max type="Param"/>
+                                            <not_check_pos_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_min">
+                                            <check_pos_min type="Param"/>
+                                            <not_check_pos_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous">
+                                            <check_pos_continuous type="Param"/>
+                                            <not_check_pos_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_at_start">
+                                            <check_pos_continuous_at_start type="Param"/>
+                                            <not_check_pos_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order">
+                                            <check_pos_continuous_second_order type="Param"/>
+                                            <not_check_pos_continuous_second_order type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order_at_start">
+                                            <check_pos_continuous_second_order_at_start type="Param"/>
+                                            <not_check_pos_continuous_second_order_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_following_error">
+                                            <check_pos_following_error type="Param"/>
+                                            <not_check_pos_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                                <unique type="UniqueParam" default_child_type="Param" default="check_vel">
+                                    <check_vel type="Param"/>
+                                    <not_check_vel type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_max">
+                                            <check_vel_max type="Param"/>
+                                            <not_check_vel_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_min">
+                                            <check_vel_min type="Param"/>
+                                            <not_check_vel_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous">
+                                            <check_vel_continuous type="Param"/>
+                                            <not_check_vel_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous_at_start">
+                                            <check_vel_continuous_at_start type="Param"/>
+                                            <not_check_vel_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_following_error">
+                                            <check_vel_following_error type="Param"/>
+                                            <not_check_vel_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                            </group>
+                        </unique_check>
+                    </group>
+                </rs>
+            </reset_plan>
+            <move_plan type="MovePlan">
+                <mv type="Command" default_child_type="Param">
+                    <group type="GroupParam" default_child_type="Param">
+                        <position_unit type="Param" default="m"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="pq">
+                            <pq type="Param" default="{0,0.63,0.316,0,0,0,1}"/>
+                            <pm type="Param" default="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <pe type="Param" default="{0,0.63,0.316,0,0,0}"/>
+                                <orientation_unit type="Param" default="rad"/>
+                                <euler_type type="Param" default="321"/>
+                            </group>
+                        </unique>
+                        <acceleration type="Param" default="0.2"/>
+                        <velocity type="Param" default="0.2"/>
+                        <deceleration type="Param" default="0.2"/>
+                        <angular_acceleration type="Param" default="0.2"/>
+                        <angular_velocity type="Param" default="0.2"/>
+                        <angular_deceleration type="Param" default="0.2"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="check_all">
+                            <check_all type="Param"/>
+                            <check_none type="Param"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <unique type="UniqueParam" default_child_type="Param" default="check_pos">
+                                    <check_pos type="Param"/>
+                                    <not_check_pos type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_max">
+                                            <check_pos_max type="Param"/>
+                                            <not_check_pos_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_min">
+                                            <check_pos_min type="Param"/>
+                                            <not_check_pos_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous">
+                                            <check_pos_continuous type="Param"/>
+                                            <not_check_pos_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_at_start">
+                                            <check_pos_continuous_at_start type="Param"/>
+                                            <not_check_pos_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order">
+                                            <check_pos_continuous_second_order type="Param"/>
+                                            <not_check_pos_continuous_second_order type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order_at_start">
+                                            <check_pos_continuous_second_order_at_start type="Param"/>
+                                            <not_check_pos_continuous_second_order_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_following_error">
+                                            <check_pos_following_error type="Param"/>
+                                            <not_check_pos_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                                <unique type="UniqueParam" default_child_type="Param" default="check_vel">
+                                    <check_vel type="Param"/>
+                                    <not_check_vel type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_max">
+                                            <check_vel_max type="Param"/>
+                                            <not_check_vel_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_min">
+                                            <check_vel_min type="Param"/>
+                                            <not_check_vel_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous">
+                                            <check_vel_continuous type="Param"/>
+                                            <not_check_vel_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous_at_start">
+                                            <check_vel_continuous_at_start type="Param"/>
+                                            <not_check_vel_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_following_error">
+                                            <check_vel_following_error type="Param"/>
+                                            <not_check_vel_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                            </group>
+                        </unique>
+                    </group>
+                </mv>
+            </move_plan>
+            <move_plan type="MoveJ">
+                <moveJ type="Command" default_child_type="Param">
+                    <group type="GroupParam" default_child_type="Param">
+                        <limit_time type="Param" default="5000"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="all">
+                            <all type="Param" abbreviation="a"/>
+                            <motion_id type="Param" abbreviation="m" default="0"/>
+                            <physical_id type="Param" abbreviation="p" default="0"/>
+                            <slave_id type="Param" abbreviation="s" default="0"/>
+                        </unique>
+                        <pos type="Param" default="0"/>
+                        <vel type="Param" default="0.5"/>
+                        <acc type="Param" default="1"/>
+                        <dec type="Param" default="1"/>
+                        <unique type="UniqueParam" default_child_type="Param" default="check_all">
+                            <check_all type="Param"/>
+                            <check_none type="Param"/>
+                            <group type="GroupParam" default_child_type="Param">
+                                <unique type="UniqueParam" default_child_type="Param" default="check_pos">
+                                    <check_pos type="Param"/>
+                                    <not_check_pos type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_max">
+                                            <check_pos_max type="Param"/>
+                                            <not_check_pos_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_min">
+                                            <check_pos_min type="Param"/>
+                                            <not_check_pos_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous">
+                                            <check_pos_continuous type="Param"/>
+                                            <not_check_pos_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_at_start">
+                                            <check_pos_continuous_at_start type="Param"/>
+                                            <not_check_pos_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order">
+                                            <check_pos_continuous_second_order type="Param"/>
+                                            <not_check_pos_continuous_second_order type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_continuous_second_order_at_start">
+                                            <check_pos_continuous_second_order_at_start type="Param"/>
+                                            <not_check_pos_continuous_second_order_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_pos_following_error">
+                                            <check_pos_following_error type="Param"/>
+                                            <not_check_pos_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                                <unique type="UniqueParam" default_child_type="Param" default="check_vel">
+                                    <check_vel type="Param"/>
+                                    <not_check_vel type="Param"/>
+                                    <group type="GroupParam" default_child_type="Param">
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_max">
+                                            <check_vel_max type="Param"/>
+                                            <not_check_vel_max type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_min">
+                                            <check_vel_min type="Param"/>
+                                            <not_check_vel_min type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous">
+                                            <check_vel_continuous type="Param"/>
+                                            <not_check_vel_continuous type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_continuous_at_start">
+                                            <check_vel_continuous_at_start type="Param"/>
+                                            <not_check_vel_continuous_at_start type="Param"/>
+                                        </unique>
+                                        <unique type="UniqueParam" default_child_type="Param" default="check_vel_following_error">
+                                            <check_vel_following_error type="Param"/>
+                                            <not_check_vel_following_error type="Param"/>
+                                        </unique>
+                                    </group>
+                                </unique>
+                            </group>
+                        </unique>
+                    </group>
+                </moveJ>
+            </move_plan>
+        </plan_pool_object>
+    </plan_root>
+    <SensorRoot type="SensorRoot">
+        <SensorPool type="SensorPoolObject"/>
+    </SensorRoot>
+</object>
