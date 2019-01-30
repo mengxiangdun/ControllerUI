@@ -144,8 +144,8 @@
     });
     var xmlDoc;
     var setupList=[];
-    var serverIP="ws://10.10.10.126:5866";
-    // var serverIP="ws://127.0.0.1:5866";
+    // var serverIP="ws://10.10.10.126:5866";
+    var serverIP="ws://127.0.0.1:5866";
     var cmd_code_list=[];//发送的命令代码列表
     var cmd_code_return_list=[];//需要处理返回值的方式列表
     var ui_id_list=[];//ui id 变量名列表
@@ -159,6 +159,11 @@
     var auto_start=false;
     var auto_stop=true;
     var ip_addr = document.location.hostname;
+
+    if (ip_addr.indexOf("localhost")===-1){
+        serverIP="ws://"+ip_addr+":5866";
+    }
+
     console.log("ip address"+ip_addr+"/ControllerUI");
 
     document.getElementById("serverIP").onchange=function(){
