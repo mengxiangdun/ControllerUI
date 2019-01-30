@@ -203,7 +203,7 @@
     document.getElementById("enable_btn").onclick=function () {
         if (!initialized){
             SendCmd("0&1&0&0&0&"+"rc");
-            gameInstance.SendMessage("empt","ReceiveDataFromJs",ip_addr);
+            gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
             initialized=true;
         }
         repeat_read= setInterval(ReadFromServer,100);
