@@ -160,7 +160,7 @@
     var auto_stop=true;
     var ip_addr = document.location.hostname;
     console.log("ip address"+ip_addr+"/ControllerUI");
-    gameInstance.SendMessage("empt","ReceiveDataFromJs",ip_addr);
+
     document.getElementById("serverIP").onchange=function(){
         var str=document.getElementById("serverIP").value;
         if (str!=""&&str!=null){
@@ -203,6 +203,7 @@
     document.getElementById("enable_btn").onclick=function () {
         if (!initialized){
             SendCmd("0&1&0&0&0&"+"rc");
+            gameInstance.SendMessage("empt","ReceiveDataFromJs",ip_addr);
             initialized=true;
         }
         repeat_read= setInterval(ReadFromServer,100);
