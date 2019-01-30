@@ -144,8 +144,8 @@
     });
     var xmlDoc;
     var setupList=[];
-    // var serverIP="ws://10.10.10.126:5866";
-    var serverIP="ws://127.0.0.1:5866";
+    var serverIP="ws://10.10.10.126:5866";
+    // var serverIP="ws://127.0.0.1:5866";
     var cmd_code_list=[];//发送的命令代码列表
     var cmd_code_return_list=[];//需要处理返回值的方式列表
     var ui_id_list=[];//ui id 变量名列表
@@ -166,9 +166,22 @@
         if (str!=""&&str!=null){
             serverIP="ws://"+str+":5866";
              console.log(serverIP);
+             ws.close();
+            buildWS();
+            setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+             }
+    }
 
+    document.getElementById("serverIP").onclick=function(){
+        var pastedtext= prompt("Please paste here:", "placeholder");
+        // document.getElementById("serverIP").valueOf(pastedtext);
+        $("#serverIP").val(pastedtext);
+        serverIP="ws://"+pastedtext+":5866";
+        console.log(serverIP);
+        ws.close();
+        buildWS();
+        setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
 
-        }
     }
 
     document.getElementById("manual_btn").onclick=function () {
@@ -200,6 +213,7 @@
     }
     var repeat_read;
     var initialized=false;
+
     document.getElementById("enable_btn").onclick=function () {
         if (!initialized){
             SendCmd("0&1&0&0&0&"+"rc");
@@ -209,6 +223,7 @@
         repeat_read= setInterval(ReadFromServer,100);
         //ws.close();
     }
+
     document.getElementById("disable_btn").onclick=function () {
         clearInterval(repeat_read);
     }
@@ -844,6 +859,7 @@
 
         }
 
+        SetUITheme();
     }
 
     function GetUI_ID_List(node) {
@@ -994,8 +1010,6 @@
         }
     }
 
-
-
     function Btn_cmd_onclick(str,return_str){
         if (str.indexOf("$")!=-1) {
             // console.log(str);
@@ -1054,19 +1068,6 @@
         cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
 
     }
-
-    // document.getElementById("saveXml").onclick= function() {
-    //     input_id=-1;
-    //     ethercat_id=-1;
-    //     sm_id=-1;
-    //     pdo_id=-1;
-    //     pdo_entry_id=-1;
-    //     CollectNodeName(xmlDoc.documentElement,"");
-    //     var text = (new XMLSerializer()).serializeToString(xmlDoc);
-    //     console.log(text);
-    //     // SendCmd("3&1&0&0&0&"+text);
-    //
-    // }
 
 </script>
 
@@ -1262,7 +1263,9 @@
     }
 
     buildWS();
+
     setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+
     function SendCmd(cmd){
         switch (ws.readyState) {
             case WebSocket.CONNECTING:
@@ -1319,11 +1322,12 @@
 
     });
     $("button").button();
-    $( "#radioset" ).buttonset();
-    $( "input[type='radio']" ).checkboxradio();
-    setTimeout("$(\"button\").button()",5050);
-    setTimeout("$(\"button\").width(80)",5050);
-    setTimeout("$(\"#interface_div\").show()",5065);
+    function SetUITheme(){
+        setTimeout("$(\"button\").button()",5050);
+        setTimeout("$(\"button\").width(80)",5050);
+        setTimeout("$(\"#interface_div\").show()",5065);
+    }
+
     // $( "#interface_div_1" ).accordion({
     //     heightStyle:"content",
     //     collapsible: "true"
