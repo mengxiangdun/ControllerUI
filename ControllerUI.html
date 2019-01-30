@@ -222,7 +222,10 @@
     document.getElementById("enable_btn").onclick=function () {
         if (!initialized){
             SendCmd("0&1&0&0&0&"+"rc");
-            gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+            if (ip_addr.indexOf("localhost")===-1){
+                gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+            }
+
             initialized=true;
         }
         repeat_read= setInterval(ReadFromServer,100);
