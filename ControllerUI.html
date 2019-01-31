@@ -216,6 +216,14 @@
     var repeat_read;
     var initialized=false;
 
+    function Initial() {
+        setInterval(ReadFromServer,100);
+        if (ip_addr.indexOf("localhost")===-1){
+             gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+         }
+
+    }
+
     // document.getElementById("enable_btn").onclick=function () {
     //     if (!initialized){
     //         SendCmd("0&1&0&0&0&"+"ds\n md\n en\n");
@@ -761,6 +769,7 @@
     buildWS();
 
     setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+    setTimeout("Initial()",5000);
 
     function SendCmd(cmd){
         switch (ws.readyState) {

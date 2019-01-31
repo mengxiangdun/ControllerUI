@@ -363,7 +363,12 @@
     </ui_id_pool_object>
     <cmd_interface_pool_object >
         <panel text="Simulator|模拟器" id="id_20">
-            <button text="Enable|使能" id="id_21" cmd="mm --stop\n am --stop\n ds\n md\n en\n rc\n" return_attached=""/>
+            <button text="Enable|使能" id="id_21" cmd="mm --stop
+             am --stop
+              ds
+               md
+                en
+                 rc" return_attached=""/>
             <button text="Disable|去使能" id="id_22" cmd="mm --stop\n am --stop\n ds\n" return_attached=""/>
             <button text="Reset|重置" id="id_23" cmd="mm --stop\n am --stop\n rs\n rc\n" return_attached=""/>
             <panel text="Manual|手动" id="id_21">
