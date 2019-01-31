@@ -539,9 +539,12 @@
             // console.log("time:"+now);
 
             // console.log("0&1&"+now+"&0&0&"+str);
-            var str_1=str.replace(";","\n");
-            console.log("send cmd:"+str_1);
-            SendCmd("0&1&"+now+"&0&0&"+str_1);
+            var str_2=str.split(';');
+            for (var j=0;j<str_2.length;j++){
+                SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
+            }
+
+
             cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
             cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
             if (str.indexOf("mm --start")!=-1){
@@ -691,7 +694,7 @@
 
 
             }
-            console.log("send PQ to UNity:"+pq);
+            //console.log("send PQ to UNity:"+pq);
             gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
 
            //  var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
