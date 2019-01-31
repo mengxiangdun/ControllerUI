@@ -225,22 +225,22 @@
 
     }
 
-    document.getElementById("enable_btn").onclick=function () {
-        if (!initialized){
-            SendCmd("0&1&0&0&0&"+"ds\n md\n en\n");
-            if (ip_addr.indexOf("localhost")===-1){
-                gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
-            }
-
-            initialized=true;
-        }
-        repeat_read= setInterval(ReadFromServer,100);
-        //ws.close();
-    }
-
-    document.getElementById("disable_btn").onclick=function () {
-        clearInterval(repeat_read);
-    }
+    // document.getElementById("enable_btn").onclick=function () {
+    //     if (!initialized){
+    //         SendCmd("0&1&0&0&0&"+"ds\n md\n en\n");
+    //         if (ip_addr.indexOf("localhost")===-1){
+    //             gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+    //         }
+    //
+    //         initialized=true;
+    //     }
+    //     repeat_read= setInterval(ReadFromServer,100);
+    //     //ws.close();
+    // }
+    //
+    // document.getElementById("disable_btn").onclick=function () {
+    //     clearInterval(repeat_read);
+    // }
 
 
     function UpdateView() {
@@ -540,6 +540,7 @@
 
             // console.log("0&1&"+now+"&0&0&"+str);
             var str_1=str.replace(";","\n");
+            console.log("send cmd:"+str_1);
             SendCmd("0&1&"+now+"&0&0&"+str_1);
             cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
             cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
