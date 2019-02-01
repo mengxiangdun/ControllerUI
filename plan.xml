@@ -366,7 +366,6 @@
             <button text="Enable|使能" id="id_21" cmd="mm --stop;am --stop;ds;md;en;rc" return_attached=""/>
             <button text="Disable|去使能" id="id_22" cmd="mm --stop; am --stop; ds;" return_attached=""/>
             <button text="Reset|重置" id="id_23" cmd="mm --stop; am --stop; rs; rc;" return_attached=""/>
-
         </panel>
         <panel text="Manual|手动" id="id_21">
             <button text="Start|启动" id="id_18" cmd="mm --start" return_attached=""/>
