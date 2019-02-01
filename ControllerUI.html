@@ -13,77 +13,152 @@
     <link href="jquery-ui.css" rel="stylesheet">
     <link href="/jquery-ui.css" rel="stylesheet">
 </head>
+<style>
+    body{
+        font-family: "Trebuchet MS", sans-serif;
+        margin: 50px;
+    }
+    .demoHeaders {
+        margin-top: 2em;
+    }
+    #dialog-link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+    #dialog-link span.ui-icon {
+        margin: 0 5px 0 0;
+        position: absolute;
+        left: .2em;
+        top: 50%;
+        margin-top: -8px;
+    }
+    #icons {
+        margin: 0;
+        padding: 0;
+    }
+    #icons li {
+        margin: 2px;
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+        float: left;
+        list-style: none;
+    }
+    #icons span.ui-icon {
+        float: left;
+        margin: 0 4px;
+    }
+    .fakewindowcontain .ui-widget-overlay {
+        position: absolute;
+    }
+    select {
+        width: 200px;
+    }
+    html {
+        box-sizing: border-box;
+    }
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+    #gameContainer {
+        width: 100vw;
+        height: 100vh;
+    }
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .logo {
+        display: block;
+        width: max-width: 80vw;
+        height: max-height: 60vh;
+    }
+
+    .progress {
+        margin: 1.5em;
+        border: 1px solid white;
+        width: 50vw;
+        display: none;
+    }
+    .progress .full {
+        margin: 2px;
+        background: white;
+        height: 1em;
+        transform-origin: top left;
+    }
+
+    #loader {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .spinner,
+    .spinner:after {
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+    }
+    .spinner {
+        margin: 10px;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+
+        transform: translateZ(0);
+        animation: spinner-spin 1.1s infinite linear;
+    }
+    @keyframes spinner-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 <body>
-<p id="title_id">Welcome to Kaanh Intelligence</p>
-<div id="main" style="width: 960px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px">
+<p id="title_id"></p>
+<input id="serverIP" placeholder="Enter server ip"/>
+<select id="language_select">
+    <option value="eng" >English</option>
+    <option value="chs" >简体中文</option>
+</select>
+<div id="main" style="width: 1100px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px;background-color: #5c5c5c">
+
     <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
-        <input id="serverIP" placeholder="Enter server ip"/>
-        <!--<button id="enable_btn" ></button>-->
-        <!--<button id="disable_btn" ></button>-->
-
-
-        <select id="language_select">
-            <option value="eng" >English</option>
-            <option value="chs" >简体中文</option>
-        </select>
+        <!--<input id="serverIP" placeholder="Enter server ip"/>-->
+        <!--<select id="language_select">-->
+            <!--<option value="eng" >English</option>-->
+            <!--<option value="chs" >简体中文</option>-->
+        <!--</select>-->
         <div id="interface_div" style="width: 250px">
             <div id="enable_div"></div>
             <button id="manual_btn" >Manual</button>
             <button id="auto_btn">Auto</button>
-            <!--<div id="radioset">-->
-                <!--<input type="radio" id="radio1" name="radio" value="1" checked="checked"><label id="radio1-label" for="radio1">Manual</label>-->
-                <!--<input type="radio" id="radio2" name="radio" value="2" ><label id="radio2-lable" for="radio2">Auto</label>-->
-            <!--</div>-->
             <div id="manual_div"></div>
             <div id="auto_div"></div>
         </div>
     </div>
     <div style="width: 50%;height: 100%; float:left">
-        <div id="gameContainer"  style="width: 100%;height: 100%">
-
-        </div>
-        <div id="loader" style="width: 50%;height: 100%;left: auto">
+        <div id="gameContainer"  style="width: 100%;height: 100%"></div>
+        <div id="loader" style="width: 100%;height: 100%;left: auto">
             <!--<img class="logo" src="logo.png">-->
             <div class="spinner" style="width: 50%;float: left"></div>
             <div class="progress" style="width: 50%;float: left"><div class="full" ></div></div>
         </div>
     </div>
-
-
-
 </div>
-
-<div id="accordion">
-    <div id="Device_0">Device_0 </div>
-    <div id="xPdo_0"></div>
-    <div id="Device_1">Device_1 </div>
-    <div id="xPdo_1"></div>
-    <div id="Device_2">Device_2 </div>
-    <div id="xPdo_2"></div>
-    <div id="Device_3">Device_3 </div>
-    <div id="xPdo_3"></div>
-    <div id="Device_4">Device_4 </div>
-    <div id="xPdo_4"></div>
-    <div id="Device_5">Device_5 </div>
-    <div id="xPdo_5"></div>
-    <div id="Device_6">Device_6 </div>
-    <div id="xPdo_6"></div>
-    <div id="Device_7">Device_7 </div>
-    <div id="xPdo_7"></div>
-    <div id="Device_8">Device_8 </div>
-    <div id="xPdo_8"></div>
-    <div id="Device_9">Device_9 </div>
-    <div id="xPdo_9"></div>
-</div>
-
-
-
-<table id="InputTable_Temp" border="1" style="width: 600px">
-    <tr bgcolor="#ffe4c4">
-        <td style="width: 40%">Attribute Name</td>
-        <td style="width: 20%">Value</td>
-    </tr>
-</table>
 
 <!--unity-->
 <script>
@@ -103,7 +178,9 @@
         if (progress === 1 && !gameInstance.removeTimeout) {
             gameInstance.removeTimeout = setTimeout(function() {
                 loader.style.display = "none";
+
             }, 2000);
+
         }
     }
 </script>
@@ -114,13 +191,10 @@
     console.log(abc(5,6));
 </script>
 <script type="text/javascript" language="javascript" charset="big5">
-
-
-
     var language="eng";
-    $("#InputTable_Temp").hide();
-    $("#accordion").hide();
-    $("#interface_div").hide();
+    $("#gameContainer").hide();
+    $("#chart_dom").hide();
+    //$("#main").hide();
     $("#manual_div").hide();
     $("#auto_div").hide();
     if (Cookies.get("var")!=null){
@@ -130,7 +204,7 @@
         language=$("select#language_select").val();
     }
 
-    document.getElementById("title_id").innerText=(ReturnUI_Text("Simulator|模拟器"));
+    // document.getElementById("title_id").innerText=(ReturnUI_Text("Simulator|模拟器"));
     document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
     document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
     // document.getElementById("enable_btn").innerText=(ReturnUI_Text("Enable|使能"));
@@ -310,14 +384,6 @@
     }
 
     setInterval(UpdateView,100);
-
-    var input_id=-1;
-    var ethercat_id=-1;
-    var sm_id=-1;
-    var pdo_id=-1;
-    var pdo_entry_id=-1;
-
-
 
     function GetXmlDoc(data){
         //
@@ -837,6 +903,10 @@
         setTimeout("$(\"button\").button()",5050);
         setTimeout("$(\"button\").width(80)",5050);
         setTimeout("$(\"#interface_div\").show()",5065);
+        setTimeout(function () {
+            $("#gameContainer").show();
+            $("#chart_dom").show();
+        },5065);
     }
 
     // $( "#interface_div_1" ).accordion({

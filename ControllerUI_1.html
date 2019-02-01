@@ -12,16 +12,15 @@
     <title>Servo Press Monitor</title>
     <link href="jquery-ui.css" rel="stylesheet">
     <link href="/jquery-ui.css" rel="stylesheet">
+    <script src="test.js"></script>
+    <script src="ControllerJS.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 <p id="title_id">Welcome to Kaanh Intelligence</p>
 <div id="main" style="width: 960px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px">
     <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
-        <input id="serverIP" placeholder="Enter server ip"/>
-        <button id="enable_btn" ></button>
-        <button id="disable_btn" ></button>
-
-
+        <input id="serverIP" placeholder="Enter server ip" onchange="ServerIP_onChange"/>
         <select id="language_select">
             <option value="eng" >English</option>
             <option value="chs" >简体中文</option>
@@ -29,10 +28,7 @@
         <div id="interface_div" style="width: 250px">
             <button id="manual_btn" >Manual</button>
             <button id="auto_btn">Auto</button>
-            <!--<div id="radioset">-->
-                <!--<input type="radio" id="radio1" name="radio" value="1" checked="checked"><label id="radio1-label" for="radio1">Manual</label>-->
-                <!--<input type="radio" id="radio2" name="radio" value="2" ><label id="radio2-lable" for="radio2">Auto</label>-->
-            <!--</div>-->
+
             <div id="manual_div"></div>
             <div id="auto_div"></div>
         </div>
@@ -47,73 +43,14 @@
             <div class="progress" style="width: 50%;float: left"><div class="full" ></div></div>
         </div>
     </div>
-
-
-
 </div>
 
-<div id="accordion">
-    <div id="Device_0">Device_0 </div>
-    <div id="xPdo_0"></div>
-    <div id="Device_1">Device_1 </div>
-    <div id="xPdo_1"></div>
-    <div id="Device_2">Device_2 </div>
-    <div id="xPdo_2"></div>
-    <div id="Device_3">Device_3 </div>
-    <div id="xPdo_3"></div>
-    <div id="Device_4">Device_4 </div>
-    <div id="xPdo_4"></div>
-    <div id="Device_5">Device_5 </div>
-    <div id="xPdo_5"></div>
-    <div id="Device_6">Device_6 </div>
-    <div id="xPdo_6"></div>
-    <div id="Device_7">Device_7 </div>
-    <div id="xPdo_7"></div>
-    <div id="Device_8">Device_8 </div>
-    <div id="xPdo_8"></div>
-    <div id="Device_9">Device_9 </div>
-    <div id="xPdo_9"></div>
-</div>
-<!--<div id="interface_div_1">-->
-    <!--<div id="interface_div_2">Device_0 </div>-->
-    <!--<div id="interface_div"></div>-->
-<!--</div>-->
 
 
-<table id="InputTable_Temp" border="1" style="width: 600px">
-    <tr bgcolor="#ffe4c4">
-        <td style="width: 40%">Attribute Name</td>
-        <td style="width: 20%">Value</td>
-    </tr>
-</table>
 
-<!--unity-->
-<script>
-    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
-    function UnityProgress(gameInstance, progress) {
-        if (!gameInstance.Module) {
-            return;
-        }
-        const loader = document.querySelector("#loader");
-        if (!gameInstance.progress) {
-            const progress = document.querySelector("#loader .progress");
-            progress.style.display = "block";
-            gameInstance.progress = progress.querySelector(".full");
-            loader.querySelector(".spinner").style.display = "none";
-        }
-        gameInstance.progress.style.transform = `scaleX(${progress})`;
-        if (progress === 1 && !gameInstance.removeTimeout) {
-            gameInstance.removeTimeout = setTimeout(function() {
-                loader.style.display = "none";
-            }, 2000);
-        }
-    }
-</script>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="test.js"></script>
 <script type="text/javascript">
     console.log(abc(5,6));
+    LoadUnity();
 </script>
 <script type="text/javascript" language="javascript" charset="big5">
 
@@ -169,16 +106,16 @@
 
     console.log("ip address"+ip_addr+"/ControllerUI");
 
-    document.getElementById("serverIP").onchange=function(){
-        var str=document.getElementById("serverIP").value;
-        if (str!=""&&str!=null){
-            serverIP="ws://"+str+":5866";
-             console.log(serverIP);
-             ws.close();
-            buildWS();
-            setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
-             }
-    }
+    // document.getElementById("serverIP").onchange=function(){
+    //     var str=document.getElementById("serverIP").value;
+    //     if (str!=""&&str!=null){
+    //         serverIP="ws://"+str+":5866";
+    //          console.log(serverIP);
+    //          ws.close();
+    //         buildWS();
+    //         setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+    //          }
+    // }
 
     document.getElementById("serverIP").onclick=function(){
         var pastedtext= prompt("Please paste here:", "placeholder");
