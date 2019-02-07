@@ -842,7 +842,7 @@
 
     buildWS();
 
-    setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+    setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",3500);
     setTimeout("Initial()",5000);
 
     function SendCmd(cmd){
@@ -902,13 +902,13 @@
     });
     $("button").button();
     function SetUITheme(){
-        setTimeout("$(\"button\").button()",5050);
-        setTimeout("$(\"button\").width(80)",5050);
-        setTimeout("$(\"#interface_div\").show()",5065);
+        setTimeout("$(\"button\").button()",1050);
+        setTimeout("$(\"button\").width(80)",1050);
+        setTimeout("$(\"#interface_div\").show()",1065);
         setTimeout(function () {
             $("#gameContainer").show();
             $("#chart_dom").show();
-        },5065);
+        },1065);
     }
 
     // $( "#interface_div_1" ).accordion({
