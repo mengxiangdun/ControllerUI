@@ -292,8 +292,8 @@
     var initialized=false;
 
     function Initial() {
-        SendCmd("0&1&"+now+"&0&0&"+"mm --stop");
-        SendCmd("0&1&"+now+"&0&0&"+"am --stop");
+        SendCmd("0&1&0&0&0&"+"mm --stop");
+        SendCmd("0&1&0&0&0&"+"am --stop");
         // SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
         setInterval(ReadFromServer,100);
         if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
