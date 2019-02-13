@@ -297,7 +297,10 @@
         // SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
         setInterval(ReadFromServer,100);
         if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
-             gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+            setTimeout(function () {
+                gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+            },2000);
+             // gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
          }
 
     }
