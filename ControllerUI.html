@@ -380,7 +380,7 @@
         //         $("input[type='radio'][name='radio'][value='1']").prop("checked", "checked");
         //     }
         // }
-        console.log($('input[type="radio"][name="radio"]:checked').val());
+        // console.log($('input[type="radio"][name="radio"]:checked').val());
     }
 
     setInterval(UpdateView,100);
@@ -751,7 +751,7 @@
         if (cmd_id===1){
 
             var pq="";
-            console.log("data view length:"+buffer.byteLength)
+            // console.log("data view length:"+buffer.byteLength)
             for(var i=0;i<(buffer.byteLength-40)/8;i++){
                 if (i!=0){
                     pq+="&"+dataView.getFloat64(40+i*8,true).toString();
@@ -825,11 +825,11 @@
         }
         ws.onmessage=function (evt) {
             if (typeof evt.data=== String){
-                console.log("Received "+evt.data);
+                // console.log("Received "+evt.data);
                 receiveStr=evt.data;
             }
             if (evt.data instanceof ArrayBuffer){
-                console.log("receive byte"+evt.data.byteLength);
+                // console.log("receive byte"+evt.data.byteLength);
                 AnalizeBotData(evt.data);
             }
 
