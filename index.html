@@ -129,7 +129,7 @@
 </style>
 <body>
 <p id="title_id"></p>
-<input id="serverIP" placeholder="Enter server ip"/>
+<!--<input id="serverIP" placeholder="Enter server ip"/>-->
 <select id="language_select">
     <option value="eng" >English</option>
     <option value="chs" >简体中文</option>
@@ -245,28 +245,28 @@
 
     console.log("ip address"+ip_addr+"/ControllerUI");
 
-    document.getElementById("serverIP").onchange=function(){
-        var str=document.getElementById("serverIP").value;
-        if (str!=""&&str!=null){
-            serverIP="ws://"+str+":5866";
-             console.log(serverIP);
-             ws.close();
-            buildWS();
-            setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
-             }
-    }
+    // document.getElementById("serverIP").onchange=function(){
+    //     var str=document.getElementById("serverIP").value;
+    //     if (str!=""&&str!=null){
+    //         serverIP="ws://"+str+":5866";
+    //          console.log(serverIP);
+    //          ws.close();
+    //         buildWS();
+    //         setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+    //          }
+    // }
 
-    document.getElementById("serverIP").onclick=function(){
-        var pastedtext= prompt("Please paste here:", "placeholder");
-        // document.getElementById("serverIP").valueOf(pastedtext);
-        $("#serverIP").val(pastedtext);
-        serverIP="ws://"+pastedtext+":5866";
-        console.log(serverIP);
-        ws.close();
-        buildWS();
-        setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
-
-    }
+    // document.getElementById("serverIP").onclick=function(){
+    //     var pastedtext= prompt("Please paste here:", "placeholder");
+    //     // document.getElementById("serverIP").valueOf(pastedtext);
+    //     $("#serverIP").val(pastedtext);
+    //     serverIP="ws://"+pastedtext+":5866";
+    //     console.log(serverIP);
+    //     ws.close();
+    //     buildWS();
+    //     setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+    //
+    // }
 
     document.getElementById("manual_btn").onclick=function () {
         if (auto_stop){
