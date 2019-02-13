@@ -302,7 +302,7 @@
         setInterval(ReadFromServer,100);
         if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
             setTimeout(function () {
-                gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
+                gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
             },1000);
             console.log("send to unity address: "+ip_addr+"/ControllerUI");
              // gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
