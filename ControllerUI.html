@@ -179,7 +179,9 @@
             gameInstance.removeTimeout = setTimeout(function() {
                 loader.style.display = "none";
 
-            }, 2000);
+                Initial();
+
+            }, 5000);
 
         }
     }
@@ -299,7 +301,7 @@
         if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
             setTimeout(function () {
                 gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
-            },2000);
+            },1000);
             console.log("send to unity address: "+ip_addr+"/ControllerUI");
              // gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
          }
@@ -480,8 +482,8 @@
         var div_syncm=document.createElement("fieldset");
         div_syncm.style="width:400px";
         div_syncm.id=panel_id;
-        div_syncm.innerText=ReturnUI_Text(panel_text);
-        div_syncm.appendChild(document.createElement("p"));
+        div_syncm.innerText=ReturnUI_Text(panel_text)+"\n";
+        // div_syncm.appendChild(document.createElement("p"));
         language_ui_id[language_ui_id.length]=panel_id;
         language_ui_text[language_ui_text.length]=panel_text;
         // console.log(div_syncm.innerText);
@@ -544,7 +546,7 @@
         language_ui_id[language_ui_id.length]=btn_id;
         language_ui_text[language_ui_text.length]=btn_text;
 
-        btn_cmd.style="width: 80px; position: relative; margin-left: 20px;margin-top: 10px";
+        btn_cmd.style="width: 80px; position: relative; margin-left: 20px;margin-top: 5px";
         father.appendChild(btn_cmd);
 
         // $("#"+btn_id).css({position: "absolute",'top':100,'left':50,'z-index':2});
@@ -850,7 +852,7 @@
     buildWS();
 
     setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",3500);
-    setTimeout("Initial()",5000);
+    // setTimeout("Initial()",5000);
 
     function SendCmd(cmd){
         switch (ws.readyState) {
@@ -915,7 +917,7 @@
         setTimeout(function () {
             $("#gameContainer").show();
             $("#chart_dom").show();
-        },1065);
+        },2065);
     }
 
     // $( "#interface_div_1" ).accordion({
