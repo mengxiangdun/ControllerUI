@@ -208,11 +208,13 @@
         language=$("select#language_select").val();
     }
 
+    // document.getElementById("title_id").innerText=(ReturnUI_Text("Simulator|模拟器"));
     document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
     document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
-
+    // document.getElementById("enable_btn").innerText=(ReturnUI_Text("Enable|使能"));
+    // document.getElementById("disable_btn").innerText=(ReturnUI_Text("Disable|去使能"));
     document.title=ReturnUI_Text("Auto|自动");
-
+    console.log(language);
     $("select#language_select").change(function(){
         console.log($(this).val());
         language=$(this).val();
@@ -221,8 +223,8 @@
     });
     var xmlDoc;
     var setupList=[];
-    // var serverIP="ws://10.10.10.126:5866";
-    var serverIP="ws://127.0.0.1:5866";
+    var serverIP="ws://10.10.10.126:5866";
+    // var serverIP="ws://127.0.0.1:5866";
     var cmd_code_list=[];//发送的命令代码列表
     var cmd_code_return_list=[];//需要处理返回值的方式列表
     var ui_id_list=[];//ui id 变量名列表
@@ -426,8 +428,6 @@
                 if (cmd_panel_node[i].getAttribute("text")==="Auto|自动") {
                     CreatePanel(cmd_panel_node[i],document.getElementById("auto_div"));
                 }
-
-                CreatePanel(cmd_panel_node[i],document.getElementById("enable_div"));
             }
 
         }
@@ -518,11 +518,6 @@
         input_div.id=ReturnUI_ID(node.getAttribute("id"));
         input_div.value=node.getAttribute("default");
         input_div.style="width:80px";
-        input_div.onclick=function(){
-            var pastedtext= prompt("Please paste here:", "placeholder");
-            input_div.value=pastedtext;
-            // document.getElementById(input_div.id).valueOf(pastedtext);
-        }
         father.appendChild(input_div);
     }
 
