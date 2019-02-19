@@ -1,198 +1,211 @@
+var ui_id_list=[];//ui id 变量名列表
+var ui_id_value_list=[];// ui id 列表
 
 
-function buildWS(cmd,serverIP) {
-    ws=new WebSocket(serverIP);
+function GetUI_ID_List(node) {
+    var id_pool_node=node.getElementsByTagName("ui_id_pool_object");
+    var id_list=id_pool_node[0].childNodes;
+    for (var i=0;i<id_list.length;i++){
 
-    ws.onopen=function (evt) {
-        console.log("Connection open...");
-        if (cmd!=null){
-            SendCmd(cmd);
-            console.log(cmd);
+        if (id_list[i].nodeType===1){
+            ui_id_list[ui_id_list.length]=id_list[i].nodeName;
+            ui_id_value_list[ui_id_value_list.length]=id_list[i].getAttribute("value");
         }
-    }
-    ws.onmessage=function (evt) {
-        if (typeof evt.data=== String){
-            // console.log("Received "+evt.data);
-            receiveStr=evt.data;
-        }
-        if (evt.data instanceof ArrayBuffer){
-            // console.log("receive byte"+evt.data.byteLength);
-            AnalizeBotData(evt.data);
-        }
-    }
-    ws.onclose=function (evt) {
-        console.log("closed");
     }
 }
 
-function PackBotCmd(str) {
-    //1&1&0&0&0&Read --check_none
-    var strArray=str.split("&");
-    if (strArray.length>3){
-        var cmd_id=parseInt(strArray[0]);
-        var cmd_option=parseInt((strArray[1]));
-        var cmd_code=parseInt((strArray[2]));
+function ReturnUI_ID(str) {
+    var index_1=ui_id_list.indexOf(str);
+    if (index_1!=-1){
+        return ui_id_value_list[index_1];
 
-        // console.log("res-1:"+cmd_code);
-        var res_2=parseInt((strArray[3]));
-        var res_3=parseInt((strArray[4]));
-
-        var mes_length=strArray[5].length;
-        var buffer=new ArrayBuffer(40+mes_length);
-        var headView=new DataView(buffer);
-        headView.setInt32(0,mes_length,true);
-        headView.setInt32(4,cmd_id,true);
-        headView.setInt32(8,cmd_option,true);
-        headView.setFloat64(16,cmd_code,true);
-        // console.log("cmd_code:"+headView.getFloat64(16,true));
-        headView.setInt32(24,res_2,true);
-        headView.setInt32(32,res_3,true);
-        for (var i=0;i<mes_length;i++){
-            headView.setUint8(40+i,strArray[5].charCodeAt(i));
-        }
-
-        ws.send(headView.buffer);
-        // console.log("send cmd"+headView.buffer.byteLength);
-
-    }
+    }else {return null;}
 }
 
-//可以处理中文
-function Utf8ArrayToStr(array) {
-    var out, i, len, c;
-    var char2, char3;
-
-    out = "";
-    len = array.length;
-    i = 0;
-    while(i < len) {
-        c = array[i++];
-        switch(c >> 4)
-        {
-            case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
-            // 0xxxxxxx
-            out += String.fromCharCode(c);
-            break;
-            case 12: case 13:
-            // 110x xxxx   10xx xxxx
-            char2 = array[i++];
-            out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-            break;
-            case 14:
-                // 1110 xxxx  10xx xxxx  10xx xxxx
-                char2 = array[i++];
-                char3 = array[i++];
-                out += String.fromCharCode(((c & 0x0F) << 12) |
-                    ((char2 & 0x3F) << 6) |
-                    ((char3 & 0x3F) << 0));
-                break;
-        }
-    }
-
-    return out;
-}
-
-function AnalizeBotData(buffer) {
-    var dataView=new DataView(buffer);
-    var cmd_length=dataView.getInt32(0);
-    // console.log("receive cmd_length:"+cmd_length);
-    var cmd_id=dataView.getInt32(4,true);
-    // console.log("receive cmd_id:"+cmd_id);
-    var cmd_code=dataView.getFloat64(16,true);
-    // console.log(("receive cmd_code:"+cmd_code));
-
-    var getMess;
-    //return float message
-    if (cmd_id===0){
-        // var step=new Array();
-        // for(var i=0;i<(dataView.length-40)/8;i++){
-        //     step[i]=dataView.getFloat64(432+i*8);
-        // }
-
-    }
-
-    //return float
-    if (cmd_id===1){
-        var pq="";
-        // console.log("data view length:"+buffer.byteLength)
-        for(var i=0;i<(buffer.byteLength-40)/8;i++){
-            if (i!=0){
-                pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+function CreatePanel(node,father) {
+    var panel_id=ReturnUI_ID( node.getAttribute("id"));
+    var panel_text=node.getAttribute("text");
+    var div_syncm=document.createElement("fieldset");
+    div_syncm.style="width:400px";
+    div_syncm.id=panel_id;
+    div_syncm.innerText=ReturnUI_Text(panel_text)+"\n";
+    // div_syncm.appendChild(document.createElement("p"));
+    // language_ui_id[language_ui_id.length]=panel_id;
+    // language_ui_text[language_ui_text.length]=panel_text;
+    // console.log(div_syncm.innerText);
+    var sonNodes=node.childNodes;
+    for (var j=0;j<sonNodes.length;j++){
+        if (sonNodes[j].nodeType===1){
+            if (sonNodes[j].nodeName==="panel"){
+                CreatePanel(sonNodes[j],div_syncm);
             }
-            if (i===0){
-                pq+=dataView.getFloat64(40+i*8,true).toString();
+            if (sonNodes[j].nodeName==="input"){
+                CreateInput(sonNodes[j],div_syncm);
+            }
+            if (sonNodes[j].nodeName==="button"){
+                CreateButton(sonNodes[j],div_syncm);
+            }
+            if (sonNodes[j].nodeName==="label"){
+                CreateLabel(sonNodes[j],div_syncm);
             }
         }
-        //console.log("send PQ to UNity:"+pq);
-        gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
     }
+    father.appendChild(document.createElement("h"));
+    father.appendChild(div_syncm);
+}
 
-    //return xml
-    if (cmd_id===2){
-        // getMess=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
-        getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
-        // console.log(getMess);
-        GetXmlDoc(getMess);
+function CreateInput(node,father) {
+    var input_para=document.createElement("b");
+    input_para.innerText="  "+node.getAttribute("parameter");
+    father.appendChild(input_para);
+    var input_div=document.createElement("input");
+    input_div.id=ReturnUI_ID(node.getAttribute("id"));
+    input_div.value=node.getAttribute("default");
+    input_div.style="width:80px";
+    input_div.onclick=function(){
+        if (show3D){
+            var pastedtext= prompt("Please paste here:", "placeholder");
+            input_div.value=pastedtext;
+        }
+
+
     }
+    father.appendChild(input_div);
+}
 
-    //return query
-    if (cmd_id===5){
-        var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
-        // console.log("receive query :"+return_str);
-        if (cmd_code_list.indexOf(cmd_code)!=-1){
-            var cmd_code_index=cmd_code_list.indexOf(cmd_code);
-            // console.log("cmd_code_index: "+cmd_code_index);
-            var code_return_str=cmd_code_return_list[cmd_code_index];
-            if (code_return_str.indexOf("$")!=-1){
-                var index_1=code_return_str.indexOf("{");
-                var index_2=code_return_str.indexOf("}");
-                var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
-                // console.log("id_str: "+id_str);
-                // $("#" + id_str).setAttribute("value",return_str);
-                $("#" + id_str).val(return_str);
-                // document.getElementById(id_str).innerText=return_str;
-                // console.log("label str:"+$("#" + id_str).value);
+function CreateLabel(node,father) {
+    var input_para=document.createElement("input");
+    input_para.id=ReturnUI_ID(node.getAttribute("id"));
+    // console.log("label id:"+input_para.id);
+    // input_para.innerText="  ";
+    input_para.setAttribute("type","text");
+    input_para.setAttribute("value","");
+    father.appendChild(input_para);
+    // var input_div=document.createElement("input");
+    // input_div.id=node.getAttribute("id");
+    // input_div.value=node.getAttribute("default");
+    // input_div.style="width:80px";
+    // father.appendChild(input_div);
+}
+
+function CreateButton(node,father) {
+
+    var btn_cmd=document.createElement("button");
+
+    // btn_cmd.innerHTML="<button>"+node.getAttribute('text')+"</button>";
+    var btn_text=node.getAttribute('text');
+    btn_cmd.innerText=ReturnUI_Text(btn_text);
+    var btn_id=ReturnUI_ID(node.getAttribute("id"));
+    btn_cmd.id=btn_id;
+    // language_ui_id[language_ui_id.length]=btn_id;
+    // language_ui_text[language_ui_text.length]=btn_text;
+
+    btn_cmd.style="width: 80px; position: relative; margin-left: 20px;margin-top: 5px";
+    father.appendChild(btn_cmd);
+
+    // $("#"+btn_id).css({position: "absolute",'top':100,'left':50,'z-index':2});
+
+    if (node.getAttribute("cmd")!=null){
+
+        var cmd_str_1=node.getAttribute("cmd");
+        var cmd_return_str=node.getAttribute("return_attached");
+        if (node.getAttribute("repeat")!=1){//down repeat
+            btn_cmd.onclick=function(){
+                Btn_cmd_onclick(cmd_str_1,cmd_return_str);
             }
-            cmd_code_list.splice(cmd_code_index,1);
-            cmd_code_return_list.splice(cmd_code_index,1);
+        }
+        if (node.getAttribute("repeat")==="1"){//down repeat
+            console.log("repeat");
+            var repeat_1;
+            btn_cmd.onmousedown=function(){
+                repeat_1=  setInterval(Btn_cmd_onclick_repeat(cmd_str_1,cmd_return_str),50);
+            }
+            btn_cmd.onmouseup=function () {
+                clearInterval(repeat_1);
+            }
+
+        }
+    }
+    if (node.getAttribute("query_item")!=null){
+        var query_str=node.getAttribute("query_item");
+        var query_return_str=node.getAttribute("return_attached");
+        btn_cmd.onclick=function () {
+            Btn_query_onclick(query_str,query_return_str)
         }
     }
 }
 
-function SendCmd(cmd){
-    switch (ws.readyState) {
-        case WebSocket.CONNECTING:
-            break;
-        case WebSocket.OPEN:
-            ws.binaryType='arraybuffer';
-            PackBotCmd(cmd);
-            break;
-        case  WebSocket.CLOSING:
-            break;
-        case WebSocket.CLOSED:
-            buildWS(cmd);
-            //setTimeout("SendCmd(cmd)",4000);
-            break;
+function Btn_cmd_onclick_repeat(id,id2) {
+    return function()
+    {
+        //foo(id,id2);
+        Btn_cmd_onclick(id,id2);
     }
 }
 
-function ReadFromServer(){
-    switch (ws.readyState) {
-        case WebSocket.CONNECTING:
-            break;
-        case WebSocket.OPEN:
-            ws.binaryType='arraybuffer';
-            PackBotCmd("1&1&0&0&0&Read --check_none");
-            //ws.send(PackBotCmd("1&1&0&0&0&Read --check_none"));
-            //ws.send("hello");
-            //CheckData(receiveStr);
-            break;
-        case  WebSocket.CLOSING:
-            break;
-        case WebSocket.CLOSED:
-            buildWS();
-            break;
+function Btn_cmd_onclick(str,return_str){
+    if (str.indexOf("$")!=-1) {
+        // console.log(str);
+        var index_1 = str.indexOf("{");
+        // console.log("index_1: " + index_1);
+
+        var index_2 = str.indexOf("}");
+        // console.log("index_2: " + index_2);
+        var id_str = str.substr(index_1 + 1, index_2 - index_1 - 1);
+        // console.log(id_str);
+        var id_value = $("#" + id_str).val();
+        // console.log(id_value);
+        var old_str="${"+id_str+"}";
+        // console.log("old str "+old_str);
+        // console.log(str.replace(old_str,id_value));
+        Btn_cmd_onclick(str.replace(old_str,id_value));
     }
 
+    if (str.indexOf("$")==-1){
+        var myDate=new Date();
+        var now=myDate.getTime();
+        // console.log("time:"+now);
+
+        // console.log("0&1&"+now+"&0&0&"+str);
+        var str_2=str.split(';');
+        for (var j=0;j<str_2.length;j++){
+            SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
+        }
+
+
+        cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
+        cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
+
+        if (str.indexOf("mm --stop")!=-1){
+            manual_stop=true;
+            manual_start=false;
+        }
+
+        if (str.indexOf("am --stop")!=-1){
+            auto_stop=true;
+            auto_start=false;
+        }
+        if (str.indexOf("mm --start")!=-1){
+            manual_start=true;
+            manual_stop=false;
+        }
+        if (str.indexOf("am --start")!=-1){
+            auto_start=true;
+            auto_stop=false;
+        }
+    }
+}
+
+function Btn_query_onclick(str,return_str){
+    var myDate=new Date();
+    var now=myDate.getTime();
+    // var now=myDate.myDate.toLocaleTimeString();
+    // console.log("time:"+now);
+
+    // console.log("send :"+"5&1&"+now+"&0&0&"+str);
+    SendCmd("5&1&"+now+"&0&0&"+str);
+    cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
+    cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
 
 }
+

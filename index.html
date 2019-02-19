@@ -129,7 +129,7 @@
 </style>
 <body>
 <p id="title_id"></p>
-<!--<input id="serverIP" placeholder="Enter server ip"/>-->
+<input id="serverIP" placeholder="Enter server ip"/>
 <select id="language_select">
     <option value="eng" >English</option>
     <option value="chs" >简体中文</option>
@@ -137,18 +137,7 @@
 <div id="main" style="width: 1100px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px;background-color: #5c5c5c">
 
     <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
-        <!--<input id="serverIP" placeholder="Enter server ip"/>-->
-        <!--<select id="language_select">-->
-            <!--<option value="eng" >English</option>-->
-            <!--<option value="chs" >简体中文</option>-->
-        <!--</select>-->
-        <div id="interface_div" style="width: 250px">
-            <div id="enable_div"></div>
-            <button id="manual_btn" >Manual</button>
-            <button id="auto_btn">Auto</button>
-            <div id="manual_div"></div>
-            <div id="auto_div"></div>
-        </div>
+        <div id="interface_div" style="width: 250px"></div>
     </div>
     <div style="width: 50%;height: 100%; float:left">
         <div id="gameContainer"  style="width: 100%;height: 100%"></div>
@@ -162,7 +151,11 @@
 
 <!--unity-->
 <script>
-    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
+    var show3D=false;
+    if (show3D){
+        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
+    }
+
     function UnityProgress(gameInstance, progress) {
         if (!gameInstance.Module) {
             return;
@@ -191,6 +184,7 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="test.js"></script>
+<script src="ControllerJS.js"></script>
 <script type="text/javascript">
     console.log(abc(5,6));
 </script>
@@ -198,19 +192,13 @@
     var language="eng";
     $("#gameContainer").hide();
     $("#chart_dom").hide();
-    //$("#main").hide();
-    $("#manual_div").hide();
-    $("#auto_div").hide();
+
     if (Cookies.get("var")!=null){
         language=Cookies.get("var");
     }
     else {
         language=$("select#language_select").val();
     }
-
-    document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
-    document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
-
     document.title=ReturnUI_Text("Auto|自动");
 
     $("select#language_select").change(function(){
@@ -220,21 +208,11 @@
         location.reload();
     });
     var xmlDoc;
-    var setupList=[];
     // var serverIP="ws://10.10.10.126:5866";
     var serverIP="ws://127.0.0.1:5866";
     var cmd_code_list=[];//发送的命令代码列表
     var cmd_code_return_list=[];//需要处理返回值的方式列表
-    var ui_id_list=[];//ui id 变量名列表
-    var ui_id_value_list=[];// ui id 列表
-    var language_ui_id=[];//中英文切换
-    var language_ui_text=[];
-    var manual_init=true;
-    var manual_start=false;
-    var manual_stop=true;
-    var auto_init=false;
-    var auto_start=false;
-    var auto_stop=true;
+
     var ip_addr = document.location.hostname;
 
     if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
@@ -243,156 +221,45 @@
 
     console.log("ip address"+ip_addr+"/ControllerUI");
 
-    // document.getElementById("serverIP").onchange=function(){
-    //     var str=document.getElementById("serverIP").value;
-    //     if (str!=""&&str!=null){
-    //         serverIP="ws://"+str+":5866";
-    //          console.log(serverIP);
-    //          ws.close();
-    //         buildWS();
-    //         setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
-    //          }
-    // }
-
-    // document.getElementById("serverIP").onclick=function(){
-    //     var pastedtext= prompt("Please paste here:", "placeholder");
-    //     // document.getElementById("serverIP").valueOf(pastedtext);
-    //     $("#serverIP").val(pastedtext);
-    //     serverIP="ws://"+pastedtext+":5866";
-    //     console.log(serverIP);
-    //     ws.close();
-    //     buildWS();
-    //     setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
-    //
-    // }
-
-    document.getElementById("manual_btn").onclick=function () {
-        if (auto_stop){
-            // $("#manual_div").show();
-            // $("#auto_div").hide();
-            manual_init=true;
-            auto_init=false;
-
-        }
-
+    document.getElementById("serverIP").onchange=function(){
+        var str=document.getElementById("serverIP").value;
+        if (str!=""&&str!=null){
+            serverIP="ws://"+str+":5866";
+            console.log(serverIP);
+            ws.close();
+            buildWS();
+            setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+             }
     }
 
-    document.getElementById("auto_btn").onclick=function () {
-        if (manual_stop){
-            // $("#manual_div").hide();
-            // $("#auto_div").show();
-            manual_init=false;
-            auto_init=true;
-
+    document.getElementById("serverIP").onclick=function(){
+        if (show3D){
+            var pastedtext= prompt("Please paste here:", "placeholder");
+            // document.getElementById("serverIP").valueOf(pastedtext);
+            $("#serverIP").val(pastedtext);
+            serverIP="ws://"+pastedtext+":5866";
+            console.log(serverIP);
+            ws.close();
+            buildWS();
+            setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
         }
     }
-
-    // document.getElementById("enable_btn").onmousedown=function(){
-    //     //setInterval(ReadFromServer,1000);
-    // }
-    var repeat_read;
-    var initialized=false;
 
     function Initial() {
-        // SendCmd("0&1&0&0&0&"+"mm --stop");
-        // SendCmd("0&1&0&0&0&"+"am --stop");
-        // SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
-        setInterval(ReadFromServer,100);
+        if (show3D){
+            setInterval(ReadFromServer,100);
+        }
+
         if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
-            setTimeout(function () {
-                gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
-            },1000);
+            if (gameInstance!=null){
+                setTimeout(function () {
+                    gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
+                },1000);
+            }
             console.log("send to unity address: "+ip_addr+"/ControllerUI");
-             // gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
          }
 
     }
-
-    // document.getElementById("enable_btn").onclick=function () {
-    //     if (!initialized){
-    //         SendCmd("0&1&0&0&0&"+"ds\n md\n en\n");
-    //         if (ip_addr.indexOf("localhost")===-1){
-    //             gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr+"/ControllerUI");
-    //         }
-    //
-    //         initialized=true;
-    //     }
-    //     repeat_read= setInterval(ReadFromServer,100);
-    //     //ws.close();
-    // }
-    //
-    // document.getElementById("disable_btn").onclick=function () {
-    //     clearInterval(repeat_read);
-    // }
-
-
-    function UpdateView() {
-            if (manual_init&&auto_stop){
-                $("#manual_div").show();
-                $("#auto_div").hide();
-            }
-            if (auto_init&&manual_stop){
-                $("#manual_div").hide();
-                $("#auto_div").show();
-            }
-
-
-            if (manual_start){
-                $("#id_8").show();
-                $("#id_9").show();
-                document.getElementById("auto_btn").disabled=true;
-                document.getElementById("auto_btn").style="color:gray";
-            }
-            if (manual_stop){
-                $("#id_8").hide();
-                $("#id_9").hide();
-                document.getElementById("auto_btn").disabled=false;
-                document.getElementById("auto_btn").style="color:black";
-            }
-        if (auto_start){
-
-            document.getElementById("manual_btn").disabled=true;
-            document.getElementById("manual_btn").style="color:gray";
-        }
-        if (auto_stop){
-
-            document.getElementById("manual_btn").disabled=false;
-            document.getElementById("manual_btn").style="color:black";
-        }
-        //     if ($('input[type="radio"][name="radio"]:checked').val()==="1"){
-        //         if (auto_stop){
-        //             // $("#manual_div").show();
-        //             // $("#auto_div").hide();
-        //             $("input[type='radio'][name='radio'][value='2']").removeAttr("checked", "checked");
-        //             $("input[type='radio'][name='radio'][value='1']").prop("checked", "checked");
-        //
-        //             manual_init=true;
-        //             auto_init=false;
-        //         }
-        //         else {
-        //             $("input[type='radio'][name='radio'][value='1']").removeAttr("checked");
-        //             $("input[type='radio'][name='radio'][value='2']").prop("checked", "checked");
-        //
-        //         }
-        //     }
-        // if ($('input[type="radio"][name="radio"]:checked').val()==="2"){
-        //     if (manual_stop){
-        //         // $("#manual_div").show();
-        //         // $("#auto_div").hide();
-        //         manual_init=false;
-        //         auto_init=true;
-        //         $("input[type='radio'][name='radio'][value='1']").removeAttr("checked");
-        //         $("input[type='radio'][name='radio'][value='2']").prop("checked", "checked");
-        //     }
-        //     else {
-        //         $("input[type='radio'][name='radio'][value='2']").removeAttr("checked");
-        //         $("input[type='radio'][name='radio'][value='1']").prop("checked", "checked");
-        //     }
-        // }
-        // console.log($('input[type="radio"][name="radio"]:checked').val());
-    }
-
-    setInterval(UpdateView,100);
 
     function GetXmlDoc(data){
         //
@@ -417,51 +284,17 @@
         var cmd_panel_node=cmd_interface_pool_node[0].childNodes;
         for (var i=0;i<cmd_panel_node.length;i++){
             if (cmd_panel_node[i].nodeType===1&&cmd_panel_node[i].nodeName==="panel"){
-                if (cmd_panel_node[i].getAttribute("text")==="Simulator|模拟器") {
-                    CreatePanel(cmd_panel_node[i],document.getElementById("enable_div"));
-                }
-                if (cmd_panel_node[i].getAttribute("text")==="Manual|手动") {
-                    CreatePanel(cmd_panel_node[i],document.getElementById("manual_div"));
-                }
-                if (cmd_panel_node[i].getAttribute("text")==="Auto|自动") {
-                    CreatePanel(cmd_panel_node[i],document.getElementById("auto_div"));
-                }
-
-                CreatePanel(cmd_panel_node[i],document.getElementById("enable_div"));
+                CreatePanel(cmd_panel_node[i],document.getElementById("interface_div"));
             }
-
         }
-
         var query_interface_pool_node=node.getElementsByTagName("query_interface_pool_object");
         var query_panel_node=query_interface_pool_node[0].childNodes;
         for (var j = 0; j < query_panel_node.length;j++){
             if (query_panel_node[j].nodeType===1&&query_panel_node[j].nodeName==="panel"){
                 CreatePanel(query_panel_node[j],document.getElementById("interface_div"));
             }
-
         }
-
         SetUITheme();
-    }
-
-    function GetUI_ID_List(node) {
-        var id_pool_node=node.getElementsByTagName("ui_id_pool_object");
-        var id_list=id_pool_node[0].childNodes;
-        for (var i=0;i<id_list.length;i++){
-
-            if (id_list[i].nodeType===1){
-                ui_id_list[ui_id_list.length]=id_list[i].nodeName;
-                ui_id_value_list[ui_id_value_list.length]=id_list[i].getAttribute("value");
-            }
-        }
-    }
-
-    function ReturnUI_ID(str) {
-        var index_1=ui_id_list.indexOf(str);
-        if (index_1!=-1){
-            return ui_id_value_list[index_1];
-
-        }else {return null;}
     }
 
     function ReturnUI_Text(str) {
@@ -473,194 +306,7 @@
                 return str_list[1];
             default:
                 return null;
-
         }
-
-    }
-
-    function CreatePanel(node,father) {
-        var panel_id=ReturnUI_ID( node.getAttribute("id"));
-        var panel_text=node.getAttribute("text");
-        var div_syncm=document.createElement("fieldset");
-        div_syncm.style="width:400px";
-        div_syncm.id=panel_id;
-        div_syncm.innerText=ReturnUI_Text(panel_text)+"\n";
-        // div_syncm.appendChild(document.createElement("p"));
-        language_ui_id[language_ui_id.length]=panel_id;
-        language_ui_text[language_ui_text.length]=panel_text;
-        // console.log(div_syncm.innerText);
-        var sonNodes=node.childNodes;
-        for (var j=0;j<sonNodes.length;j++){
-            if (sonNodes[j].nodeType===1){
-                if (sonNodes[j].nodeName==="panel"){
-                    CreatePanel(sonNodes[j],div_syncm);
-                }
-                if (sonNodes[j].nodeName==="input"){
-                    CreateInput(sonNodes[j],div_syncm);
-                }
-                if (sonNodes[j].nodeName==="button"){
-                    CreateButton(sonNodes[j],div_syncm);
-                }
-                if (sonNodes[j].nodeName==="label"){
-                    CreateLabel(sonNodes[j],div_syncm);
-                }
-            }
-        }
-        father.appendChild(document.createElement("h"));
-        father.appendChild(div_syncm);
-    }
-
-    function CreateInput(node,father) {
-        var input_para=document.createElement("b");
-        input_para.innerText="  "+node.getAttribute("parameter");
-        father.appendChild(input_para);
-        var input_div=document.createElement("input");
-        input_div.id=ReturnUI_ID(node.getAttribute("id"));
-        input_div.value=node.getAttribute("default");
-        input_div.style="width:80px";
-        input_div.onclick=function(){
-            var pastedtext= prompt("Please paste here:", "placeholder");
-            input_div.value=pastedtext;
-            // document.getElementById(input_div.id).valueOf(pastedtext);
-        }
-        father.appendChild(input_div);
-    }
-
-    function CreateLabel(node,father) {
-        var input_para=document.createElement("input");
-        input_para.id=ReturnUI_ID(node.getAttribute("id"));
-        // console.log("label id:"+input_para.id);
-        // input_para.innerText="  ";
-        input_para.setAttribute("type","text");
-        input_para.setAttribute("value","");
-        father.appendChild(input_para);
-        // var input_div=document.createElement("input");
-        // input_div.id=node.getAttribute("id");
-        // input_div.value=node.getAttribute("default");
-        // input_div.style="width:80px";
-        // father.appendChild(input_div);
-    }
-
-    function CreateButton(node,father) {
-
-        var btn_cmd=document.createElement("button");
-
-        // btn_cmd.innerHTML="<button>"+node.getAttribute('text')+"</button>";
-        var btn_text=node.getAttribute('text');
-        btn_cmd.innerText=ReturnUI_Text(btn_text);
-        var btn_id=ReturnUI_ID(node.getAttribute("id"));
-        btn_cmd.id=btn_id;
-        language_ui_id[language_ui_id.length]=btn_id;
-        language_ui_text[language_ui_text.length]=btn_text;
-
-        btn_cmd.style="width: 80px; position: relative; margin-left: 20px;margin-top: 5px";
-        father.appendChild(btn_cmd);
-
-        // $("#"+btn_id).css({position: "absolute",'top':100,'left':50,'z-index':2});
-
-        if (node.getAttribute("cmd")!=null){
-
-            var cmd_str_1=node.getAttribute("cmd");
-            var cmd_return_str=node.getAttribute("return_attached");
-            if (node.getAttribute("repeat")!=1){//down repeat
-                btn_cmd.onclick=function(){
-                    Btn_cmd_onclick(cmd_str_1,cmd_return_str);
-                }
-            }
-            if (node.getAttribute("repeat")==="1"){//down repeat
-                console.log("repeat");
-                var repeat_1;
-                btn_cmd.onmousedown=function(){
-                   repeat_1=  setInterval(Btn_cmd_onclick_repeat(cmd_str_1,cmd_return_str),50);
-                }
-                btn_cmd.onmouseup=function () {
-                    clearInterval(repeat_1);
-                }
-                
-            }
-        }
-        if (node.getAttribute("query_item")!=null){
-            var query_str=node.getAttribute("query_item");
-            var query_return_str=node.getAttribute("return_attached");
-            btn_cmd.onclick=function () {
-                Btn_query_onclick(query_str,query_return_str)
-            }
-        }
-    }
-
-
-    function Btn_cmd_onclick_repeat(id,id2) {
-        return function()
-        {
-            //foo(id,id2);
-           Btn_cmd_onclick(id,id2);
-        }
-    }
-
-    function Btn_cmd_onclick(str,return_str){
-        if (str.indexOf("$")!=-1) {
-            // console.log(str);
-            var index_1 = str.indexOf("{");
-            // console.log("index_1: " + index_1);
-
-            var index_2 = str.indexOf("}");
-            // console.log("index_2: " + index_2);
-            var id_str = str.substr(index_1 + 1, index_2 - index_1 - 1);
-            // console.log(id_str);
-            var id_value = $("#" + id_str).val();
-            // console.log(id_value);
-            var old_str="${"+id_str+"}";
-            // console.log("old str "+old_str);
-            // console.log(str.replace(old_str,id_value));
-            Btn_cmd_onclick(str.replace(old_str,id_value));
-        }
-
-        if (str.indexOf("$")==-1){
-            var myDate=new Date();
-            var now=myDate.getTime();
-            // console.log("time:"+now);
-
-            // console.log("0&1&"+now+"&0&0&"+str);
-            var str_2=str.split(';');
-            for (var j=0;j<str_2.length;j++){
-                SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
-            }
-
-
-            cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
-            cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
-
-            if (str.indexOf("mm --stop")!=-1){
-                manual_stop=true;
-                manual_start=false;
-            }
-
-            if (str.indexOf("am --stop")!=-1){
-                auto_stop=true;
-                auto_start=false;
-            }
-            if (str.indexOf("mm --start")!=-1){
-                manual_start=true;
-                manual_stop=false;
-            }
-            if (str.indexOf("am --start")!=-1){
-                auto_start=true;
-                auto_stop=false;
-            }
-        }
-    }
-
-    function Btn_query_onclick(str,return_str){
-        var myDate=new Date();
-        var now=myDate.getTime();
-        // var now=myDate.myDate.toLocaleTimeString();
-        // console.log("time:"+now);
-
-        // console.log("send :"+"5&1&"+now+"&0&0&"+str);
-        SendCmd("5&1&"+now+"&0&0&"+str);
-        cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
-        cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
-
     }
 
 </script>
@@ -779,7 +425,10 @@
 
             }
             //console.log("send PQ to UNity:"+pq);
-            gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+            if (gameInstance!=null){
+                gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+            }
+
 
            //  var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
            // if (cmd_code_list.indexOf(cmd_code)!=-1){
@@ -923,7 +572,10 @@
         setTimeout("$(\"#interface_div\").show()",1065);
         setTimeout(function () {
             // $("#gameContainer").show();
-            // $("#chart_dom").show();
+            if (!show3D){
+                $("#chart_dom").show();
+            }
+            //
         },2065);
     }
 
