@@ -184,25 +184,26 @@ function Btn_cmd_onclick(str,return_str){
 
 
         cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
-        cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
-
-        if (str.indexOf("mm --stop")!=-1){
-            manual_stop=true;
-            manual_start=false;
-        }
-
-        if (str.indexOf("am --stop")!=-1){
-            auto_stop=true;
-            auto_start=false;
-        }
-        if (str.indexOf("mm --start")!=-1){
-            manual_start=true;
-            manual_stop=false;
-        }
-        if (str.indexOf("am --start")!=-1){
-            auto_start=true;
-            auto_stop=false;
-        }
+        cmd_code_return_list[cmd_code_return_list.length]=return_str;
+        //储存cmd的返回操作
+        //
+        // if (str.indexOf("mm --stop")!=-1){
+        //     manual_stop=true;
+        //     manual_start=false;
+        // }
+        //
+        // if (str.indexOf("am --stop")!=-1){
+        //     auto_stop=true;
+        //     auto_start=false;
+        // }
+        // if (str.indexOf("mm --start")!=-1){
+        //     manual_start=true;
+        //     manual_stop=false;
+        // }
+        // if (str.indexOf("am --start")!=-1){
+        //     auto_start=true;
+        //     auto_stop=false;
+        // }
     }
 }
 
