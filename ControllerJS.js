@@ -3,12 +3,12 @@ var ui_id_value_list=[];// ui id 列表
 
 
 function GetUI_ID_List(node) {
-    var id_pool_node=node.getElementsByTagName("ui_id_pool_object");
+    var id_pool_node=node.getElementsByTagName("UiIdPoolObject");
     var id_list=id_pool_node[0].childNodes;
     for (var i=0;i<id_list.length;i++){
 
         if (id_list[i].nodeType===1){
-            ui_id_list[ui_id_list.length]=id_list[i].nodeName;
+            ui_id_list[ui_id_list.length]=id_list[i].getAttribute("name");
             ui_id_value_list[ui_id_value_list.length]=id_list[i].getAttribute("value");
         }
     }
@@ -20,6 +20,16 @@ function ReturnUI_ID(str) {
         return ui_id_value_list[index_1];
 
     }else {return null;}
+}
+
+function ShowInterface(node,text,father) {
+    // var cmd_interface_pool_node=node.getElementsByTagName("Cmd_interface_pool_object");
+    var cmd_panel_node=node.getElementsByTagName("Panel");
+    for (var i=0;i<cmd_panel_node.length;i++){
+        if (cmd_panel_node[i].nodeType===1&&cmd_panel_node[i].getAttribute("text")===text){
+            CreatePanel(cmd_panel_node[i],father);
+        }
+    }
 }
 
 function CreatePanel(node,father) {
@@ -36,16 +46,16 @@ function CreatePanel(node,father) {
     var sonNodes=node.childNodes;
     for (var j=0;j<sonNodes.length;j++){
         if (sonNodes[j].nodeType===1){
-            if (sonNodes[j].nodeName==="panel"){
+            if (sonNodes[j].nodeName==="Panel"){
                 CreatePanel(sonNodes[j],div_syncm);
             }
-            if (sonNodes[j].nodeName==="input"){
+            if (sonNodes[j].nodeName==="Input"){
                 CreateInput(sonNodes[j],div_syncm);
             }
-            if (sonNodes[j].nodeName==="button"){
+            if (sonNodes[j].nodeName==="Button"){
                 CreateButton(sonNodes[j],div_syncm);
             }
-            if (sonNodes[j].nodeName==="label"){
+            if (sonNodes[j].nodeName==="Label"){
                 CreateLabel(sonNodes[j],div_syncm);
             }
         }

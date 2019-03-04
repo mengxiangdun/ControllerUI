@@ -271,26 +271,30 @@
         // printNodeName(master_node[0],"");
 
         //plan_interface
-        var interface_node=xmlDoc.getElementsByTagName("interface_root");
-        ShowPlanInterface(interface_node[0]);
+        var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
+        // ShowPlanInterface(interface_node[0]);
 
+        GetUI_ID_List(interface_node[0]);
+        ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
+        ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
+        SetUITheme();
     }
 
     function ShowPlanInterface(node){
 
         GetUI_ID_List(node);
-        var cmd_interface_pool_node=node.getElementsByTagName("cmd_interface_pool_object");
+        var cmd_interface_pool_node=node.getElementsByTagName("Cmd_interface_pool_object");
 
         var cmd_panel_node=cmd_interface_pool_node[0].childNodes;
         for (var i=0;i<cmd_panel_node.length;i++){
-            if (cmd_panel_node[i].nodeType===1&&cmd_panel_node[i].nodeName==="panel"){
+            if (cmd_panel_node[i].nodeType===1&&cmd_panel_node[i].nodeName==="Panel"){
                 CreatePanel(cmd_panel_node[i],document.getElementById("interface_div"));
             }
         }
-        var query_interface_pool_node=node.getElementsByTagName("query_interface_pool_object");
+        var query_interface_pool_node=node.getElementsByTagName("Query_interface_pool_object");
         var query_panel_node=query_interface_pool_node[0].childNodes;
         for (var j = 0; j < query_panel_node.length;j++){
-            if (query_panel_node[j].nodeType===1&&query_panel_node[j].nodeName==="panel"){
+            if (query_panel_node[j].nodeType===1&&query_panel_node[j].nodeName==="Panel"){
                 CreatePanel(query_panel_node[j],document.getElementById("interface_div"));
             }
         }
@@ -310,7 +314,6 @@
     }
 
 </script>
-
 
 <script type="text/javascript">
 
@@ -544,13 +547,10 @@
                 buildWS();
                 break;
         }
-
-
     }
 
 
 </script>
-
 
 <script type="text/javascript">
     $("#btn_0").button();
