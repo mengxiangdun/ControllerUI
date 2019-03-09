@@ -1,3 +1,5 @@
+// import * as echarts from "./echarts";
+
 var ui_id_list=[];//ui id 变量名列表
 var ui_id_value_list=[];// ui id 列表
 
@@ -33,6 +35,7 @@ function ShowInterface(node,text,father) {
 }
 
 function CreatePanel(node,father) {
+    console.log("panel!");
     var panel_id=ReturnUI_ID( node.getAttribute("id"));
     var panel_text=node.getAttribute("text");
     var div_syncm=document.createElement("fieldset");
@@ -54,9 +57,15 @@ function CreatePanel(node,father) {
             }
             if (sonNodes[j].nodeName==="Button"){
                 CreateButton(sonNodes[j],div_syncm);
+                console.log("Button!");
             }
             if (sonNodes[j].nodeName==="Label"){
                 CreateLabel(sonNodes[j],div_syncm);
+            }
+            if (sonNodes[j].nodeName==="Chart"){
+                console.log("chart!");
+                CreateChart(sonNodes[j],div_syncm);
+
             }
         }
     }
@@ -77,11 +86,11 @@ function CreateInput(node,father) {
             var pastedtext= prompt("Please paste here:", "placeholder");
             input_div.value=pastedtext;
         }
-
-
     }
     father.appendChild(input_div);
 }
+
+
 
 function CreateLabel(node,father) {
     var input_para=document.createElement("input");
@@ -119,29 +128,74 @@ function CreateButton(node,father) {
 
         var cmd_str_1=node.getAttribute("cmd");
         var cmd_return_str=node.getAttribute("return_attached");
-        if (node.getAttribute("repeat")!=1){//down repeat
+        if (node.getAttribute("repeat")===null){//down repeat
             btn_cmd.onclick=function(){
                 Btn_cmd_onclick(cmd_str_1,cmd_return_str);
             }
         }
-        if (node.getAttribute("repeat")==="1"){//down repeat
+        if (node.getAttribute("repeat")==="0"){//keep mouse down repeat
             console.log("repeat");
             var repeat_1;
+            var rate_1=node.getAttribute("rate");
             btn_cmd.onmousedown=function(){
-                repeat_1=  setInterval(Btn_cmd_onclick_repeat(cmd_str_1,cmd_return_str),50);
+                repeat_1=  setInterval(Btn_cmd_onclick_repeat(cmd_str_1,cmd_return_str),rate_1);
             }
             btn_cmd.onmouseup=function () {
                 clearInterval(repeat_1);
             }
-
+        }
+        if (node.getAttribute("repeat")>1){//mouse click repeat
+            var repeat_click;
+            var rate_click=node.getAttribute("rate");
+            btn_cmd.onclick=function () {
+                if (repeat_click == null) {
+                    repeat_click=setInterval(Btn_cmd_onclick_repeat(cmd_str_1),rate_click);
+                }else {
+                    clearInterval(repeat_click);
+                    repeat_click=null;
+                }
+            }
         }
     }
+
     if (node.getAttribute("query_item")!=null){
         var query_str=node.getAttribute("query_item");
         var query_return_str=node.getAttribute("return_attached");
-        btn_cmd.onclick=function () {
-            Btn_query_onclick(query_str,query_return_str)
+
+        if (node.getAttribute("repeat")===null){//down repeat
+            console.log("no repeat");
+            btn_cmd.onclick=function(){
+                Btn_query_onclick(query_str,query_return_str);
+            }
         }
+        if (node.getAttribute("repeat")==="0"){//keep mouse down repeat
+            console.log("repeat");
+            var repeat_1;
+            var rate_1=node.getAttribute("rate");
+            btn_cmd.onmousedown=function(){
+                repeat_1=  setInterval(Btn_query_onclick_repeat(query_str,query_return_str),rate_1);
+            }
+            btn_cmd.onmouseup=function () {
+                clearInterval(repeat_1);
+            }
+        }
+        if (node.getAttribute("repeat")==="1"){//mouse click repeat
+            var repeat_click;
+            var rate_click=node.getAttribute("rate");
+            console.log("repeat rate="+rate_click);
+            btn_cmd.onclick=function () {
+                setInterval(Btn_query_onclick_repeat(query_str,query_return_str),50);
+                // if (repeat_click == null) {
+                //     repeat_click=setInterval(Btn_query_onclick_repeat(query_str,query_return_str),rate_click);
+                // }else {
+                //     clearInterval(repeat_click);
+                //     repeat_click=null;
+                // }
+            }
+        }
+        // btn_cmd.onclick=function () {
+        //     Btn_query_onclick(query_str,query_return_str);
+        // }
     }
 }
 
@@ -181,8 +235,6 @@ function Btn_cmd_onclick(str,return_str){
         for (var j=0;j<str_2.length;j++){
             SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
         }
-
-
         cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
         cmd_code_return_list[cmd_code_return_list.length]=return_str;
         //储存cmd的返回操作
@@ -210,13 +262,17 @@ function Btn_cmd_onclick(str,return_str){
 function Btn_query_onclick(str,return_str){
     var myDate=new Date();
     var now=myDate.getTime();
-    // var now=myDate.myDate.toLocaleTimeString();
-    // console.log("time:"+now);
-
-    // console.log("send :"+"5&1&"+now+"&0&0&"+str);
     SendCmd("5&1&"+now+"&0&0&"+str);
     cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
     cmd_code_return_list[cmd_code_return_list.length]=return_str;//储存cmd的返回操作
 
 }
 
+function Btn_query_onclick_repeat(id,id2) {
+    console.log("query mm");
+    return function()
+    {
+        //foo(id,id2);
+        Btn_query_onclick(id,id2);
+    }
+}

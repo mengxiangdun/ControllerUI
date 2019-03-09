@@ -186,7 +186,7 @@
 <script src="test.js"></script>
 <script src="ControllerJS.js"></script>
 <script type="text/javascript">
-    console.log(abc(5,6));
+
 </script>
 <script type="text/javascript" language="javascript" charset="big5">
     var language="eng";
@@ -248,17 +248,15 @@
     function Initial() {
         if (show3D){
             setInterval(ReadFromServer,100);
-        }
-
-        if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
-            if (gameInstance!=null){
-                setTimeout(function () {
-                    gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
-                },1000);
+            if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+                if (gameInstance!=null){
+                    setTimeout(function () {
+                        gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
+                    },1000);
+                }
+                console.log("send to unity address: "+ip_addr+"/ControllerUI");
             }
-            console.log("send to unity address: "+ip_addr+"/ControllerUI");
-         }
-
+        }
     }
 
     function GetXmlDoc(data){
@@ -311,6 +309,86 @@
             default:
                 return null;
         }
+    }
+
+    var date = [0,1,2,3,4,5,6,7,8,9];
+    var data = [0,1,2,3,4,5,6,7,8,9];
+    function CreateChart(node,father) {
+        var chart_div=document.createElement("b");
+        chart_div.innerText="chart";
+        chart_div.style="width: 960px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px"
+        father.appendChild(chart_div);
+        var myChart = echarts.init(chart_div);
+        //var app = {};
+        var  option = {
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: data
+            },
+            yAxis: {
+                boundaryGap: [0, '50%'],
+                type: 'value',
+                min:-1000,
+                max:1000
+            },
+            series: [
+                {
+                    name:'RT',
+                    type:'line',
+                    //smooth:true,
+                    symbol: 'none',
+                    stack: 'a',
+                    // areaStyle: {
+                    //     normal: {}
+                    // },
+                    data: date,
+                    // min:-1000,
+                    // max:1000
+                },
+                {
+                    name:"Max",
+                    type:"line",
+                    data:vel,
+                    // min:-10,
+                    // max:10
+                }
+                // {
+                //     name:"Min",
+                //     type:"line",
+                //     data:current
+                // }
+            ]
+        };
+
+        setInterval(function () {
+            //addData(true);
+            console.log("chart!");
+            myChart.setOption({
+                xAxis: {
+                    data: data
+                },
+                series: [{
+                    name:'成交',
+                    data: date
+                },
+                    {
+                        name:"Max",
+                        type:"line",
+                        data:vel
+                    }
+                    // {
+                    //     name:"Min",
+                    //     type:"line",
+                    //     data:current
+                    // }
+                ]
+            });
+        }, 500);
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+
     }
 
 </script>
@@ -553,7 +631,8 @@
 
         var myDate=new Date();
         var now=myDate.getTime();
-        SendCmd("0&1&"+now+"&0&0&get_server_xml");
+        // SendCmd("0&1&"+now+"&0&0&get_server_xml");
+        SendCmd("2&1&"+now+"&0&0&get_server_xml");
         cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
         cmd_code_return_list[cmd_code_return_list.length]="get_server_xml";
     }
@@ -585,7 +664,7 @@
                 // PackBotCmd("1&1&0&0&0&Read --check_none");
                 var myDate=new Date();
                 var now=myDate.getTime();
-                SendCmd("0&1&"+now+"&0&0&get_part_pq");
+                SendCmd("1&1&"+now+"&0&0&get_part_pq");
                 cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
                 cmd_code_return_list[cmd_code_return_list.length]="get_part_pq";
 
@@ -597,7 +676,6 @@
                 break;
         }
     }
-
 
 </script>
 
