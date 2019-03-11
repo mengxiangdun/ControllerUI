@@ -65,7 +65,10 @@ function CreatePanel(node,father) {
             if (sonNodes[j].nodeName==="Chart"){
                 console.log("chart!");
                 CreateChart(sonNodes[j],div_syncm);
-
+            }
+            if (sonNodes[j].nodeName==="Tabs"){
+                console.log("Tabs!");
+                CreateTabs(sonNodes[j],div_syncm);
             }
         }
     }
@@ -90,6 +93,38 @@ function CreateInput(node,father) {
     father.appendChild(input_div);
 }
 
+function CreateTabs(node,father) {
+    var tabs_div=document.createElement("div");
+    tabs_div.id=ReturnUI_ID(node.getAttribute("id"));
+    father.appendChild(tabs_div);
+    var ul_div=document.createElement("ul");
+    tabs_div.appendChild(ul_div);
+    var sonNodes=node.getElementsByTagName("Li");
+    for (var tab_i=0;tab_i<sonNodes.length;tab_i++){
+        if (sonNodes[tab_i].nodeType===1){
+            var tabOne_div=document.createElement("div");
+            tabOne_div.id=tabs_div.id+"tab-"+(tab_i+1);
+            tabs_div.appendChild(tabOne_div);
+            var cmd_panel_node=sonNodes[tab_i].getElementsByTagName("Panel");
+            for (var i=0;i<cmd_panel_node.length;i++){
+                if (cmd_panel_node[i].nodeType===1){
+                    CreatePanel(cmd_panel_node[i],tabOne_div);
+                }
+            }
+
+            var li_div=document.createElement("li");
+            var a_div=document.createElement("a");
+            a_div.setAttribute("href","#"+tabOne_div.id);
+            a_div.innerText="tab-1";
+            li_div.appendChild(a_div);
+            // li_div.innerHTML="<a href="#""+tabs_div.id+"tab-"+(tab_i+1)+">tab-1</a>";
+
+            ul_div.appendChild(li_div);
+
+        }
+    }
+
+}
 
 
 function CreateLabel(node,father) {
