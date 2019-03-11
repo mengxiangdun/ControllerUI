@@ -208,8 +208,8 @@
         location.reload();
     });
     var xmlDoc;
-    // var serverIP="ws://10.10.10.126:5866";
-    var serverIP="ws://127.0.0.1:5866";
+    var serverIP="ws://192.168.1.13:5866";
+    // var serverIP="ws://127.0.0.1:5866";
     var cmd_code_list=[];//发送的命令代码列表
     var cmd_code_return_list=[];//需要处理返回值的方式列表
 
@@ -465,7 +465,8 @@
         return out;
     }
 
-    function AnalizeBotData(buffer) {
+    function AnalizeBotData_(buffer) {
+
         var dataView=new DataView(buffer);
         var cmd_length=dataView.getInt32(0);
         // console.log("receive cmd_length:"+cmd_length);
@@ -595,6 +596,139 @@
         }
     }
 
+    function AnalizeBotData(buffer) {
+
+        var dataView=new DataView(buffer);
+        var cmd_length=dataView.getInt32(0);
+        // console.log("receive cmd_length:"+cmd_length);
+        var cmd_id=dataView.getInt32(4,true);
+        // console.log("receive cmd_id:"+cmd_id);
+        var cmd_code=dataView.getFloat64(16,true);
+        // console.log(("receive cmd_code:"+cmd_code));
+        var getMess;
+        if (cmd_id===0){
+            var return_str;
+            var cmd_code_index;
+            var code_return_str;
+            return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                code_return_str=cmd_code_return_list[cmd_code_index];
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    $("#" + id_str).val(return_str);
+                }
+                if (code_return_str.indexOf("get_server_xml")!=-1) {
+                    getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+                    // console.log(getMess);
+                    GetXmlDoc(getMess);
+                }
+                if (code_return_str.indexOf("get_part_pq")!=-1){
+                    var pq="";
+                    // console.log("data view length:"+buffer.byteLength)
+                    for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                        if (i!=0){
+                            pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                        }
+                        if (i===0){
+                            pq+=dataView.getFloat64(40+i*8,true).toString();
+                        }
+                    }
+                    //console.log("send PQ to UNity:"+pq);
+                    if (gameInstance!=null){
+                        gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+                    }
+                }
+
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+        }
+
+
+        //return xml
+        if (cmd_id===9){
+            // getMess=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+            // console.log(getMess);
+            GetXmlDoc(getMess);
+        }
+        //return float message
+        if (cmd_id===9){
+            var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                var code_return_str=cmd_code_return_list[cmd_code_index];
+                //query
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    // console.log("id_str: "+id_str);
+                    // $("#" + id_str).setAttribute("value",return_str);
+                    $("#" + id_str).val(return_str);
+                    // document.getElementById(id_str).innerText=return_str;
+                    // console.log("label str:"+$("#" + id_str).value);
+                }
+                //xml
+                if (code_return_str.indexOf("get_server_xml")!=-1){
+                    getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+                    // console.log(getMess);
+                    GetXmlDoc(getMess);
+                }
+                //read pq
+                if (code_return_str.indexOf("get_part_pq")!=-1){
+                    var pq="";
+                    // console.log("data view length:"+buffer.byteLength)
+                    for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                        if (i!=0){
+                            pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                        }
+                        if (i===0){
+                            pq+=dataView.getFloat64(40+i*8,true).toString();
+                        }
+                    }
+                    //console.log("send PQ to UNity:"+pq);
+                    if (gameInstance!=null){
+                        gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+                    }
+                }
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+
+        }
+        //return float
+        //return query
+        if (cmd_id===9){
+            var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                var code_return_str=cmd_code_return_list[cmd_code_index];
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    // console.log("id_str: "+id_str);
+                    // $("#" + id_str).setAttribute("value",return_str);
+                    $("#" + id_str).val(return_str);
+                    // document.getElementById(id_str).innerText=return_str;
+                    // console.log("label str:"+$("#" + id_str).value);
+                }
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+        }
+    }
+
     function buildWS(cmd) {
         ws=new WebSocket(serverIP);
 
@@ -632,8 +766,8 @@
 
         var myDate=new Date();
         var now=myDate.getTime();
-        // SendCmd("0&1&"+now+"&0&0&get_server_xml");
-        SendCmd("2&1&"+now+"&0&0&get_server_xml");
+        SendCmd("0&1&"+now+"&0&0&get_server_xml");
+        // SendCmd("2&1&"+now+"&0&0&get_server_xml");
         cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
         cmd_code_return_list[cmd_code_return_list.length]="get_server_xml";
     }
@@ -665,7 +799,7 @@
                 // PackBotCmd("1&1&0&0&0&Read --check_none");
                 var myDate=new Date();
                 var now=myDate.getTime();
-                SendCmd("1&1&"+now+"&0&0&get_part_pq");
+                SendCmd("0&1&"+now+"&0&0&get_part_pq");
                 cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
                 cmd_code_return_list[cmd_code_return_list.length]="get_part_pq";
 
