@@ -12,6 +12,7 @@
     <title>Servo Press Monitor</title>
     <link href="jquery-ui.css" rel="stylesheet">
     <link href="/jquery-ui.css" rel="stylesheet">
+    <script src="FileSaver.js"></script>
 </head>
 <style>
     body{
@@ -188,7 +189,12 @@
 <script src="test.js"></script>
 <script src="ControllerJS.js"></script>
 <script type="text/javascript">
-
+    function downloadText(data) {
+        // var blob = new Blob([JSON.stringify(data)], { type: "text/plain;charset=utf-8" });
+        var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "export.txt");
+    }
+    // downloadText("der");
 </script>
 <script type="text/javascript" language="javascript" charset="big5">
     var language="eng";
@@ -448,7 +454,6 @@
         chart_div.style="width: 300px; height: 300px; float: left;background-color: beige;";
         father.appendChild(chart_div);
         var myChart = echarts.init(chart_div);
-        //var app = {};
         var  option = {
             xAxis: {
                 type: 'category',
@@ -516,6 +521,13 @@
         if (option && typeof option === "object") {
             myChart.setOption(option, true);
         }
+
+        var btn_SaveData=document.createElement("button");
+        btn_SaveData.innerText="Save Data";
+        btn_SaveData.onclick=function () {
+            downloadText(dataSet[data_index]);
+        }
+        father.appendChild(btn_SaveData);
     }
 
 </script>
