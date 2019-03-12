@@ -96,7 +96,9 @@ function CreateInput(node,father) {
 function CreateTabs(node,father) {
     var tabs_div=document.createElement("div");
     tabs_div.id=ReturnUI_ID(node.getAttribute("id"));
+    tabs_div.innerText=ReturnUI_Text(node.getAttribute("text"));
     father.appendChild(tabs_div);
+    setTimeout("$( \"#"+tabs_div.id+"\" ).tabs()",1065);
     var ul_div=document.createElement("ul");
     tabs_div.appendChild(ul_div);
     var sonNodes=node.getElementsByTagName("Li");
@@ -247,7 +249,6 @@ function Btn_cmd_onclick(str,return_str){
         // console.log(str);
         var index_1 = str.indexOf("{");
         // console.log("index_1: " + index_1);
-
         var index_2 = str.indexOf("}");
         // console.log("index_2: " + index_2);
         var id_str = str.substr(index_1 + 1, index_2 - index_1 - 1);
@@ -267,11 +268,15 @@ function Btn_cmd_onclick(str,return_str){
 
         // console.log("0&1&"+now+"&0&0&"+str);
         var str_2=str.split(';');
+
         for (var j=0;j<str_2.length;j++){
             SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
         }
+
         cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
-        cmd_code_return_list[cmd_code_return_list.length]=return_str;
+        cmd_code_return_list[cmd_code_return_list.length]=(return_str===null?"":return_str);
+        //console.log("send return str: "+return_str);
+
         //储存cmd的返回操作
         //
         // if (str.indexOf("mm --stop")!=-1){

@@ -13,6 +13,7 @@
     <link href="jquery-ui.css" rel="stylesheet">
     <link href="/jquery-ui.css" rel="stylesheet">
     <script src="FileSaver.js"></script>
+
 </head>
 <style>
     body{
@@ -135,6 +136,8 @@
     <option value="eng" >English</option>
     <option value="chs" >简体中文</option>
 </select>
+<!--<div id="id_29"><ul><li><a href="#id_29tab-1">tab-1</a></li><li><a href="#id_29tab-2">tab-1</a></li></ul><div id="id_29tab-1"><h></h><fieldset id="null" style="width: 400px;"><br><button id="null" class="ui-button ui-corner-all ui-widget" style="width: 117.2px; position: relative; margin-left: 20px; margin-top: 5px;">abcefg</button></fieldset></div><div id="id_29tab-2"><h></h><fieldset id="null" style="width: 400px;"><br><button id="null" class="ui-button ui-corner-all ui-widget" style="width: 117.2px; position: relative; margin-left: 20px; margin-top: 5px;">abc</button></fieldset></div></div>-->
+
 <div id="main" style="width: 1100px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px;background-color: #5c5c5c">
 
     <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
@@ -183,6 +186,7 @@
 
         }
     }
+
 </script>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -224,7 +228,7 @@
 
     var ip_addr = document.location.hostname;
 
-    if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+    if (ip_addr!==""&& ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
         serverIP="ws://"+ip_addr+":5866";
     }
 
@@ -257,7 +261,7 @@
     function Initial() {
         if (show3D){
             setInterval(ReadFromServer,100);
-            if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+            if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
                 if (gameInstance!=null){
                     setTimeout(function () {
                         gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
@@ -673,7 +677,7 @@
         if (cmd_id===1){
 
             var pq="";
-            // console.log("data view length:"+buffer.byteLength)
+            console.log("data view length:"+buffer.byteLength)
             for(var i=0;i<(buffer.byteLength-40)/8;i++){
                 if (i!=0){
                     pq+="&"+dataView.getFloat64(40+i*8,true).toString();
@@ -831,14 +835,22 @@
     $( "#accordion" ).accordion({
         heightStyle:"content",
         collapsible: "true"
-
     });
     $("button").button();
-    $( "#id_29" ).tabs();
+
+
+    $(function() {
+        // $(".123").tabs();
+        // $( ".123" ).tabs();
+        $( "#id_29" ).tabs();
+
+    });
+
     function SetUITheme(){
         setTimeout("$(\"button\").button()",1050);
         setTimeout("$(\"button\").width(80)",1050);
         setTimeout("$(\"#interface_div\").show()",1065);
+        // setTimeout("$( \"#id_29\" ).tabs()",1065);
         setTimeout(function () {
             // $("#gameContainer").show();
             if (!show3D){
