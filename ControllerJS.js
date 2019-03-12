@@ -128,7 +128,6 @@ function CreateTabs(node,father) {
 
 }
 
-
 function CreateLabel(node,father) {
     var input_para=document.createElement("input");
     input_para.id=ReturnUI_ID(node.getAttribute("id"));
@@ -316,3 +315,4 @@ function Btn_query_onclick_repeat(id,id2) {
         Btn_query_onclick(id,id2);
     }
 }
+

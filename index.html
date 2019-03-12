@@ -399,17 +399,13 @@
     var ws;
 
     function PackBotCmd(str) {
-        //1&1&0&0&0&Read --check_none
         var strArray=str.split("&");
         if (strArray.length>3){
             var cmd_id=parseInt(strArray[0]);
             var cmd_option=parseInt((strArray[1]));
             var cmd_code=parseInt((strArray[2]));
-
-            // console.log("res-1:"+cmd_code);
             var res_2=parseInt((strArray[3]));
             var res_3=parseInt((strArray[4]));
-
             var mes_length=strArray[5].length;
             var buffer=new ArrayBuffer(40+mes_length);
             var headView=new DataView(buffer);
@@ -417,16 +413,12 @@
             headView.setInt32(4,cmd_id,true);
             headView.setInt32(8,cmd_option,true);
             headView.setFloat64(16,cmd_code,true);
-            // console.log("cmd_code:"+headView.getFloat64(16,true));
             headView.setInt32(24,res_2,true);
             headView.setInt32(32,res_3,true);
             for (var i=0;i<mes_length;i++){
                 headView.setUint8(40+i,strArray[5].charCodeAt(i));
             }
-
             ws.send(headView.buffer);
-            // console.log("send cmd"+headView.buffer.byteLength);
-
         }
     }
 
@@ -827,9 +819,10 @@
     $( "#accordion" ).accordion({
         heightStyle:"content",
         collapsible: "true"
-
     });
+
     $("button").button();
+
     function SetUITheme(){
         setTimeout("$(\"button\").button()",1050);
         setTimeout("$(\"button\").width(80)",1050);
