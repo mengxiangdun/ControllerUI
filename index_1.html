@@ -542,7 +542,6 @@
     var ws;
 
     function PackBotCmd(str) {
-        //1&1&0&0&0&Read --check_none
         var strArray=str.split("&");
         if (strArray.length>3){
             var cmd_id=parseInt(strArray[0]);
@@ -566,10 +565,7 @@
             for (var i=0;i<mes_length;i++){
                 headView.setUint8(40+i,strArray[5].charCodeAt(i));
             }
-
             ws.send(headView.buffer);
-            // console.log("send cmd"+headView.buffer.byteLength);
-
         }
     }
 
@@ -607,7 +603,6 @@
 
         return out;
     }
-
     function AnalizeBotData(buffer) {
         var dataView=new DataView(buffer);
         var cmd_length=dataView.getInt32(0);
