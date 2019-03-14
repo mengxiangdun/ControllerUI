@@ -33,10 +33,10 @@
     }
 
     var mytextArea=document.getElementsByTagName("text_area");
-    // var codeMirrorEditor=CodeMirror.fromTextArea(mytextArea,{
-    //     mode:"text/html",
-    //     lineNumber:true
-    // });
+    var codeMirrorEditor=CodeMirror.fromTextArea(mytextArea,{
+        mode:"text/html",
+        lineNumber:true
+    });
 
     document.getElementById("btn_upload").onclick=function(){
         UpLoad();
