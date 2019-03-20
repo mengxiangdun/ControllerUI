@@ -12,7 +12,7 @@
     <title>Servo Press Monitor</title>
     <link href="jquery-ui.css" rel="stylesheet">
     <link href="/jquery-ui.css" rel="stylesheet">
-    <script src="ControllerJS.js"></script>
+    <!--<script src="ControllerJS.js"></script>-->
 </head>
 <style>
     body{
@@ -197,6 +197,7 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="test.js"></script>
+<script src="ControllerJS.js"></script>
 <script type="text/javascript">
     // console.log(abc(5,6));
 </script>
@@ -245,7 +246,7 @@
     var auto_stop=true;
     var ip_addr = document.location.hostname;
 
-    if (ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+    if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
         serverIP="ws://"+ip_addr+":5866";
     }
 
@@ -329,14 +330,14 @@
 
 
             if (manual_start){
-                // $("#id_8").show();
-                // $("#id_9").show();
+                $("#id_8").show();
+                $("#id_9").show();
                 document.getElementById("auto_btn").disabled=true;
                 document.getElementById("auto_btn").style="color:gray";
             }
             if (manual_stop){
-                // $("#id_8").hide();
-                // $("#id_9").hide();
+                $("#id_8").hide();
+                $("#id_9").hide();
                 document.getElementById("auto_btn").disabled=false;
                 document.getElementById("auto_btn").style="color:black";
             }
@@ -425,6 +426,7 @@
             auto_stop=false;
         }
     }
+
     function ShowPlanInterface(node){
 
         GetUI_ID_List(node);

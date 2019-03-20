@@ -266,7 +266,7 @@ function Btn_cmd_onclick(str,return_str){
         var now=myDate.getTime();
         // console.log("time:"+now);
 
-        // console.log("0&1&"+now+"&0&0&"+str);
+        console.log("0&1&"+now+"&0&0&"+str);
         var str_2=str.split(';');
 
         for (var j=0;j<str_2.length;j++){
