@@ -8,9 +8,12 @@
     <script src="jquery-ui.js"></script>
     <script src="ControllerJS.js"></script>
     <link href="jquery-ui.css" rel="stylesheet">
-    <script src="external/codemirror.js"></script>
-    <link href="external/codemirror.css" rel="stylesheet">
-    <script src="external/xml.js"></script>
+
+    <script src="lib/codemirror.js"></script>
+    <script src="mode/xml/xml.js"></script>
+    <script src="mode/javascript/javascript.js"></script>
+    <script src="mode/css/css.js"></script>
+    <script src="mode/htmlmixed/htmlmixed.js"></script>
 
 </head>
 <body>
@@ -27,24 +30,20 @@
     function GetXmlDoc(data){
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
-        showXml(data);
+        // showXml(data);
         //document.getElementById("text_area").innerText=data;
 
     }
 
     var mytextArea=document.getElementsByTagName("text_area");
-    var codeMirrorEditor=CodeMirror.fromTextArea(mytextArea,{
-        mode:"text/html",
-        lineNumber:true
-    });
+
 
     document.getElementById("btn_upload").onclick=function(){
         UpLoad();
     }
     $("button").button();
 
-    function Download()
-    {
+    function Download() {
         
     }
 

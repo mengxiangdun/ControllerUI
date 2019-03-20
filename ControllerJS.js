@@ -273,31 +273,15 @@ function Btn_cmd_onclick(str,return_str){
             SendCmd(str_2[j],"23");
             // SendCmd(str_2[j],(return_str===null?"":return_str));
             // SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
+            console.log("After btn click: "+str);
+            AfterBtnClick(str_2[j]);
+
         }
 
         // cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
         // cmd_code_return_list[cmd_code_return_list.length]=(return_str===null?"":return_str);
         //console.log("send return str: "+return_str);
 
-        //储存cmd的返回操作
-        //
-        // if (str.indexOf("mm --stop")!=-1){
-        //     manual_stop=true;
-        //     manual_start=false;
-        // }
-        //
-        // if (str.indexOf("am --stop")!=-1){
-        //     auto_stop=true;
-        //     auto_start=false;
-        // }
-        // if (str.indexOf("mm --start")!=-1){
-        //     manual_start=true;
-        //     manual_stop=false;
-        // }
-        // if (str.indexOf("am --start")!=-1){
-        //     auto_start=true;
-        //     auto_stop=false;
-        // }
     }
 }
 

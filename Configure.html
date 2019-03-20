@@ -19,15 +19,18 @@
 <p/>
 <textarea id="text_area" rows="30" cols="150"></textarea>
 <script>
-    var serverIP="ws://127.0.0.1:5866";
+    // var serverIP="ws://127.0.0.1:5866";
+    var serverIP="ws://192.168.1.13:5866";
     var ws;
     var xmlDoc;
     buildWS();
     setTimeout(QueryXml,3500);
+    var xmlStr;
     function GetXmlDoc(data){
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
         showXml(data);
+        xmlStr=data;
         //document.getElementById("text_area").innerText=data;
 
     }
@@ -41,19 +44,21 @@
     document.getElementById("btn_upload").onclick=function(){
         UpLoad();
     }
+    document.getElementById("btn_download").onclick=function(){
+        Download();
+    }
     $("button").button();
 
-    function Download()
-    {
-        
+    function Download() {
+        setTimeout(QueryXml,3500);
     }
 
     function UpLoad() {
         // var newXml=document.getElementById("text_area").innerText;
         var newXml =$('#text_area').val();
-        // newXml.replace(" ","");
-        console.log("new xml: "+newXml);
-        SendCmd("set_xml --xml="+newXml,"");
+        var str= newXml.split('\n').join('');
+        console.log("new xml: "+str);
+        SendCmd("set_xml --xml={"+str+"}","");
     }
 
     function showXml(text){
