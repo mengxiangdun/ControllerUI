@@ -26,16 +26,17 @@
     buildWS();
     setTimeout(QueryXml,3500);
     var xmlStr;
+
     function GetXmlDoc(data){
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
         showXml(data);
         xmlStr=data;
         //document.getElementById("text_area").innerText=data;
-
     }
 
     var mytextArea=document.getElementsByTagName("text_area");
+
     // var codeMirrorEditor=CodeMirror.fromTextArea(mytextArea,{
     //     mode:"text/html",
     //     lineNumber:true
@@ -43,10 +44,12 @@
 
     document.getElementById("btn_upload").onclick=function(){
         UpLoad();
-    }
+    };
+
     document.getElementById("btn_download").onclick=function(){
         Download();
-    }
+    };
+
     $("button").button();
 
     function Download() {

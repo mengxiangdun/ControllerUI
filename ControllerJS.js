@@ -4,6 +4,9 @@ var ui_id_list=[];//ui id 变量名列表
 var ui_id_value_list=[];// ui id 列表
 var cmd_code_list=[];//发送的命令代码列表
 var cmd_code_return_list=[];//需要处理返回值的方式列表
+var dataSet = [];
+var dataMap_chartID=[];
+var dataMap_dataIndex=[];
 
 function GetUI_ID_List(node) {
     var id_pool_node=node.getElementsByTagName("UiIdPoolObject");
@@ -142,6 +145,94 @@ function CreateLabel(node,father) {
     // input_div.value=node.getAttribute("default");
     // input_div.style="width:80px";
     // father.appendChild(input_div);
+}
+
+function CreateChart(node,father) {
+    var chart_div=document.createElement("b");
+    var id_str=ReturnUI_Text(node.getAttribute("id"));
+    chart_div.id=id_str;
+    var  data_index=dataSet.length;
+    dataMap_chartID[dataMap_chartID.length]=id_str;
+    dataMap_dataIndex[dataMap_dataIndex.length]=data_index;
+    dataSet[data_index]=[];
+    chart_div.innerText="chart";
+    chart_div.style="width: 300px; height: 300px; float: left;background-color: beige;";
+    father.appendChild(chart_div);
+    var myChart = echarts.init(chart_div);
+    var  option = {
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: dataSet[data_index]
+        },
+        yAxis: {
+            boundaryGap: [0, '50%'],
+            type: 'value'
+        },
+        series: [
+            {
+                name:'RT',
+                type:'line',
+                //smooth:true,
+                symbol: 'none',
+                stack: 'a',
+                // areaStyle: {
+                //     normal: {}
+                // },
+                // data: date,
+                // min:-1000,
+                // max:1000
+            },
+            {
+                name:"Max",
+                type:"line",
+                // data:vel,
+                // min:-10,
+                // max:10
+            }
+            // {
+            //     name:"Min",
+            //     type:"line",
+            //     data:current
+            // }
+        ]
+    };
+
+    setInterval(function () {
+        //addData(true);
+        console.log("chart!");
+        myChart.setOption({
+            xAxis: {
+                // data: data
+            },
+            series: [{
+                name:'成交',
+                data: dataSet[data_index]
+            },
+                {
+                    name:"Max",
+                    type:"line",
+                    // data:vel
+                }
+                // {
+                //     name:"Min",
+                //     type:"line",
+                //     data:current
+                // }
+            ]
+        });
+    }, 500);
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+    var btn_SaveData=document.createElement("button");
+    btn_SaveData.innerText="Save Data";
+    btn_SaveData.onclick=function () {
+        downloadText(dataSet[data_index]);
+    }
+    father.appendChild(btn_SaveData);
 }
 
 function CreateButton(node,father) {
