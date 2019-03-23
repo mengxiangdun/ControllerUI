@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title >Kaanh Intelligence</title>
+    <link rel='stylesheet' href='./style.css' />
+    <script src="external/jquery/jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="echarts.js"></script>
+    <script src="js.cookie.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <title>Servo Press Monitor</title>
+    <link href="jquery-ui.css" rel="stylesheet">
+    <link href="/jquery-ui.css" rel="stylesheet">
+</head>
+<style>
+    body{
+        font-family: "Trebuchet MS", sans-serif;
+        margin: 50px;
+    }
+    .demoHeaders {
+        margin-top: 2em;
+    }
+    #dialog-link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+    #dialog-link span.ui-icon {
+        margin: 0 5px 0 0;
+        position: absolute;
+        left: .2em;
+        top: 50%;
+        margin-top: -8px;
+    }
+    #icons {
+        margin: 0;
+        padding: 0;
+    }
+    #icons li {
+        margin: 2px;
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+        float: left;
+        list-style: none;
+    }
+    #icons span.ui-icon {
+        float: left;
+        margin: 0 4px;
+    }
+    .fakewindowcontain .ui-widget-overlay {
+        position: absolute;
+    }
+    select {
+        width: 200px;
+    }
+    html {
+        box-sizing: border-box;
+    }
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+    #gameContainer {
+        width: 100vw;
+        height: 100vh;
+    }
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .logo {
+        display: block;
+        width: max-width: 80vw;
+        height: max-height: 60vh;
+    }
+
+    .progress {
+        margin: 1.5em;
+        border: 1px solid white;
+        width: 50vw;
+        display: none;
+    }
+    .progress .full {
+        margin: 2px;
+        background: white;
+        height: 1em;
+        transform-origin: top left;
+    }
+
+    #loader {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .spinner,
+    .spinner:after {
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+    }
+    .spinner {
+        margin: 10px;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+
+        transform: translateZ(0);
+        animation: spinner-spin 1.1s infinite linear;
+    }
+    @keyframes spinner-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<body>
+<p id="title_id"></p>
+<input id="serverIP" placeholder="Enter server ip"/>
+<select id="language_select">
+    <option value="eng" >English</option>
+    <option value="chs" >简体中文</option>
+</select>
+<input placeholder="Enter CMD" id="cmd_input"/>
+<button id="cmd_enter"/>
+<div id="main" style="width: 1100px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px;background-color: #5c5c5c">
+
+    <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
+        <div id="interface_div" style="width: 250px"></div>
+    </div>
+    <div style="width: 50%;height: 100%; float:left">
+        <div id="gameContainer"  style="width: 100%;height: 100%"></div>
+        <div id="loader" style="width: 100%;height: 100%;left: auto">
+            <!--<img class="logo" src="logo.png">-->
+            <div class="spinner" style="width: 50%;float: left"></div>
+            <div class="progress" style="width: 50%;float: left"><div class="full" ></div></div>
+        </div>
+    </div>
+</div>
+
+<!--unity-->
+<script>
+    var show3D=true;
+    if (show3D){
+        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
+    }
+
+    function UnityProgress(gameInstance, progress) {
+        if (!gameInstance.Module) {
+            return;
+        }
+        const loader = document.querySelector("#loader");
+        if (!gameInstance.progress) {
+            const progress = document.querySelector("#loader .progress");
+            progress.style.display = "block";
+            gameInstance.progress = progress.querySelector(".full");
+            loader.querySelector(".spinner").style.display = "none";
+        }
+        gameInstance.progress.style.transform = `scaleX(${progress})`;
+        if (progress === 1 && !gameInstance.removeTimeout) {
+            gameInstance.removeTimeout = setTimeout(function() {
+                loader.style.display = "none";
+
+                Initial();
+                $("#gameContainer").show();
+                $("#chart_dom").show();
+
+            }, 5000);
+
+        }
+    }
+</script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="test.js"></script>
+<script src="ControllerJS.js"></script>
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript" language="javascript" charset="big5">
+    var language="eng";
+    $("#gameContainer").hide();
+    $("#chart_dom").hide();
+
+    if (Cookies.get("var")!=null){
+        language=Cookies.get("var");
+    }
+    else {
+        language=$("select#language_select").val();
+    }
+    document.title=ReturnUI_Text("Auto|自动");
+
+    $("select#language_select").change(function(){
+        console.log($(this).val());
+        language=$(this).val();
+        Cookies.set("var",language);
+        location.reload();
+    });
+    var xmlDoc;
+    // var serverIP="ws://192.168.1.13:5866";
+    var serverIP="ws://127.0.0.1:5866";
+    var cmd_code_list=[];//发送的命令代码列表
+    var cmd_code_return_list=[];//需要处理返回值的方式列表
+
+    var ip_addr = document.location.hostname;
+
+    if (ip_addr!=null && ip_addr!=""&& ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+        serverIP="ws://"+ip_addr+":5866";
+    }
+
+    console.log("ip address"+ip_addr+"/ControllerUI");
+
+    document.getElementById("serverIP").onchange=function(){
+        var str=document.getElementById("serverIP").value;
+        if (str!=""&&str!=null){
+            serverIP="ws://"+str+":5866";
+            console.log(serverIP);
+            ws.close();
+            buildWS();
+            setTimeout(QueryXml,4000);
+             }
+    }
+
+    document.getElementById("serverIP").onclick=function(){
+        if (show3D){
+            var pastedtext= prompt("Please paste here:", "placeholder");
+            // document.getElementById("serverIP").valueOf(pastedtext);
+            $("#serverIP").val(pastedtext);
+            serverIP="ws://"+pastedtext+":5866";
+            console.log(serverIP);
+            ws.close();
+            buildWS();
+            setTimeout(QueryXml,4000);
+        }
+    }
+
+    document.getElementById("cmd_enter").onclick=function () {
+        var cmd=document.getElementById("cmd_input").value;
+        SendCmd(cmd);
+
+    }
+    function Initial() {
+        if (show3D){
+            setInterval(ReadFromServer,2000);
+            if (ip_addr!=null &&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+                if (gameInstance!=null){
+                    setTimeout(function () {
+                        gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
+                    },1000);
+                }
+                console.log("send to unity address: "+ip_addr+"/ControllerUI");
+            }
+        }
+    }
+
+    function GetXmlDoc(data){
+        //
+        // console.log(data);
+        var parser=new DOMParser();
+        xmlDoc=parser.parseFromString(data,"text/xml");
+        //master
+        // var master_node=xmlDoc.getElementsByTagName("master");
+        // printNodeName(master_node[0],"");
+
+        //plan_interface
+        var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
+        // ShowPlanInterface(interface_node[0]);
+
+        GetUI_ID_List(interface_node[0]);
+        ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
+        ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
+        SetUITheme();
+    }
+
+    function ShowPlanInterface(node){
+
+        GetUI_ID_List(node);
+        var cmd_interface_pool_node=node.getElementsByTagName("Cmd_interface_pool_object");
+
+        var cmd_panel_node=cmd_interface_pool_node[0].childNodes;
+        for (var i=0;i<cmd_panel_node.length;i++){
+            if (cmd_panel_node[i].nodeType===1&&cmd_panel_node[i].nodeName==="Panel"){
+                CreatePanel(cmd_panel_node[i],document.getElementById("interface_div"));
+            }
+        }
+        var query_interface_pool_node=node.getElementsByTagName("Query_interface_pool_object");
+        var query_panel_node=query_interface_pool_node[0].childNodes;
+        for (var j = 0; j < query_panel_node.length;j++){
+            if (query_panel_node[j].nodeType===1&&query_panel_node[j].nodeName==="Panel"){
+                CreatePanel(query_panel_node[j],document.getElementById("interface_div"));
+            }
+        }
+        SetUITheme();
+    }
+
+    function ReturnUI_Text(str) {
+        var str_list=str.split('|');
+        switch (language) {
+            case "eng":
+                return str_list[0];
+            case "chs":
+                return str_list[1];
+            default:
+                return null;
+        }
+    }
+
+    var date = [0,1,2,3,4,5,6,7,8,9];
+    var data = [0,1,2,3,4,5,6,7,8,9];
+
+    function CreateChart(node,father) {
+        var chart_div=document.createElement("b");
+        chart_div.innerText="chart";
+        chart_div.style="width: 960px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px"
+        father.appendChild(chart_div);
+        var myChart = echarts.init(chart_div);
+        //var app = {};
+        var  option = {
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: data
+            },
+            yAxis: {
+                boundaryGap: [0, '50%'],
+                type: 'value',
+                min:-1000,
+                max:1000
+            },
+            series: [
+                {
+                    name:'RT',
+                    type:'line',
+                    //smooth:true,
+                    symbol: 'none',
+                    stack: 'a',
+                    // areaStyle: {
+                    //     normal: {}
+                    // },
+                    data: date,
+                    // min:-1000,
+                    // max:1000
+                },
+                {
+                    name:"Max",
+                    type:"line",
+                    // data:vel,
+                    // min:-10,
+                    // max:10
+                }
+                // {
+                //     name:"Min",
+                //     type:"line",
+                //     data:current
+                // }
+            ]
+        };
+
+        setInterval(function () {
+            //addData(true);
+            console.log("chart!");
+            myChart.setOption({
+                xAxis: {
+                    data: data
+                },
+                series: [{
+                    name:'成交',
+                    data: date
+                },
+                    {
+                        name:"Max",
+                        type:"line",
+                        // data:vel
+                    }
+                    // {
+                    //     name:"Min",
+                    //     type:"line",
+                    //     data:current
+                    // }
+                ]
+            });
+        }, 500);
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    var ws;
+
+
+
+    function PackBotCmd(str) {
+        var strArray=str.split("&");
+        if (strArray.length>3){
+            var cmd_id=parseInt(strArray[0]);
+            var cmd_option=parseInt((strArray[1]));
+            var cmd_code=parseInt((strArray[2]));
+            var res_2=parseInt((strArray[3]));
+            var res_3=parseInt((strArray[4]));
+            var mes_length=strArray[5].length;
+            var buffer=new ArrayBuffer(40+mes_length);
+            var headView=new DataView(buffer);
+            headView.setInt32(0,mes_length,true);
+            headView.setInt32(4,cmd_id,true);
+            headView.setInt32(8,cmd_option,true);
+            headView.setFloat64(16,cmd_code,true);
+            headView.setInt32(24,res_2,true);
+            headView.setInt32(32,res_3,true);
+            for (var i=0;i<mes_length;i++){
+                headView.setUint8(40+i,strArray[5].charCodeAt(i));
+            }
+            ws.send(headView.buffer);
+        }
+    }
+
+    //可以处理中文
+    function Utf8ArrayToStr(array) {
+        var out, i, len, c;
+        var char2, char3;
+
+        out = "";
+        len = array.length;
+        i = 0;
+        while(i < len) {
+            c = array[i++];
+            switch(c >> 4)
+            {
+                case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+                // 0xxxxxxx
+                out += String.fromCharCode(c);
+                break;
+                case 12: case 13:
+                // 110x xxxx   10xx xxxx
+                char2 = array[i++];
+                out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
+                break;
+                case 14:
+                    // 1110 xxxx  10xx xxxx  10xx xxxx
+                    char2 = array[i++];
+                    char3 = array[i++];
+                    out += String.fromCharCode(((c & 0x0F) << 12) |
+                        ((char2 & 0x3F) << 6) |
+                        ((char3 & 0x3F) << 0));
+                    break;
+            }
+        }
+
+        return out;
+    }
+
+    function AnalizeBotData_(buffer) {
+
+        var dataView=new DataView(buffer);
+        var cmd_length=dataView.getInt32(0);
+        // console.log("receive cmd_length:"+cmd_length);
+        var cmd_id=dataView.getInt32(4,true);
+        // console.log("receive cmd_id:"+cmd_id);
+        var cmd_code=dataView.getFloat64(16,true);
+        // console.log(("receive cmd_code:"+cmd_code));
+
+        var getMess;
+
+        //return xml
+        if (cmd_id===2){
+            // getMess=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+            // console.log(getMess);
+            GetXmlDoc(getMess);
+        }
+        //return float message
+        if (cmd_id===0){
+            var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                var code_return_str=cmd_code_return_list[cmd_code_index];
+                //query
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    // console.log("id_str: "+id_str);
+                    // $("#" + id_str).setAttribute("value",return_str);
+                    $("#" + id_str).val(return_str);
+                    // document.getElementById(id_str).innerText=return_str;
+                    // console.log("label str:"+$("#" + id_str).value);
+                }
+                //xml
+                if (code_return_str.indexOf("get_server_xml")!=-1){
+                    getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+                    // console.log(getMess);
+                    GetXmlDoc(getMess);
+                }
+                //read pq
+                if (code_return_str.indexOf("get_part_pq")!=-1){
+                    var pq="";
+                    // console.log("data view length:"+buffer.byteLength)
+                    for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                        if (i!=0){
+                            pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                        }
+                        if (i===0){
+                            pq+=dataView.getFloat64(40+i*8,true).toString();
+                        }
+                    }
+                    //console.log("send PQ to UNity:"+pq);
+                    if (gameInstance!=null){
+                        gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+                    }
+                }
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+
+        }
+        //return float
+        if (cmd_id===1){
+
+            var pq="";
+            // console.log("data view length:"+buffer.byteLength)
+            for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                if (i!=0){
+                    pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                }
+                if (i===0){
+                    pq+=dataView.getFloat64(40+i*8,true).toString();
+                }
+            }
+            //console.log("send PQ to UNity:"+pq);
+            if (gameInstance!=null){
+                gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+            }
+
+
+           //  var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+           // if (cmd_code_list.indexOf(cmd_code)!=-1){
+           //     var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+           //     var code_return_str=cmd_code_return_list[cmd_code_index];
+           //
+           //     var return_str_splitlist=return_str.split(' ');
+           //     var code_return_str_splitList=code_return_str.split(' ');
+           //     for (var i=0;i<return_str_splitlist.length;i++){
+           //         if (code_return_str_splitList[i].indexOf("$")!=-1);
+           //         var index_1=code_return_str_splitList[i].indexOf(("{"));
+           //         var index_2=code_return_str_splitList[i].indexOf("}");
+           //         var ui_id_str=code_return_str_splitList[i].substr(index_1+1,index_2-index_1-1);
+           //         var valude_str=return_str_splitlist[i].substr(index_1-1,return_str_splitlist[i].length-index_1+1);
+           //         $("#" + ui_id_str).val=valude_str;
+           //     }
+           //     cmd_code_list.splice(cmd_code_index,1);
+           //     cmd_code_return_list.splice(cmd_code_index,1);
+           //     //Motion -m=5 --pos=6
+           //     //Motion -m=${id_4} --pos=
+           // }
+        }
+
+        //return query
+        if (cmd_id===5){
+            var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                var code_return_str=cmd_code_return_list[cmd_code_index];
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    // console.log("id_str: "+id_str);
+                    // $("#" + id_str).setAttribute("value",return_str);
+                    $("#" + id_str).val(return_str);
+                    // document.getElementById(id_str).innerText=return_str;
+                    // console.log("label str:"+$("#" + id_str).value);
+                }
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+        }
+    }
+
+    function AnalizeBotData(buffer) {
+
+        var dataView=new DataView(buffer);
+        var cmd_length=dataView.getInt32(0);
+        // console.log("receive cmd_length:"+cmd_length);
+        var cmd_id=dataView.getInt32(4,true);
+        var cmd_code=dataView.getFloat64(16,true);
+        var getMess;
+        if (cmd_id===0){
+            var return_str;
+            var cmd_code_index;
+            var code_return_str;
+            return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            console.log("receive  :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!==-1){
+                cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                console.log("cmd_code_index: "+cmd_code_index);
+                code_return_str=cmd_code_return_list[cmd_code_index];
+
+                if (code_return_str.indexOf("$")!==-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    $("#" + id_str).val(return_str);
+                }
+
+                if (code_return_str.indexOf("get_server_xml")!==-1) {
+                    getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+                    // console.log(getMess);
+                    GetXmlDoc(getMess);
+                }
+
+                if (code_return_str.indexOf("get_part_pq")!==-1){
+                    var pq="";
+                    console.log("data view length:"+buffer.byteLength)
+                    for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                        if (i!=0){
+                            pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                        }
+                        if (i===0){
+                            pq+=dataView.getFloat64(40+i*8,true).toString();
+                        }
+                    }
+                    console.log("send PQ to UNity:"+pq);
+                    if (gameInstance!=null){
+                        gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+                    }
+                }
+
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+        }
+
+
+        //return xml
+        if (cmd_id===9){
+            // getMess=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+            // console.log(getMess);
+            GetXmlDoc(getMess);
+        }
+        //return float message
+        if (cmd_id===9){
+            var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                var code_return_str=cmd_code_return_list[cmd_code_index];
+                //query
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    // console.log("id_str: "+id_str);
+                    // $("#" + id_str).setAttribute("value",return_str);
+                    $("#" + id_str).val(return_str);
+                    // document.getElementById(id_str).innerText=return_str;
+                    // console.log("label str:"+$("#" + id_str).value);
+                }
+                //xml
+                if (code_return_str.indexOf("get_server_xml")!=-1){
+                    getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+                    // console.log(getMess);
+                    GetXmlDoc(getMess);
+                }
+                //read pq
+                if (code_return_str.indexOf("get_part_pq")!=-1){
+                    var pq="";
+                    // console.log("data view length:"+buffer.byteLength)
+                    for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                        if (i!=0){
+                            pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                        }
+                        if (i===0){
+                            pq+=dataView.getFloat64(40+i*8,true).toString();
+                        }
+                    }
+                    //console.log("send PQ to UNity:"+pq);
+                    if (gameInstance!=null){
+                        gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
+                    }
+                }
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+
+        }
+        //return float
+        //return query
+        if (cmd_id===9){
+            var return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+            // console.log("receive query :"+return_str);
+            if (cmd_code_list.indexOf(cmd_code)!=-1){
+                var cmd_code_index=cmd_code_list.indexOf(cmd_code);
+                // console.log("cmd_code_index: "+cmd_code_index);
+                var code_return_str=cmd_code_return_list[cmd_code_index];
+                if (code_return_str.indexOf("$")!=-1){
+                    var index_1=code_return_str.indexOf("{");
+                    var index_2=code_return_str.indexOf("}");
+                    var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
+                    // console.log("id_str: "+id_str);
+                    // $("#" + id_str).setAttribute("value",return_str);
+                    $("#" + id_str).val(return_str);
+                    // document.getElementById(id_str).innerText=return_str;
+                    // console.log("label str:"+$("#" + id_str).value);
+                }
+                cmd_code_list.splice(cmd_code_index,1);
+                cmd_code_return_list.splice(cmd_code_index,1);
+            }
+        }
+    }
+
+    function buildWS(cmd) {
+        console.log("server ip: "+serverIP);
+        ws=new WebSocket(serverIP);
+
+        ws.onopen=function (evt) {
+            console.log("Connection open...");
+            if (cmd!=null){
+                SendCmd(cmd);
+                console.log(cmd);
+            }
+
+
+        }
+        ws.onmessage=function (evt) {
+            if (typeof evt.data=== String){
+                // console.log("Received "+evt.data);
+                receiveStr=evt.data;
+            }
+            if (evt.data instanceof ArrayBuffer){
+                // console.log("receive byte"+evt.data.byteLength);
+                AnalizeBotData(evt.data);
+            }
+
+
+        }
+        ws.onclose=function (evt) {
+            console.log("closed");
+        }
+    }
+
+    buildWS();
+
+    setTimeout(QueryXml,3500);
+
+    function  QueryXml() {
+
+        var myDate=new Date();
+        var now=myDate.getTime();
+        SendCmd("0&1&"+now+"&0&0&get_server_xml");
+        // SendCmd("2&1&"+now+"&0&0&get_server_xml");
+        cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
+        cmd_code_return_list[cmd_code_return_list.length]="get_server_xml";
+    }
+    // setTimeout("Initial()",5000);
+
+    function SendCmd(cmd){
+        switch (ws.readyState) {
+            case WebSocket.CONNECTING:
+                break;
+            case WebSocket.OPEN:
+                ws.binaryType='arraybuffer';
+                PackBotCmd(cmd);
+                break;
+            case  WebSocket.CLOSING:
+                break;
+            case WebSocket.CLOSED:
+                buildWS(cmd);
+                //setTimeout("SendCmd(cmd)",4000);
+                break;
+        }
+    }
+
+    function ReadFromServer(){
+        switch (ws.readyState) {
+            case WebSocket.CONNECTING:
+                break;
+            case WebSocket.OPEN:
+                ws.binaryType='arraybuffer';
+                // PackBotCmd("1&1&0&0&0&Read --check_none");
+                var myDate=new Date();
+                var now=myDate.getTime();
+                SendCmd("0&1&"+now+"&0&0&get_part_pq");
+                cmd_code_list[cmd_code_list.length]=now;//储存已发送的cmd code
+                cmd_code_return_list[cmd_code_return_list.length]="get_part_pq";
+
+                break;
+            case  WebSocket.CLOSING:
+                break;
+            case WebSocket.CLOSED:
+                buildWS();
+                break;
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+    $("#btn_0").button();
+    $("#btn_1").button();
+    $("#getXml").button();
+    $("#saveXml").button();
+    $("#auto_btn").button();
+    //$("#manual_btn").button();
+    $("#run").button();
+    $( "#accordion" ).accordion({
+        heightStyle:"content",
+        collapsible: "true"
+    });
+
+    $("button").button();
+
+    function SetUITheme(){
+        setTimeout("$(\"button\").button()",1050);
+        setTimeout("$(\"button\").width(80)",1050);
+        setTimeout("$(\"#interface_div\").show()",1065);
+        setTimeout(function () {
+            // $("#gameContainer").show();
+            if (!show3D){
+                $("#chart_dom").show();
+            }
+            //
+        },2065);
+    }
+
+    // $( "#interface_div_1" ).accordion({
+    //     heightStyle:"content",
+    //     collapsible: "true"
+    //
+    // });
+
+</script>
+</body>
+</html>

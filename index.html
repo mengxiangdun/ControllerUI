@@ -158,7 +158,7 @@
 
 <!--Unity 3D-->
 <script>
-    var show3D=true;
+    var show3D=false;
     if (show3D) {
         var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
     }
@@ -269,6 +269,24 @@
 
     }
 
+    function ReturnUI_Text(str) {
+        if (str!==null&&str!==""){
+            var str_list=str.split('|');
+            switch (language) {
+                case "eng":
+                    return str_list[0];
+                case "chs":
+                    return str_list[1];
+                default:
+                    return null;
+
+            }
+        }
+
+
+    }
+
+    //业务
     //获得xml后的回调
     function GetXmlDoc(data){
         // console.log(data);
@@ -279,8 +297,8 @@
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
         GetUI_ID_List(interface_node[0]);
         ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
-        ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
-        ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
+        // ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
+        // ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
         ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
         ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
         SetUITheme();
@@ -311,22 +329,6 @@
             auto_stop=false;
         }
     }
-
-    function ReturnUI_Text(str) {
-        var str_list=str.split('|');
-        switch (language) {
-            case "eng":
-                return str_list[0];
-            case "chs":
-                return str_list[1];
-            default:
-                return null;
-
-        }
-
-    }
-
-    //业务
 
     document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
     document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
