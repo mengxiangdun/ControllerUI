@@ -294,13 +294,13 @@
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
         GetUI_ID_List(interface_node[0]);
         //duodian
-        ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
-        ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
-        ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
-        $("#serverIP").hide();
-        $("#language_select").hide();
+        // ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
+        // ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
+        // ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
+        // $("#serverIP").hide();
+        // $("#language_select").hide();
 
-        // ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
+        ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
         // ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
         SetUITheme();
         // ShowPlanInterface(interface_node[0]);
