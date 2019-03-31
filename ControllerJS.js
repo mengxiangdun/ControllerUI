@@ -200,7 +200,7 @@ function CreateChart(node,father) {
 
     setInterval(function () {
         //addData(true);
-        console.log("chart!");
+        // console.log("chart!");
         myChart.setOption({
             xAxis: {
                 // data: data
@@ -538,10 +538,10 @@ function AnalizeBotData(buffer) {
         var cmd_code_index;
         var code_return_str;
         return_str=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
-        console.log("receive  :"+return_str);
+        // console.log("receive  :"+return_str);
         if (cmd_code_list.indexOf(cmd_code)!==-1){
             cmd_code_index=cmd_code_list.indexOf(cmd_code);
-            console.log("cmd_code_index: "+cmd_code_index);
+            // console.log("cmd_code_index: "+cmd_code_index);
             code_return_str=cmd_code_return_list[cmd_code_index];
 
             if (code_return_str.indexOf("$")!==-1){
@@ -559,7 +559,7 @@ function AnalizeBotData(buffer) {
 
             if (code_return_str.indexOf("get_part_pq")!==-1){
                 var pq="";
-                console.log("data view length:"+buffer.byteLength)
+                // console.log("data view length:"+buffer.byteLength)
                 for(var i=0;i<(buffer.byteLength-40)/8;i++){
                     if (i!=0){
                         pq+="&"+dataView.getFloat64(40+i*8,true).toString();
@@ -568,7 +568,7 @@ function AnalizeBotData(buffer) {
                         pq+=dataView.getFloat64(40+i*8,true).toString();
                     }
                 }
-                console.log("send PQ to UNity:"+pq);
+                // console.log("send PQ to UNity:"+pq);
                 if (gameInstance!=null){
                     gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
                 }

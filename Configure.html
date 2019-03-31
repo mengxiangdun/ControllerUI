@@ -45,7 +45,7 @@
     // $("#interface_div").hide();
     $("button").button();
     var serverIP="ws://127.0.0.1:5866";
-    // var serverIP="ws://192.168.1.14:5866";
+    // var serverIP="ws://192.168.1.11:5866";
     var ws;
     var xmlDoc;
     buildWS();
@@ -67,6 +67,7 @@
         console.log("data: "+data);
         SetUITheme();
     }
+
     document.getElementById("btn_upload").onclick=function(){
         SendCmd("stop");
         UpLoad();
@@ -75,12 +76,13 @@
     document.getElementById("btn_download").onclick=function(){
         Download();
     };
+
     document.getElementById("btn_start").onclick=function () {
         SendCmd("start");
         ws.close();
         var url="index.html?ServerIp="+escape( serverIP);
         location.href=url;
-    }
+    };
 
     function SetUITheme(){
         setTimeout("$(\"button\").button()",2050);

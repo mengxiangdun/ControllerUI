@@ -287,6 +287,12 @@
     //获得xml后的回调
     function GetXmlDoc(data){
         // console.log(data);
+        if (show3D){
+            console.log("send xml to Unity:"+data);
+            if (gameInstance!=null){
+                gameInstance.SendMessage("empt","GetRobotXmlFromJS",data);
+            }
+        }
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
 
