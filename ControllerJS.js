@@ -573,7 +573,6 @@ function AnalizeBotData(buffer) {
                     var data_index=dataMap_dataIndex[dataMap_chartID.indexOf(id_str)];
                     dataSet[data_index].push(return_str);
                 }
-
             }
 
             if (code_return_str.indexOf("get_xml")!==-1) {
