@@ -1,0 +1,82 @@
+<object type="ControlServer">
+
+<InterfaceRoot >
+    <UiIdPoolObject >
+        <Id name="id_1"  value="id_1"/>
+        <Id name="id_2"  value="id_2"/>
+        <Id name="id_3"  value="id_3"/>
+        <Id name="id_4"  value="id_4"/>
+        <Id name="id_5"  value="id_5"/>
+        <Id name="id_6"  value="id_6"/>
+        <Id name="id_7"  value="id_7"/>
+        <Id name="id_8"  value="id_8"/>
+        <Id name="id_9"  value="id_9"/>
+        <Id name="id_10"  value="id_10"/>
+        <Id name="id_11"  value="id_11"/>
+        <Id name="id_12"  value="id_12"/>
+        <Id name="id_13"  value="id_13"/>
+        <Id name="id_14"  value="id_14"/>
+        <Id name="id_15"  value="id_15"/>
+        <Id name="id_16"  value="id_16"/>
+        <Id name="id_17"  value="id_17"/>
+        <Id name="id_18"  value="id_18"/>
+        <Id name="id_19"  value="id_19"/>
+        <Id name="id_20"  value="id_20"/>
+        <Id name="id_21"  value="id_21"/>
+        <Id name="id_22"  value="id_22"/>
+        <Id name="id_23"  value="id_23"/>
+        <Id name="id_24"  value="id_24"/>
+        <Id name="id_25"  value="id_25"/>
+        <Id name="id_26"  value="id_26"/>
+        <Id name="id_27"  value="id_27"/>
+        <Id name="id_28"  value="id_28"/>
+        <Id name="id_29"  value="id_29"/>
+    </UiIdPoolObject>
+    <CmdInterfacePoolObject>
+        <Panel text="My CMD|CMD" id="id_1">
+            <Panel text="mvaj|CMD" id="id_2">
+                <Input id="id_3" default="" parameter="m"/>
+                <!--default：input内的默认值-->
+                <!--parameter:所对应的参数名称，会显示在输入框的前面-->
+                <Input id="id_4" default="" parameter="pos"/>
+                <Button id="id_5" text="mvaj"  cmd="mvaj -m=${id_3} --pos=${id_4}" return_attached=""/>
+                <!--text:显示在UI上的文字-->
+                <!---->
+                <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
+                <!--rate:cmd send rate 重复发送的间隔ms-->
+                <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
+                <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
+            </Panel>
+            <Panel>
+                <Button id="id_6" text="b" cmd="b" return_attached="$label{id_7}"/>
+                <Label id="id_7"/>
+            </Panel>
+            <Panel text="" id="id_24">
+                <Button id="id_25" text="current_1" repeat="1" rate="50"  query_item="b" return_attached="$chart{id_26}"/>
+                <Chart id="id_26" text="" />
+            </Panel>
+            <Panel text="" id="id_11">
+                <Tabs id="id_12" text="Tab">
+                    <Li text="tab_1">
+                        <Panel text="">
+                            <Button text="abc"/>
+                        </Panel>
+                    </Li>
+                    <Li text="tab_2">
+                        <Panel text="">
+                            <Button text="def"/>
+                        </Panel>
+                    </Li>
+                    <Li text="tab_3">
+                        <Panel text="">
+                            <Button text="ghj"/>
+                        </Panel>
+                    </Li>
+                </Tabs>
+            </Panel>
+        </Panel>
+    </CmdInterfacePoolObject>
+
+</InterfaceRoot>
+
+</object>
