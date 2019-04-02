@@ -364,7 +364,7 @@ function Btn_cmd_onclick(str,return_str){
         var old_str="${"+id_str+"}";
         // console.log("old str "+old_str);
         // console.log(str.replace(old_str,id_value));
-        Btn_cmd_onclick(str.replace(old_str,id_value));
+        Btn_cmd_onclick(str.replace(old_str,id_value),return_str);
     }
 
     if (str.indexOf("$")==-1){

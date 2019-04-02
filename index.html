@@ -161,7 +161,7 @@
 
 <!--Unity 3D-->
 <script>
-    var show3D=true;
+    var show3D=false;
     if (show3D) {
         var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
     }
@@ -193,6 +193,7 @@
 
         }
     }
+
 </script>
 
 <script src="/socket.io/socket.io.js"></script>
