@@ -548,8 +548,17 @@ function AnalizeBotData(buffer) {
                 var index_1=code_return_str.indexOf("{");
                 var index_2=code_return_str.indexOf("}");
                 var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
-                $("#" + id_str).val(return_str);
-                console.log("receive mess:"+return_str);
+
+                if (code_return_str.indexOf("label")!==-1){
+                    $("#" + id_str).val(return_str);
+                    console.log("receive mess:"+return_str);
+                }
+
+                if (code_return_str.indexOf("chart")!==-1){
+                    var data_index=dataMap_dataIndex[dataMap_chartID.indexOf(id_str)];
+                    dataSet[data_index].push(return_str);
+                }
+
             }
 
             if (code_return_str.indexOf("get_xml")!==-1) {
