@@ -139,6 +139,9 @@
 
     <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
         <div id="interface_div" style="width: 250px">
+
+        </div>
+        <div id="interface_div_duodian" style="width: 250px">
             <div id="enable_div"></div>
             <button id="manual_btn" >Manual</button>
             <button id="auto_btn">Auto</button>
@@ -169,6 +172,7 @@
         $("#gameContainer").show();
         $("#chart_dom").show();
     }
+
     function UnityProgress(gameInstance, progress) {
         if (!gameInstance.Module) {
             return;
@@ -198,9 +202,11 @@
     // console.log(abc(5,6));
 </script>
 <script type="text/javascript" language="javascript" charset="big5">
+    var showDuodian=false;
     var language="eng";
     $("#gameContainer").hide();
     $("#chart_dom").hide();
+    $("#interface_div_duodian").hide();
     $("#manual_div").hide();
     $("#auto_div").hide();
 
@@ -337,72 +343,81 @@
         }
     }
 
-    document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
-    document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
-    document.title=ReturnUI_Text("Auto|自动");
-    var manual_init=true;
-    var manual_start=false;
-    var manual_stop=true;
-    var auto_init=false;
-    var auto_start=false;
-    var auto_stop=true;
-
-    function UpdateView() {
-        if (manual_init&&auto_stop){
-            $("#manual_div").show();
-            $("#auto_div").hide();
-        }
-        if (auto_init&&manual_stop){
-            $("#manual_div").hide();
-            $("#auto_div").show();
-        }
-
-
-        if (manual_start){
-            $("#id_8").show();
-            $("#id_9").show();
-            document.getElementById("auto_btn").disabled=true;
-            document.getElementById("auto_btn").style="color:gray";
-        }
-        if (manual_stop){
-            $("#id_8").hide();
-            $("#id_9").hide();
-            document.getElementById("auto_btn").disabled=false;
-            document.getElementById("auto_btn").style="color:black";
-        }
-        if (auto_start){
-
-            document.getElementById("manual_btn").disabled=true;
-            document.getElementById("manual_btn").style="color:gray";
-        }
-        if (auto_stop){
-
-            document.getElementById("manual_btn").disabled=false;
-            document.getElementById("manual_btn").style="color:black";
-        }
-
+    function ReGenerateUI() {
+        $("#interface_div").empty();
+        //setTimeout(QueryXml,3500);
+        QueryXml();
     }
 
-    setInterval(UpdateView,100);
+    if (showDuodian){
+        document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
+        document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
+        document.title=ReturnUI_Text("Auto|自动");
+        var manual_init=true;
+        var manual_start=false;
+        var manual_stop=true;
+        var auto_init=false;
+        var auto_start=false;
+        var auto_stop=true;
 
-    document.getElementById("manual_btn").onclick=function () {
-        if (auto_stop){
-            // $("#manual_div").show();
-            // $("#auto_div").hide();
-            manual_init=true;
-            auto_init=false;
+        function UpdateView() {
+            if (manual_init&&auto_stop){
+                $("#manual_div").show();
+                $("#auto_div").hide();
+            }
+            if (auto_init&&manual_stop){
+                $("#manual_div").hide();
+                $("#auto_div").show();
+            }
+
+
+            if (manual_start){
+                $("#id_8").show();
+                $("#id_9").show();
+                document.getElementById("auto_btn").disabled=true;
+                document.getElementById("auto_btn").style="color:gray";
+            }
+            if (manual_stop){
+                $("#id_8").hide();
+                $("#id_9").hide();
+                document.getElementById("auto_btn").disabled=false;
+                document.getElementById("auto_btn").style="color:black";
+            }
+            if (auto_start){
+
+                document.getElementById("manual_btn").disabled=true;
+                document.getElementById("manual_btn").style="color:gray";
+            }
+            if (auto_stop){
+
+                document.getElementById("manual_btn").disabled=false;
+                document.getElementById("manual_btn").style="color:black";
+            }
+
         }
-    };
 
-    document.getElementById("auto_btn").onclick=function () {
-        if (manual_stop){
-            // $("#manual_div").hide();
-            // $("#auto_div").show();
-            manual_init=false;
-            auto_init=true;
+        setInterval(UpdateView,100);
 
-        }
-    };
+        document.getElementById("manual_btn").onclick=function () {
+            if (auto_stop){
+                // $("#manual_div").show();
+                // $("#auto_div").hide();
+                manual_init=true;
+                auto_init=false;
+            }
+        };
+
+        document.getElementById("auto_btn").onclick=function () {
+            if (manual_stop){
+                // $("#manual_div").hide();
+                // $("#auto_div").show();
+                manual_init=false;
+                auto_init=true;
+
+            }
+        };
+    }
+
 
 </script>
 

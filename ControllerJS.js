@@ -147,6 +147,21 @@ function CreateLabel(node,father) {
     // father.appendChild(input_div);
 }
 
+function CreateTextarea(node,father) {
+    var input_para=document.createElement("textarea");
+    input_para.id=ReturnUI_ID(node.getAttribute("id"));
+    // console.log("label id:"+input_para.id);
+    // input_para.innerText="  ";
+    input_para.setAttribute("type","text");
+    input_para.setAttribute("value","");
+    father.appendChild(input_para);
+    // var input_div=document.createElement("input");
+    // input_div.id=node.getAttribute("id");
+    // input_div.value=node.getAttribute("default");
+    // input_div.style="width:80px";
+    // father.appendChild(input_div);
+}
+
 function CreateChart(node,father) {
     var chart_div=document.createElement("b");
     var id_str=ReturnUI_Text(node.getAttribute("id"));
@@ -566,7 +581,11 @@ function AnalizeBotData(buffer) {
                 console.log(getMess);
                 GetXmlDoc(getMess);
             }
-
+            if (code_return_str.indexOf("update_ui")!==-1) {
+                // getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+                console.log("update_UI");
+                ReGenerateUI();
+            }
             if (code_return_str.indexOf("get_part_pq")!==-1){
                 var pq="";
                 // console.log("data view length:"+buffer.byteLength)
