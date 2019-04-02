@@ -361,7 +361,7 @@ function Btn_cmd_onclick(str,return_str){
         var str_2=str.split(';');
 
         for (var j=0;j<str_2.length;j++){
-            SendCmd(str_2[j],"23");
+            SendCmd(str_2[j],return_str);
             // SendCmd(str_2[j],(return_str===null?"":return_str));
             // SendCmd("0&1&"+now+"&0&0&"+str_2[j]);
             console.log("After btn click: "+str);
@@ -549,11 +549,12 @@ function AnalizeBotData(buffer) {
                 var index_2=code_return_str.indexOf("}");
                 var id_str=code_return_str.substr(index_1+1,index_2-index_1-1);
                 $("#" + id_str).val(return_str);
+                console.log("receive mess:"+return_str);
             }
 
             if (code_return_str.indexOf("get_xml")!==-1) {
                 getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
-                // console.log(getMess);
+                console.log(getMess);
                 GetXmlDoc(getMess);
             }
 
