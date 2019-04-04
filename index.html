@@ -161,7 +161,7 @@
 
 <!--Unity 3D-->
 <script>
-    var show3D=true;
+    var show3D=false;
     if (show3D) {
         var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
     }
@@ -224,7 +224,7 @@
     });
     var xmlDoc;
 
-    // var serverIP="ws://192.168.1.5:5866";
+    // var serverIP="ws://192.168.1.26:5866";
     var serverIP="ws://127.0.0.1:5866";
 
     var ip_addr = document.location.hostname;
