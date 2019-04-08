@@ -9,6 +9,7 @@
     <script src="lib/echarts.js"></script>
     <script src="lib/js.cookie.js"></script>
     <script src="Build/UnityLoader.js"></script>
+    <script src="lib/FileSaver.js"></script>
     <title>Servo Press Monitor</title>
     <link href="lib/jquery-ui.css" rel="stylesheet">
     <link href="lib/jquery-ui.css" rel="stylesheet">
@@ -200,6 +201,14 @@
 <script type="text/javascript">
     // console.log(abc(5,6));
 </script>
+<script type="text/javascript">
+    function downloadText(data) {
+        // var blob = new Blob([JSON.stringify(data)], { type: "text/plain;charset=utf-8" });
+        var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "export.txt");
+    }
+    // downloadText("der");
+</script>
 <script type="text/javascript" language="javascript" charset="big5">
     var showDuodian=false;
     var language="eng";
@@ -310,7 +319,7 @@
         // ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
         // $("#serverIP").hide();
         // $("#language_select").hide();
-
+        ShowInterface(interface_node[0],"Teaching|",document.getElementById("interface_div"));
         ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
         // ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
         SetUITheme();

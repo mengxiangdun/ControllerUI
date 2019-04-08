@@ -48,11 +48,17 @@
                 <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
             </Panel>
             <Panel>
-                <Button id="id_6" text="b" cmd="b" return_attached="$label{id_7}"/>
+                <Button id="id_6" text="b" cmd="b" return_attached="$Label{id_7}"/>
                 <Label id="id_7"/>
+                <!--Label：返回的数据为字符串-->
+            </Panel>
+            <Panel text="Get EE Pq|">
+                <Button id="id_6" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
+                <BinaryLabel id="id_27"/>
+                <!--BinaryLabel:返回的数据为二进制：float类型-->
             </Panel>
             <Panel text="" id="id_24">
-                <Button id="id_25" text="current_1" repeat="1" rate="50"  query_item="b" return_attached="$chart{id_26}"/>
+                <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
                 <Chart id="id_26" text="" />
             </Panel>
             <Panel text="" id="id_11">
