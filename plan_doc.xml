@@ -59,7 +59,8 @@
             </Panel>
             <Panel text="" id="id_24">
                 <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
-                <Chart id="id_26" text="" />
+                <Chart id="id_26" text="" length="1000"/>
+                <!--length:图表显示的数据的长度，默认为1000-->
             </Panel>
             <Panel text="" id="id_11">
                 <Tabs id="id_12" text="Tab">
