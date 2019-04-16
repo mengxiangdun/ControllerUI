@@ -233,8 +233,8 @@
     });
     var xmlDoc;
 
-    var serverIP="ws://192.168.1.21:5866";
-    // var serverIP="ws://127.0.0.1:5866";
+    // var serverIP="ws://192.168.1.21:5866";
+    var serverIP="ws://127.0.0.1:5866";
 
     var ip_addr = document.location.hostname;
     if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
@@ -245,7 +245,7 @@
 
     document.getElementById("serverIP").onchange=function(){
         var str=document.getElementById("serverIP").value;
-        if (str!=""&&str!=null){
+        if (str!==""&&str!=null){
             serverIP="ws://"+str+":5866";
              console.log(serverIP);
              ws.close();
@@ -270,7 +270,7 @@
     function Initial() {
 
         if (show3D){
-            setInterval(GetPartPq,100);
+            setInterval(GetPartPq,10);
             if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
                 if (gameInstance!=null){
                     setTimeout(function () {
@@ -330,7 +330,7 @@
     function AfterBtnClick(str) {
         //储存cmd的返回操作
 
-        console.log("After btn click: "+str);
+        // console.log("After btn click: "+str);
         if (str.indexOf("mm --stop")!=-1){
             manual_stop=true;
             manual_start=false;
