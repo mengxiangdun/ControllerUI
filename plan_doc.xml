@@ -61,6 +61,7 @@
                 <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
                 <Chart id="id_26" text="" length="100"/>
                 <!--length:图表显示的数据的长度，默认为1000-->
+                <!--chart 的返回数据需要两个，前一个显示在X轴，后一个显示在Y轴-->
             </Panel>
             <Panel text="" id="id_11">
                 <Tabs id="id_12" text="Tab">

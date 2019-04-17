@@ -233,7 +233,7 @@
     });
     var xmlDoc;
 
-    // var serverIP="ws://192.168.1.21:5866";
+    // var serverIP="ws://192.168.1.3:5866";
     var serverIP="ws://127.0.0.1:5866";
 
     var ip_addr = document.location.hostname;
@@ -300,6 +300,7 @@
     //业务
     //获得xml后的回调
     function GetXmlDoc(data){
+        $("#interface_div").empty();
         // console.log(data);
         if (show3D){
             console.log("send xml to Unity:"+data);
