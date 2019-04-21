@@ -162,7 +162,7 @@
 
 <!--Unity 3D-->
 <script>
-    var show3D=false;
+    var show3D=true;
     if (show3D) {
         var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
     }
@@ -210,7 +210,7 @@
     // downloadText("der");
 </script>
 <script type="text/javascript" language="javascript" charset="big5">
-    var showDuodian=false;
+    var showDuodian=true;
     var language="eng";
     $("#gameContainer").hide();
     $("#chart_dom").hide();
@@ -282,9 +282,10 @@
             }
 
             if (gameInstance!=null&&robotXmlStr!=null&&robotXmlStr!==""){
-                    console.log("send xml to Unity:"+robotXmlStr);
-                    gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
+                console.log("send xml to Unity:"+robotXmlStr);
+                gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
             }
+
         }
     }
 
@@ -312,17 +313,32 @@
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
 
+
+        //robot name
+        var root_ele=xmlDoc.getElementsByTagName("ControlServer");
+        var robot_name=root_ele[0].getAttribute("name");
+        console.log("robot name: "+robot_name);
+        if (robot_name.indexOf("stewart")!==-1){
+            showDuodian=true;
+            ShowDuodianInterface();
+        }
         //plan_interface
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
         GetUI_ID_List(interface_node[0]);
         //duodian
-        // ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
-        // ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
-        // ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
+        if (showDuodian){
+            ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
+            ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
+            ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
+        }
+        else {
+            ShowInterface(interface_node[0],"Teaching|",document.getElementById("interface_div"));
+            ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
+        }
+
         // $("#serverIP").hide();
         // $("#language_select").hide();
-        ShowInterface(interface_node[0],"Teaching|",document.getElementById("interface_div"));
-        ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
+
         // ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
         SetUITheme();
         // ShowPlanInterface(interface_node[0]);
@@ -359,7 +375,81 @@
         QueryXml();
     }
 
+    function ShowDuodianInterface() {
+        if (false){
+
+            $("#interface_div_duodian").show();
+            document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
+            document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
+            document.title=ReturnUI_Text("Auto|自动");
+            var manual_init=true;
+            var manual_start=false;
+            var manual_stop=true;
+            var auto_init=false;
+            var auto_start=false;
+            var auto_stop=true;
+
+            function UpdateView() {
+                if (manual_init&&auto_stop){
+                    $("#manual_div").show();
+                    $("#auto_div").hide();
+                }
+                if (auto_init&&manual_stop){
+                    $("#manual_div").hide();
+                    $("#auto_div").show();
+                }
+
+
+                if (manual_start){
+                    $("#id_8").show();
+                    $("#id_9").show();
+                    document.getElementById("auto_btn").disabled=true;
+                    document.getElementById("auto_btn").style="color:gray";
+                }
+                if (manual_stop){
+                    $("#id_8").hide();
+                    $("#id_9").hide();
+                    document.getElementById("auto_btn").disabled=false;
+                    document.getElementById("auto_btn").style="color:black";
+                }
+                if (auto_start){
+
+                    document.getElementById("manual_btn").disabled=true;
+                    document.getElementById("manual_btn").style="color:gray";
+                }
+                if (auto_stop){
+
+                    document.getElementById("manual_btn").disabled=false;
+                    document.getElementById("manual_btn").style="color:black";
+                }
+
+            }
+
+            setInterval(UpdateView,100);
+
+            document.getElementById("manual_btn").onclick=function () {
+                if (auto_stop){
+                    // $("#manual_div").show();
+                    // $("#auto_div").hide();
+                    manual_init=true;
+                    auto_init=false;
+                }
+            };
+
+            document.getElementById("auto_btn").onclick=function () {
+                if (manual_stop){
+                    // $("#manual_div").hide();
+                    // $("#auto_div").show();
+                    manual_init=false;
+                    auto_init=true;
+
+                }
+            };
+        }
+    }
     if (showDuodian){
+
+        $("#interface_div_duodian").show();
         document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
         document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
         document.title=ReturnUI_Text("Auto|自动");
