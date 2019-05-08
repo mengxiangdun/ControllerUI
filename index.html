@@ -12,7 +12,9 @@
     <script src="lib/FileSaver.js"></script>
     <title>Servo Press Monitor</title>
     <link href="lib/jquery-ui.css" rel="stylesheet">
-    <link href="lib/jquery-ui.css" rel="stylesheet">
+    <link href="jquery-ui.css" rel="stylesheet">
+    <script src="external/jquery/jquery.js"></script>
+    <script src="jquery-ui.js"></script>
     <!--<script src="ControllerJS.js"></script>-->
 </head>
 <style>
@@ -128,10 +130,52 @@
             transform: rotate(360deg);
         }
     }
+    body{
+        font-family: "Trebuchet MS", sans-serif;
+        margin: 50px;
+    }
+    .demoHeaders {
+        margin-top: 2em;
+    }
+    #dialog-link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+    #dialog-link span.ui-icon {
+        margin: 0 5px 0 0;
+        position: absolute;
+        left: .2em;
+        top: 50%;
+        margin-top: -8px;
+    }
+    #icons {
+        margin: 0;
+        padding: 0;
+    }
+    #icons li {
+        margin: 2px;
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+        float: left;
+        list-style: none;
+    }
+    #icons span.ui-icon {
+        float: left;
+        margin: 0 4px;
+    }
+    .fakewindowcontain .ui-widget-overlay {
+        position: absolute;
+    }
+    select {
+        width: 200px;
+    }
 </style>
 <body>
 <p id="title_id"></p>
 <input id="serverIP" placeholder="Enter server ip"/>
+<input>
 <select id="language_select">
     <option value="eng" >English</option>
     <option value="chs" >简体中文</option>
@@ -152,26 +196,44 @@
     </div>
     <div style="width: 50%;height: 100%; float:left">
         <div id="gameContainer"  style="width: 100%;height: 100%"></div>
-        <div id="loader" style="width: 100%;height: 100%;left: auto">
+        <div id="loader" style="width: 500%;height: 100%;left: auto">
             <!--<img class="logo" src="logo.png">-->
             <div class="spinner" style="width: 50%;float: left"></div>
             <div class="progress" style="width: 50%;float: left"><div class="full" ></div></div>
         </div>
     </div>
+
 </div>
 
 <!--Unity 3D-->
 <script>
     var show3D=false;
-    if (show3D) {
-        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
+    var gameInstance;
+    function Show3DView() {
+        if (show3D==="true") {
+            gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
+        }
     }
 
     //unity 加载完成后的回调
     function AfterUnityShow() {
-        Initial();
+
         $("#gameContainer").show();
         $("#chart_dom").show();
+        setInterval(GetPartPq,100);
+        if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+            if (gameInstance!=null){
+                setTimeout(function () {
+                    gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
+                },1000);
+            }
+            //console.log("send to unity address: "+ip_addr+"/ControllerUI");
+        }
+
+        if (gameInstance!=null&&robotXmlStr!=null&&robotXmlStr!==""){
+            //console.log("send xml to Unity:"+robotXmlStr);
+            gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
+        }
     }
 
     function UnityProgress(gameInstance, progress) {
@@ -212,11 +274,11 @@
 <script type="text/javascript" language="javascript" charset="big5">
     var showDuodian=false;
     var language="eng";
-    $("#gameContainer").hide();
-    $("#chart_dom").hide();
+    // $("#gameContainer").hide();
+    // $("#chart_dom").hide();
     $("#interface_div_duodian").hide();
-    $("#manual_div").hide();
-    $("#auto_div").hide();
+    // $("#manual_div").hide();
+    // $("#auto_div").hide();
 
     if (Cookies.get("var")!=null){
         language=Cookies.get("var");
@@ -268,28 +330,6 @@
         }
     };
 
-
-    function Initial() {
-
-        if (show3D){
-            setInterval(GetPartPq,100);
-            if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
-                if (gameInstance!=null){
-                    setTimeout(function () {
-                        gameInstance.SendMessage("empt","GetUrlFromJs",ip_addr);
-                    },1000);
-                }
-                console.log("send to unity address: "+ip_addr+"/ControllerUI");
-            }
-
-            if (gameInstance!=null&&robotXmlStr!=null&&robotXmlStr!==""){
-                console.log("send xml to Unity:"+robotXmlStr);
-                gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
-            }
-
-        }
-    }
-
     function ReturnUI_Text(str) {
         if (str!==null&&str!==""){
             var str_list=str.split('|');
@@ -309,11 +349,10 @@
     //获得xml后的回调
     function GetXmlDoc(data){
         $("#interface_div").empty();
-        // console.log(data);
+
         robotXmlStr=data;
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
-
 
         //robot name
         var root_ele=xmlDoc.getElementsByTagName("ControlServer");
@@ -323,9 +362,17 @@
             showDuodian=true;
             ShowDuodianInterface();
         }
-        //plan_interface
+
+
+        //interface
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
         GetUI_ID_List(interface_node[0]);
+
+        //3D view
+        show3D=(interface_node[0].getElementsByTagName("View3DInterfacePoolObject"))[0].getAttribute("show");
+        Show3DView();
+
+
         //duodian
         if (showDuodian){
             ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
@@ -341,7 +388,7 @@
         // $("#language_select").hide();
 
         // ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
-        SetUITheme();
+        //SetUITheme();
         // ShowPlanInterface(interface_node[0]);
     }
 
@@ -525,20 +572,21 @@
 
 <script type="text/javascript">
     var ws;
-    buildWS();
-    setTimeout(QueryXml,3500);
+    buildWS("get_xml","get_xml");
+    // setTimeout(QueryXml,3500);
     $("button").button();
     function SetUITheme(){
-        setTimeout("$(\"button\").button()",1050);
-        setTimeout("$(\"button\").width(80)",1050);
-        setTimeout("$(\"#interface_div\").show()",1065);
+        setTimeout("$(\"button\").button()",10);
+        setTimeout("$(\"button\").width(80)",10);
+        setTimeout("$(\"#interface_div\").show()",10);
 
         setTimeout(function () {
             if (!show3D){
                 $("#chart_dom").show();
             }
-        },2065);
+        },65);
     }
+
 </script>
 </body>
 </html>

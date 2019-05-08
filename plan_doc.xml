@@ -124,17 +124,22 @@
                 <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
                 <!--slider控件-->
                 <!--default:默认值；max：最大值；min：最小值；step：拖动时的步进值；-->
-                <Button id="id_5" text="mvaj" cmd="mvaj -m=${id_3} --pos=$Slider{id_4}" return_attached=""/>
+                <Select id="id_6" parameter="vel">
+                    <Option  selected="selected">1</Option>
+                    <Option >2</Option>
+                    <Option >3</Option>
+                </Select>
+                <!--Select:下拉选择框-->
+                <Button id="id_5" text="mvaj" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6}" return_attached=""/>
                 <!--text:显示在UI上的文字-->
                 <!---->
                 <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
                 <!--rate:cmd send rate 重复发送的间隔ms-->
                 <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
                 <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
-                <!--参数中需要链接其他控件值时，Input类型可以省略，其他类型需要在$之后标记类型-->
             </Panel>
             <Panel>
-                <Button id="id_6" text="b" cmd="b" return_attached="$Label{id_7}"/>
+                <Button  text="b" cmd="b" return_attached="$Label{id_7}"/>
                 <Label id="id_7"/>
                 <!--Label：返回的数据为字符串-->
             </Panel>
