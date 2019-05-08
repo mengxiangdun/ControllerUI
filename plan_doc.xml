@@ -61,6 +61,9 @@
         <Id name="id_1028" value="id_1028"/>
         <Id name="id_1029" value="id_1029"/>
     </UiIdPoolObject>
+    <View3DInterfacePoolObject show="true">
+
+    </View3DInterfacePoolObject>
     <CmdInterfacePoolObject>
         <Panel text="Teaching|">
             <Tabs id="" text="">
@@ -111,18 +114,24 @@
             </Panel>
         </Panel>
         <Panel text="My CMD|CMD" id="id_1">
+            <Panel >
+                <Viewer></Viewer>
+            </Panel>
             <Panel text="mvaj|CMD" id="id_2">
                 <Input id="id_3" default="" parameter="m"/>
                 <!--default：input内的默认值-->
                 <!--parameter:所对应的参数名称，会显示在输入框的前面-->
-                <Input id="id_4" default="" parameter="pos"/>
-                <Button id="id_5" text="mvaj"  cmd="mvaj -m=${id_3} --pos=${id_4}" return_attached=""/>
+                <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
+                <!--slider控件-->
+                <!--default:默认值；max：最大值；min：最小值；step：拖动时的步进值；-->
+                <Button id="id_5" text="mvaj" cmd="mvaj -m=${id_3} --pos=$Slider{id_4}" return_attached=""/>
                 <!--text:显示在UI上的文字-->
                 <!---->
                 <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
                 <!--rate:cmd send rate 重复发送的间隔ms-->
                 <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
                 <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
+                <!--参数中需要链接其他控件值时，Input类型可以省略，其他类型需要在$之后标记类型-->
             </Panel>
             <Panel>
                 <Button id="id_6" text="b" cmd="b" return_attached="$Label{id_7}"/>
