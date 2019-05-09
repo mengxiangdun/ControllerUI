@@ -317,18 +317,18 @@
              }
     };
 
-    document.getElementById("serverIP").onclick=function(){
-        if (show3D){
-            var pastedtext= prompt("Please paste here:", "placeholder");
-            // document.getElementById("serverIP").valueOf(pastedtext);
-            $("#serverIP").val(pastedtext);
-            serverIP="ws://"+pastedtext+":5866";
-            console.log(serverIP);
-            ws.close();
-            buildWS();
-            setTimeout(QueryXml,4000);
-        }
-    };
+    // document.getElementById("serverIP").onclick=function(){
+    //     if (show3D){
+    //         var pastedtext= prompt("Please paste here:", "placeholder");
+    //         // document.getElementById("serverIP").valueOf(pastedtext);
+    //         $("#serverIP").val(pastedtext);
+    //         serverIP="ws://"+pastedtext+":5866";
+    //         console.log(serverIP);
+    //         ws.close();
+    //         buildWS();
+    //         setTimeout(QueryXml,4000);
+    //     }
+    // };
 
     function ReturnUI_Text(str) {
         if (str!==null&&str!==""){
@@ -495,6 +495,7 @@
             };
         }
     }
+
     if (showDuodian){
 
         $("#interface_div_duodian").show();
@@ -565,8 +566,6 @@
             }
         };
     }
-
-
 
 </script>
 

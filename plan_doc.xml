@@ -130,12 +130,16 @@
                     <Option >3</Option>
                 </Select>
                 <!--Select:下拉选择框-->
-                <Button id="id_5" text="mvaj" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6}" return_attached=""/>
+                <Spinner id="id_7" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
+                <!--spinner:点动输入-->
+                <Button id="id_5" text="mvaj" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6} --acc=$Spinner{id_7}" function="Disable(${id_1023})" return_attached=""/>
+                <Button id="id_8" text="Hide" function="HideUI(${id_5})" return_attached=""/>
                 <!--text:显示在UI上的文字-->
                 <!---->
                 <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
                 <!--rate:cmd send rate 重复发送的间隔ms-->
                 <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
+                <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI-->
                 <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
             </Panel>
             <Panel>
