@@ -8,6 +8,7 @@
     <script src="lib/jquery-ui.js"></script>
     <script src="lib/echarts.js"></script>
     <script src="lib/js.cookie.js"></script>
+
     <script src="Build/UnityLoader.js"></script>
     <script src="lib/FileSaver.js"></script>
     <title>Servo Press Monitor</title>
@@ -15,6 +16,10 @@
     <link href="jquery-ui.css" rel="stylesheet">
     <script src="external/jquery/jquery.js"></script>
     <script src="jquery-ui.js"></script>
+    <link type="text/css" rel="stylesheet" href="lib/layout-default.css">
+    <script type="text/javascript" src="external/jquery/jquery.js"></script>
+    <script type="text/javascript" src="jquery-ui.js"></script>
+    <script type="text/javascript" src="lib/jquery.layout.js"></script>
     <!--<script src="ControllerJS.js"></script>-->
 </head>
 <style>
@@ -172,47 +177,40 @@
         width: 200px;
     }
 </style>
-<body>
+<body id="body">
 <p id="title_id"></p>
-<input id="serverIP" placeholder="Enter server ip"/>
-<input>
-<select id="language_select">
-    <option value="eng" >English</option>
-    <option value="chs" >简体中文</option>
-</select>
-<div id="main" style="width: 1100px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px;background-color: #5c5c5c">
+<!--<input id="serverIP" placeholder="Enter server ip"/>-->
+<!--<input>-->
+<!--<select id="language_select">-->
+    <!--<option value="eng" >English</option>-->
+    <!--<option value="chs" >简体中文</option>-->
+<!--</select>-->
+<!--<div id="main" style="width: 1100px; height: 600px; margin-left: auto; margin-right: auto; margin-top: 10px;background-color: #5c5c5c">-->
 
-    <div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">
-        <div id="interface_div" style="width: 250px">
+    <!--<div id="chart_dom" style="width: 50%;height: 100%; float: left;background-color: beige;">-->
+        <!--<div id="interface_div" style="width: 250px">-->
 
-        </div>
-        <div id="interface_div_duodian" style="width: 250px">
-            <div id="enable_div"></div>
-            <button id="manual_btn" >Manual</button>
-            <button id="auto_btn">Auto</button>
-            <div id="manual_div"></div>
-            <div id="auto_div"></div>
-        </div>
-    </div>
-    <div style="width: 50%;height: 100%; float:left">
-        <div id="gameContainer"  style="width: 100%;height: 100%"></div>
-        <div id="loader" style="width: 500%;height: 100%;left: auto">
-            <!--<img class="logo" src="logo.png">-->
-            <div class="spinner" style="width: 50%;float: left"></div>
-            <div class="progress" style="width: 50%;float: left"><div class="full" ></div></div>
-        </div>
-    </div>
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div style="width: 50%;height: 100%; float:left">-->
+        <!--<div id="gameContainer"  style="width: 100%;height: 100%"></div>-->
+        <!--<div id="loader" style="width: 500%;height: 100%;left: auto">-->
+            <!--&lt;!&ndash;<img class="logo" src="logo.png">&ndash;&gt;-->
+            <!--<div class="spinner" style="width: 50%;float: left"></div>-->
+            <!--<div class="progress" style="width: 50%;float: left"><div class="full" ></div></div>-->
+        <!--</div>-->
+    <!--</div>-->
 
-</div>
+<!--</div>-->
+
 
 <!--Unity 3D-->
 <script>
+
     var show3D=false;
     var gameInstance;
     function Show3DView() {
-        if (show3D==="true") {
-            gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
-        }
+        gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
     }
 
     //unity 加载完成后的回调
@@ -257,6 +255,7 @@
         }
     }
 
+
 </script>
 
 <script src="lib/ControllerJS.js"></script>
@@ -274,25 +273,22 @@
 <script type="text/javascript" language="javascript" charset="big5">
     var showDuodian=false;
     var language="eng";
-    // $("#gameContainer").hide();
-    // $("#chart_dom").hide();
-    $("#interface_div_duodian").hide();
-    // $("#manual_div").hide();
-    // $("#auto_div").hide();
 
-    if (Cookies.get("var")!=null){
-        language=Cookies.get("var");
-    }
-    else {
-        language=$("select#language_select").val();
-    }
 
-    $("select#language_select").change(function(){
-        console.log($(this).val());
-        language=$(this).val();
-        Cookies.set("var",language);
-        location.reload();
-    });
+
+    // if (Cookies.get("var")!=null){
+    //     language=Cookies.get("var");
+    // }
+    // else {
+    //     language=$("select#language_select").val();
+    // }
+    //
+    // $("select#language_select").change(function(){
+    //     console.log($(this).val());
+    //     language=$(this).val();
+    //     Cookies.set("var",language);
+    //     location.reload();
+    // });
     var xmlDoc;
     var robotXmlStr;
 
@@ -306,28 +302,15 @@
 
     console.log("ip address"+ip_addr+"/ControllerUI");
 
-    document.getElementById("serverIP").onchange=function(){
-        var str=document.getElementById("serverIP").value;
-        if (str!==""&&str!=null){
-            serverIP="ws://"+str+":5866";
-             console.log(serverIP);
-             ws.close();
-            buildWS();
-            setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
-             }
-    };
-
-    // document.getElementById("serverIP").onclick=function(){
-    //     if (show3D){
-    //         var pastedtext= prompt("Please paste here:", "placeholder");
-    //         // document.getElementById("serverIP").valueOf(pastedtext);
-    //         $("#serverIP").val(pastedtext);
-    //         serverIP="ws://"+pastedtext+":5866";
-    //         console.log(serverIP);
-    //         ws.close();
+    // document.getElementById("serverIP").onchange=function(){
+    //     var str=document.getElementById("serverIP").value;
+    //     if (str!==""&&str!=null){
+    //         serverIP="ws://"+str+":5866";
+    //          console.log(serverIP);
+    //          ws.close();
     //         buildWS();
-    //         setTimeout(QueryXml,4000);
-    //     }
+    //         setTimeout("SendCmd('2&1&0&0&0&GetXml --check_none')",4000);
+    //          }
     // };
 
     function ReturnUI_Text(str) {
@@ -363,7 +346,6 @@
             ShowDuodianInterface();
         }
 
-
         //interface
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
         GetUI_ID_List(interface_node[0]);
@@ -372,24 +354,9 @@
         show3D=(interface_node[0].getElementsByTagName("View3DInterfacePoolObject"))[0].getAttribute("show");
         Show3DView();
 
+        ShowInterface(interface_node[0],document.getElementById("body"));
 
-        //duodian
-        if (showDuodian){
-            ShowInterface(interface_node[0],"Simulator",document.getElementById("enable_div"));
-            ShowInterface(interface_node[0],"Auto",document.getElementById("auto_div"));
-            ShowInterface(interface_node[0],"Manual",document.getElementById("manual_div"));
-        }
-        else {
-            ShowInterface(interface_node[0],"Teaching|",document.getElementById("interface_div"));
-            ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
-        }
 
-        // $("#serverIP").hide();
-        // $("#language_select").hide();
-
-        // ShowInterface(interface_node[0],"My query|Query",document.getElementById("interface_div"));
-        //SetUITheme();
-        // ShowPlanInterface(interface_node[0]);
     }
 
     //按钮的回调
@@ -423,156 +390,13 @@
         QueryXml();
     }
 
-    function ShowDuodianInterface() {
-        if (false){
-
-            $("#interface_div_duodian").show();
-            document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
-            document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
-            document.title=ReturnUI_Text("Auto|自动");
-            var manual_init=true;
-            var manual_start=false;
-            var manual_stop=true;
-            var auto_init=false;
-            var auto_start=false;
-            var auto_stop=true;
-
-            function UpdateView() {
-                if (manual_init&&auto_stop){
-                    $("#manual_div").show();
-                    $("#auto_div").hide();
-                }
-                if (auto_init&&manual_stop){
-                    $("#manual_div").hide();
-                    $("#auto_div").show();
-                }
-
-
-                if (manual_start){
-                    $("#id_8").show();
-                    $("#id_9").show();
-                    document.getElementById("auto_btn").disabled=true;
-                    document.getElementById("auto_btn").style="color:gray";
-                }
-                if (manual_stop){
-                    $("#id_8").hide();
-                    $("#id_9").hide();
-                    document.getElementById("auto_btn").disabled=false;
-                    document.getElementById("auto_btn").style="color:black";
-                }
-                if (auto_start){
-
-                    document.getElementById("manual_btn").disabled=true;
-                    document.getElementById("manual_btn").style="color:gray";
-                }
-                if (auto_stop){
-
-                    document.getElementById("manual_btn").disabled=false;
-                    document.getElementById("manual_btn").style="color:black";
-                }
-
-            }
-
-            setInterval(UpdateView,100);
-
-            document.getElementById("manual_btn").onclick=function () {
-                if (auto_stop){
-                    // $("#manual_div").show();
-                    // $("#auto_div").hide();
-                    manual_init=true;
-                    auto_init=false;
-                }
-            };
-
-            document.getElementById("auto_btn").onclick=function () {
-                if (manual_stop){
-                    // $("#manual_div").hide();
-                    // $("#auto_div").show();
-                    manual_init=false;
-                    auto_init=true;
-
-                }
-            };
-        }
-    }
-
-    if (showDuodian){
-
-        $("#interface_div_duodian").show();
-        document.getElementById("manual_btn").innerText=(ReturnUI_Text("Manual|手动"));
-        document.getElementById("auto_btn").innerText=(ReturnUI_Text("Auto|自动"));
-        document.title=ReturnUI_Text("Auto|自动");
-        var manual_init=true;
-        var manual_start=false;
-        var manual_stop=true;
-        var auto_init=false;
-        var auto_start=false;
-        var auto_stop=true;
-
-        function UpdateView() {
-            if (manual_init&&auto_stop){
-                $("#manual_div").show();
-                $("#auto_div").hide();
-            }
-            if (auto_init&&manual_stop){
-                $("#manual_div").hide();
-                $("#auto_div").show();
-            }
-
-
-            if (manual_start){
-                $("#id_8").show();
-                $("#id_9").show();
-                document.getElementById("auto_btn").disabled=true;
-                document.getElementById("auto_btn").style="color:gray";
-            }
-            if (manual_stop){
-                $("#id_8").hide();
-                $("#id_9").hide();
-                document.getElementById("auto_btn").disabled=false;
-                document.getElementById("auto_btn").style="color:black";
-            }
-            if (auto_start){
-
-                document.getElementById("manual_btn").disabled=true;
-                document.getElementById("manual_btn").style="color:gray";
-            }
-            if (auto_stop){
-
-                document.getElementById("manual_btn").disabled=false;
-                document.getElementById("manual_btn").style="color:black";
-            }
-
-        }
-
-        setInterval(UpdateView,100);
-
-        document.getElementById("manual_btn").onclick=function () {
-            if (auto_stop){
-                // $("#manual_div").show();
-                // $("#auto_div").hide();
-                manual_init=true;
-                auto_init=false;
-            }
-        };
-
-        document.getElementById("auto_btn").onclick=function () {
-            if (manual_stop){
-                // $("#manual_div").hide();
-                // $("#auto_div").show();
-                manual_init=false;
-                auto_init=true;
-
-            }
-        };
-    }
 
 </script>
 
 <script type="text/javascript">
     var ws;
     buildWS("get_xml","get_xml");
-    // setTimeout(QueryXml,3500);
+
     $("button").button();
     function SetUITheme(){
         setTimeout("$(\"button\").button()",10);
