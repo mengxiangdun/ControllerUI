@@ -61,129 +61,106 @@
         <Id name="id_1028" value="id_1028"/>
         <Id name="id_1029" value="id_1029"/>
     </UiIdPoolObject>
-    <LayoutPoolObject>
-
-    </LayoutPoolObject>
-    <View3DInterfacePoolObject show="true">
-
-    </View3DInterfacePoolObject>
-
-    <CmdInterfacePoolObject>
-
-        <Panel text="Teaching|">
-            <Tabs id="" text="">
-                <Li text="World|">
-                    <Panel text="">
-                        <Button id="" text="+X" repeat="0" rate="50" cmd="movePoint --x=0.01" return_attached=""/>
-                        <Button id="" text="-X" repeat="0" rate="50" cmd="movePoint --x=-0.01" return_attached=""/>
-                        <Button id="" text="+Y" repeat="0" rate="50" cmd="movePoint --y=0.01" return_attached=""/>
-                        <Button id="" text="-Y" repeat="0" rate="50" cmd="movePoint --y=-0.01" return_attached=""/>
-                        <Button id="" text="+Z" repeat="0" rate="50" cmd="movePoint --z=0.01" return_attached=""/>
-                        <Button id="" text="-Z" repeat="0" rate="50" cmd="movePoint --z=-0.01" return_attached=""/>
-                        <Button id="" text="+RX" repeat="0" rate="50" cmd="movePoint --a=0.01" return_attached=""/>
-                        <Button id="" text="-RX" repeat="0" rate="50" cmd="movePoint --a=-0.01" return_attached=""/>
-                        <Button id="" text="+RY" repeat="0" rate="50" cmd="movePoint --b=0.01" return_attached=""/>
-                        <Button id="" text="-RY" repeat="0" rate="50" cmd="movePoint --b=-0.01" return_attached=""/>
-                        <Button id="" text="+RZ" repeat="0" rate="50" cmd="movePoint --c=0.01" return_attached=""/>
-                        <Button id="" text="-RZ" repeat="0" rate="50" cmd="movePoint --c=-0.01" return_attached=""/>
-                    </Panel>
-                </Li>
-                <Li text="End|">
-                    <Panel text="">
-                        <Button id="" text="+X" repeat="0" rate="50" cmd="movePoint --cor=1 --x=0.01" return_attached=""/>
-                        <Button id="" text="-X" repeat="0" rate="50" cmd="movePoint --cor=1  --x=-0.01" return_attached=""/>
-                        <Button id="" text="+Y" repeat="0" rate="50" cmd="movePoint --cor=1  --y=0.01" return_attached=""/>
-                        <Button id="" text="-Y" repeat="0" rate="50" cmd="movePoint --cor=1  --y=-0.01" return_attached=""/>
-                        <Button id="" text="+Z" repeat="0" rate="50" cmd="movePoint --cor=1  --z=0.01" return_attached=""/>
-                        <Button id="" text="-Z" repeat="0" rate="50" cmd="movePoint  --cor=1 --z=-0.01" return_attached=""/>
-                        <Button id="" text="+RX" repeat="0" rate="50" cmd="movePoint  --cor=1 --a=0.01" return_attached=""/>
-                        <Button id="" text="-RX" repeat="0" rate="50" cmd="movePoint  --cor=1 --a=-0.01" return_attached=""/>
-                        <Button id="" text="+RY" repeat="0" rate="50" cmd="movePoint  --cor=1 --b=0.01" return_attached=""/>
-                        <Button id="" text="-RY" repeat="0" rate="50" cmd="movePoint  --cor=1 --b=-0.01" return_attached=""/>
-                        <Button id="" text="+RZ" repeat="0" rate="50" cmd="movePoint  --cor=1 --c=0.01" return_attached=""/>
-                        <Button id="" text="-RZ" repeat="0" rate="50" cmd="movePoint  --cor=1 --c=-0.01" return_attached=""/>
-                    </Panel>
-                </Li>
-            </Tabs>
-            <Panel text="Input CMD">
-                <Input id="id_1021" parameter=""/>
-                <Button id="" text="Send" cmd="${id_1021}" return_attached=""/>
-            </Panel>
-            <Panel text="Insert Point">
-                <Button id="" text="Record" cmd="get_ee_pq" return_attached="$BinaryLabel{id_1022}"/>
-                <Label id="id_1022"/>
-            </Panel>
-            <Panel text="Show Joint Position">
-                <Button id="" text="Show" cmd="sh" return_attached="$BinaryLabel{1023}"/>
-                <Label id="1023"/>
-            </Panel>
-        </Panel>
-        <Panel text="My CMD|CMD" id="id_1">
-            <Panel >
-                <Viewer></Viewer>
-            </Panel>
-            <Panel text="mvaj|CMD" id="id_2">
-                <Input id="id_3" default="" parameter="m"/>
-                <!--default：input内的默认值-->
-                <!--parameter:所对应的参数名称，会显示在输入框的前面-->
-                <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
-                <!--slider控件-->
-                <!--default:默认值；max：最大值；min：最小值；step：拖动时的步进值；-->
-                <Select id="id_6" parameter="vel">
-                    <Option  selected="selected">1</Option>
-                    <Option >2</Option>
-                    <Option >3</Option>
-                </Select>
-                <!--Select:下拉选择框-->
-                <Spinner id="id_7" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
-                <!--spinner:点动输入-->
-                <Button id="id_5" text="mvaj" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6} --acc=$Spinner{id_7}" function="Disable(${id_1023})" return_attached=""/>
-                <Button id="id_8" text="Hide" function="HideUI(${id_5});Enable(${id_1023})" return_attached=""/>
-                <!--text:显示在UI上的文字-->
-                <!---->
-                <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
-                <!--rate:cmd send rate 重复发送的间隔ms-->
-                <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
-                <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI-->
-                <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
+    <!--layout 为页面布局，必须包括ui-layout-center。布局可相互嵌套-->
+    <Layout pos="ui-layout-center" id="">
+        <CmdInterfacePoolObject>
+            <Panel text="My CMD|CMD" id="id_1">
+                <Panel text="mvaj|CMD" id="id_2">
+                    <Input id="id_3" default="" parameter="m" style="width:30px"/>
+                    <!--default：input内的默认值-->
+                    <!--parameter:所对应的参数名称，会显示在输入框的前面-->
+                    <!--<Input id="id_4" default="" parameter="pos"/>-->
+                    <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
+                    <Select id="id_6" parameter="vel">
+                        <Option value="1" selected="selected">world</Option>
+                        <Option value="2">end</Option>
+                        <Option value="3">abc</Option>
+                    </Select>
+                    <!--Select:下拉选择框;显示text，取值用value-->
+                    <Br/>
+                    <!--Br插入一个换行-->
+                    <Spinner id="id_7" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
+                    <!--spinner:点动输入-->
+                    <Button id="id_5" text="mvaj" style="width: 100px;background-color: #8e846b;color: #a45b13" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6} --acc=$Spinner{id_7}" function="Disable(${id_1023})" return_attached=""/>
+                    <Button id="id_8" text="Hide" function="HideUI(${id_5});HideUI(${id_7});" return_attached=""/>
+                    <!--text:显示在UI上的文字-->
+                    <!---->
+                    <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
+                    <!--rate:cmd send rate 重复发送的间隔ms-->
+                    <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
+                    <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI-->
+                    <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
+                </Panel>
+                <Panel>
+                    <Button  text="b" cmd="b" return_attached="$Label{id_7}"/>
+                    <Label id="id_7"/>
+                    <!--Label：返回的数据为字符串-->
+                </Panel>
+                <Panel text="Get EE Pq|">
+                    <Button id="id_6" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
+                    <BinaryLabel id="id_27"/>
+                    <!--BinaryLabel:返回的数据为二进制：float类型-->
+                </Panel>
+                <Panel text="" id="id_24">
+                    <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
+                    <Chart id="id_26" text="" length="100"/>
+                    <!--length:图表显示的数据的长度，默认为1000-->
+                    <!--chart 的返回数据需要两个，前一个显示在X轴，后一个显示在Y轴-->
+                </Panel>
             </Panel>
             <Panel>
-                <Button  text="b" cmd="b" return_attached="$Label{id_7}"/>
-                <Label id="id_7"/>
-                <!--Label：返回的数据为字符串-->
+                <!--可拖动排序的控件-->
+                <Sortable id="id_1017" style="width: 100px;height: 200px;background-color: #0074c7"/>
             </Panel>
-            <Panel text="Get EE Pq|">
-                <Button id="id_6" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
-                <BinaryLabel id="id_27"/>
-                <!--BinaryLabel:返回的数据为二进制：float类型-->
-            </Panel>
-            <Panel text="" id="id_24">
-                <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
-                <Chart id="id_26" text="" length="100"/>
-                <!--length:图表显示的数据的长度，默认为1000-->
-                <!--chart 的返回数据需要两个，前一个显示在X轴，后一个显示在Y轴-->
-            </Panel>
-            <Panel text="" id="id_11">
-                <Tabs id="id_12" text="Tab">
-                    <Li text="tab_1">
-                        <Panel text="">
-                            <Button text="abc"/>
-                        </Panel>
-                    </Li>
-                    <Li text="tab_2">
-                        <Panel text="">
-                            <Button text="def"/>
-                        </Panel>
-                    </Li>
-                    <Li text="tab_3">
-                        <Panel text="">
-                            <Button text="ghj"/>
-                        </Panel>
-                    </Li>
-                </Tabs>
-            </Panel>
-        </Panel>
-    </CmdInterfacePoolObject>
+        </CmdInterfacePoolObject>
+    </Layout>
+    <Layout pos="ui-layout-north" id="">
+        <Figure text="logo" src="images/logo.png" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
+    <!--Figure，显示图片-->
+    </Layout>
+    <Layout pos="ui-layout-south" id="">
+        <CmdInterfacePoolObject>
+            <Tabs id="">
+                <TabItem text="tab_1">
+                    <Panel text="">
+                        <Button text="abc"/>
+                    </Panel>
+                </TabItem>
+                <TabItem text="tab_2">
+                    <Panel text="">
+                        <Button text="def"/>
+                    </Panel>
+                </TabItem>
+            </Tabs>
+        </CmdInterfacePoolObject>
+    </Layout>
+    <Layout pos="ui-layout-west" id="">
+        <CmdInterfacePoolObject>
+            <Accordion id="">
+                <AccordionItem text="拖动" id="">
+                    <Panel>
+                        <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="abc"/>
+                        <!--可拖动控件-->
+                        <!--connectToSortable：连接到可接受的目标区域-->
+                        <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="def"/>
+                        <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="ghi"/>
+                    </Panel>
+                </AccordionItem>
+                <AccordionItem text="def" id="">
+                    <Panel>
+                        <Button id="" text="defg"/>
+                    </Panel>
+                </AccordionItem>
+            </Accordion>
+            <!--可折叠控件，-->
+        </CmdInterfacePoolObject>
+    </Layout>
+    <Layout pos="ui-layout-east" id="">
+        <View3DInterfacePoolObject show="true" rate="50"/>
+    </Layout>
+
+
+
 
 </InterfaceRoot>
 
