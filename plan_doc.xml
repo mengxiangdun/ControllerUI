@@ -1,6 +1,6 @@
 <object type="ControlServer">
 
-<InterfaceRoot >
+<InterfaceRoot lang="eng">
     <UiIdPoolObject >
         <Id name="id_1"  value="id_1"/>
         <Id name="id_2"  value="id_2"/>
@@ -99,7 +99,7 @@
                     <!--Label：返回的数据为字符串-->
                 </Panel>
                 <Panel text="Get EE Pq|">
-                    <Button id="id_6" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
+                    <Button id="" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
                     <BinaryLabel id="id_27"/>
                     <!--BinaryLabel:返回的数据为二进制：float类型-->
                 </Panel>
@@ -157,7 +157,7 @@
             <!--可折叠控件，-->
         </CmdInterfacePoolObject>
     </Layout>
-    <Layout pos="ui-layout-east"size="100"  id="id_1005">
+    <Layout pos="ui-layout-east" size="100"  id="id_1005">
         <View3DInterfacePoolObject show="true" rate="50"/>
     </Layout>
 </InterfaceRoot>
