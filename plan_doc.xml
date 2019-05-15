@@ -117,8 +117,11 @@
         </CmdInterfacePoolObject>
     </Layout>
     <Layout pos="ui-layout-north" size="100" id="id_1002">
-        <Figure text="logo" src="images/logo.png" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
-    <!--Figure，显示图片-->
+        <CmdInterfacePoolObject>
+            <Figure text="logo" src="images/logo.png" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
+            <!--Figure，显示图片-->
+        </CmdInterfacePoolObject>
+
     </Layout>
     <Layout pos="ui-layout-south" size="100" id="id_1003">
         <CmdInterfacePoolObject>
