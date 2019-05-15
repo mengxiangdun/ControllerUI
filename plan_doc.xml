@@ -1,4 +1,4 @@
-<object type="ControlServer">
+<ContrlServer name="rokae_xb4">
 
 <InterfaceRoot lang="eng">
     <UiIdPoolObject >
@@ -162,4 +162,4 @@
     </Layout>
 </InterfaceRoot>
 
-</object>
+</ContrlServer>

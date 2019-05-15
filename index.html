@@ -328,10 +328,10 @@
         var root_ele=xmlDoc.getElementsByTagName("ControlServer");
         var robot_name=root_ele[0].getAttribute("name");
         console.log("robot name: "+robot_name);
-        if (robot_name.indexOf("stewart")!==-1){
-            showDuodian=true;
-            ShowDuodianInterface();
-        }
+        // if (robot_name.indexOf("stewart")!==-1){
+        //     showDuodian=true;
+        //     ShowDuodianInterface();
+        // }
 
         //interface
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
