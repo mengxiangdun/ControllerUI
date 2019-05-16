@@ -1,0 +1,172 @@
+﻿<!doctype html>
+
+<title>Kaanh Controller Configure</title>
+<meta charset="utf-8"/>
+<script src="lib/ControllerJS.js"></script>
+<link rel='stylesheet' href='lib/style.css' />
+<script src="external/jquery/jquery.js"></script>
+<script src="lib/jquery-ui.js"></script>
+<link href="lib/jquery-ui.css" rel="stylesheet">
+<link href="lib/jquery-ui.css" rel="stylesheet">
+
+<link rel="stylesheet" href="lib/codemirror.css">
+<link rel="stylesheet" href="addon/fold/foldgutter.css" />
+<script src="lib/codemirror.js"></script>
+<script src="addon/fold/foldcode.js"></script>
+<script src="addon/fold/foldgutter.js"></script>
+<script src="addon/fold/brace-fold.js"></script>
+<script src="addon/fold/xml-fold.js"></script>
+<script src="addon/fold/indent-fold.js"></script>
+<script src="addon/fold/markdown-fold.js"></script>
+<script src="addon/fold/comment-fold.js"></script>
+<script src="mode/javascript/javascript.js"></script>
+<script src="mode/xml/xml.js"></script>
+<script src="mode/css/css.js"></script>
+<script src="mode/htmlmixed/htmlmixed.js"></script>
+<script src="mode/python/python.js"></script>
+<script src="mode/markdown/markdown.js"></script>
+<style>
+      .CodeMirror { border: 1px solid black;height: auto; font-family: "微软雅黑 Light";  }
+    </style>
+<body>
+<div id="interface_div">
+    <button id="btn_download">查看配置</button>
+    <button id="btn_upload">修改配置</button>
+    <button id="btn_start">开启</button>
+
+    <form><textarea id="code" name="code" >
+</textarea></form>
+</div>
+
+
+
+<script>
+    var editor;
+    // $("#interface_div").hide();
+    $("button").button();
+    var serverIP="ws://127.0.0.1:5866";
+    // var serverIP="ws://192.168.1.26:5866";
+    var ws;
+    var xmlDoc;
+    buildWS();
+
+    editor= CodeMirror.fromTextArea(document.getElementById("code"), {
+        mode: "xml",
+        lineNumbers: true,
+        lineWrapping: true,
+        extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    });
+    setTimeout(QueryXml,3500);
+
+    function GetXmlDoc(data){
+        var parser=new DOMParser();
+        xmlDoc=parser.parseFromString(data,"text/xml");
+        editor.setValue(data);
+        console.log("data: "+data);
+        SetUITheme();
+    }
+
+    document.getElementById("btn_upload").onclick=function(){
+        SendCmd("stop");
+        UpLoad();
+    };
+
+    document.getElementById("btn_download").onclick=function(){
+        Download();
+    };
+
+    document.getElementById("btn_start").onclick=function () {
+        SendCmd("start");
+        ws.close();
+        var url="index.html?ServerIp="+escape( serverIP);
+        location.href=url;
+    };
+
+    function SetUITheme(){
+        setTimeout("$(\"button\").button()",2050);
+        setTimeout("$(\"button\").width(80)",2050);
+        setTimeout("$(\"#interface_div\").show()",2050);
+    }
+
+    function Download() {
+        setTimeout(QueryXml,3500);
+    }
+
+    function UpLoad() {
+        // var newXml=document.getElementById("text_area").innerText;
+        var newXml =editor.getValue();
+        console.log("new xml "+newXml);
+        var str= newXml.split('\n').join('');
+        console.log("new xml: "+str);
+        SendCmd("set_xml --xml={"+str+"}","");
+    }
+
+    var dummy = {
+        attrs: {
+            color: ["red", "green", "blue", "purple", "white", "black", "yellow"],
+            size: ["large", "medium", "small"],
+            description: null
+        },
+        children: []
+    };
+
+    var tags = {
+        "!top": ["top"],
+        "!attrs": {
+            id: null,
+            class: ["A", "B", "C"]
+        },
+        top: {
+            attrs: {
+                lang: ["en", "de", "fr", "nl"],
+                freeform: null
+            },
+            children: ["animal", "plant"]
+        },
+        animal: {
+            attrs: {
+                name: null,
+                isduck: ["yes", "no"]
+            },
+            children: ["wings", "feet", "body", "head", "tail"]
+        },
+        plant: {
+            attrs: {name: null},
+            children: ["leaves", "stem", "flowers"]
+        },
+        wings: dummy, feet: dummy, body: dummy, head: dummy, tail: dummy,
+        leaves: dummy, stem: dummy, flowers: dummy
+    };
+
+    function completeAfter(cm, pred) {
+        var cur = cm.getCursor();
+        if (!pred || pred()) setTimeout(function() {
+            if (!cm.state.completionActive)
+                cm.showHint({completeSingle: false});
+        }, 100);
+        return CodeMirror.Pass;
+    }
+
+    function completeIfAfterLt(cm) {
+        return completeAfter(cm, function() {
+            var cur = cm.getCursor();
+            return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == "<";
+        });
+    }
+
+    function completeIfInTag(cm) {
+        return completeAfter(cm, function() {
+            var tok = cm.getTokenAt(cm.getCursor());
+            if (tok.type == "string" && (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1)) return false;
+            var inner = CodeMirror.innerMode(cm.getMode(), tok.state).state;
+            return inner.tagName;
+        });
+    }
+
+
+</script>
+</body>
+
+

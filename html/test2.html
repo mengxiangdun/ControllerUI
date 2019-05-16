@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>New Web Project</title>
+    <!--<link type = "text/css" href = "jquery-ui.css" rel = "stylesheet"/>-->
+    <style type = "text/css">
+        .EZ_SITE{width:990px; position: relative; margin:0px auto; top:30px;}
+        .EZ_SITE_HEADER{width:990px; position: absolute; height:80px; border:1px solid red;}
+        .ez_site_border{position: absolute; width:100%; height:100%; background-color:#000;}
+        .ez_site_background{position: absolute; width:100%; height:100%;background-color:#fff; margin:0px;}
+        .EZ_SITE_PAGE{width:990px; height:500px; position: absolute;top:82px;border:1px solid blue;}
+        .ez_page_content{width:100%; height:100%; position: absolute;}
+        .EZ_SITE_FOOTER{width:990px; position: absolute; height:80px; top:580px;border:1px solid green;}
+        #dragMe{
+            position:absolute;
+            top:100px;
+            left:100px;
+            width:100px;
+            height:50px;
+            border:1px solid green;
+            line-height:50px;
+            cursor:move;
+            text-align: center;
+            z-index:999;
+            background:#008800;
+        }
+        .box{
+            position:absolute;
+            top:100px;
+            left:300px;
+            width:300px;
+            height:200px;
+            border:1px solid blue;
+            line-height:200px;
+            cursor:move;
+            text-align: center;
+            z-index:990;
+            background:#ddd;
+        }
+    </style>
+    <link type="text/css" rel="stylesheet" href="lib/layout-default.css">
+    <script type="text/javascript" src="external/jquery/jquery.js"></script>
+    <script type="text/javascript" src="jquery-ui.js"></script>
+    <script type="text/javascript" src="lib/jquery.layout.js"></script>
+    <script type = "text/javascript">
+        $(function(){
+            var obj = {
+                drop:function(e,ui){
+                    var handle = ui.helper,
+                        _left = handle.offset().left,
+                        _top = handle.offset().top,
+                        cleft = $(this).offset().left,
+                        ctop = $(this).offset().top;
+                    handle.appendTo($(this)).css({
+                        left:_left-cleft,
+                        top:_top-ctop
+                    });
+                }
+            };
+            $("#addBox").click(function(){
+                var $box = $('<div class = "box">box</div>');
+                $box.appendTo($("#EZ_SITE_PAGE")).draggable().droppable(obj);
+            })
+            $("#dragMe,#box").draggable({
+                containment:"#EZ_SITE"
+            });
+            $(".ez_page_content,#box").droppable(obj);
+        })
+    </script>
+</head>
+<body>
+<div id="EZ_SITE" class="EZ_SITE">
+    <div id="EZ_SITE_HEADER" class="EZ_SITE_HEADER">
+        <div class="ez_site_border">
+            <div class="ez_site_background"></div>
+        </div>
+        <div class="ez_page_content">
+            <div style="position: absolute; top:20px; left:30px;">这是一个网站标题</div>
+            <div style="position: absolute; top:20px; left:300px;" class="mk-element-navigation">
+                <a href="javascript:;" id="index">主页</a>
+                <a href="javascript:;" id="product">产品</a>
+            </div>
+        </div>
+    </div>
+    <div id="EZ_SITE_PAGE" class="EZ_SITE_PAGE">
+        <input type = "button" value = "添加容器" id = "addBox"/>
+        <div class="ez_site_border" style="height:500px;">
+            <div class="ez_site_background"></div>
+        </div>
+        <div id="index" class="ez_page_content" style="opacity: 1;" current="true">
+            <div style="position: absolute; top:20px; left:30px; font-weight: bold;">这是一个主页面</div>
+            <div id = "dragMe">dragMe</div>
+        </div>
+    </div>
+    <div id="EZ_SITE_FOOTER" class="EZ_SITE_FOOTER">
+        <div class="ez_site_border">
+            <div class="ez_site_background"></div>
+        </div>
+        <div class="ez_page_content">
+            <div style="position: absolute; top:20px; left:30px;">这里是页脚</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

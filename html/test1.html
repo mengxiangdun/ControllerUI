@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Layout Container</title>
+
+    <link type="text/css" rel="stylesheet" href="lib/layout-default.css">
+    <link type="text/css" rel="stylesheet" href="jquery-ui.css">
+    <script type="text/javascript" src="external/jquery/jquery.js"></script>
+    <script type="text/javascript" src="jquery-ui.js"></script>
+    <script type="text/javascript" src="lib/jquery.layout.js"></script>
+    <style type="text/css">
+        html, body {
+            background:	#666;
+            width:		100%;
+            height:		100%;
+            padding:	0;
+            margin:		0;
+            overflow:	auto; /* when page gets too small */
+        }
+        #container {
+            background:	#999;
+            height:		100%;
+            margin:		0 auto;
+            width:		100%;
+            max-width:	900px;
+            min-width:	700px;
+            _width:		700px; /* min-width for IE6 */
+        }
+        .pane {
+            display:	none; /* will appear when layout inits */
+        }
+    </style>
+
+<style>
+    #draggable {
+        width: 100px;
+        height: 100px;
+        background: #ccc;
+    }
+    #droppable {
+        position: absolute;
+        left: 250px;
+        top: 0;
+        width: 125px;
+        height: 125px;
+        background: #999;
+        color: #fff;
+        padding: 10px;
+    }
+</style>
+</head>
+<body id="body">
+<figure>
+    <figcaption>der</figcaption>
+    <img src="images/ui-bg_diagonals-medium_20_d34d17_40x40.png" alt="s" style="width: 40px;height: 40px;margin-left:30px;margin-top: 30px "/>
+</figure>
+
+<div id="body_1" style="width: 100%;height: 100%">
+    <div class="pane ui-layout-center">
+        Center
+
+        <button id="coo" style="width: 100px;background-color: #8e846b;color: #a45b13">color</button>
+        <div id="droppable">Drop here</div>
+
+
+        <ul id="sortable" style="width: 200px;height: 200px;background-color: #0074c7">
+            <!--<li><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>-->
+            <!--<li><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>-->
+            <!--<li><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>-->
+            <!--<li><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>-->
+            <!--<li><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>-->
+        </ul>
+
+        <script>$("#sortable").sortable();</script>
+
+    </div>
+    <div class="pane ui-layout-north" style="height: 100px" id="">North</div>
+    <div class="pane ui-layout-south" style="height: 100px" >South
+        <fieldset style="width: 300px;background-color: #f5ff83">
+
+        </fieldset>
+    </div>
+    <div class="pane ui-layout-east" style="width: 200px">East</div>
+    <div class="pane ui-layout-west"  style="width: 200px">West
+
+        <div id="drag_btn1" >drag me 1</div>
+        <div id="drag_btn2" >drag me 2</div>
+        <div id="drag_btn3" >drag me 3</div>
+        <div id="drag_btn4" >drag me 4</div>
+
+    </div>
+</div>
+
+
+
+</div>
+
+<script type="text/javascript">
+
+    document.getElementById("coo").onclick=function(){
+        alert("aaa");
+    };
+
+    $(document).ready(function(){
+        pageLayout=  $("#body_1").layout({
+            // west__size:300,
+            // west__resizable:false,
+            // west__slidable:false
+        });
+    });
+
+
+
+    $( "#drag_btn1" ).draggable({
+        appendTo:"body",
+        helper:"clone",
+        opacity:1,
+        // connectToSortable:"#sortable"
+    });
+    $( "#drag_btn2" ).draggable({
+        appendTo:"body",
+        helper:"clone",
+        opacity:1,
+        connectToSortable:"#sortable"
+    });
+    $( "#drag_btn3" ).draggable({
+        appendTo:"body",
+        helper:"clone",
+        opacity:1,
+        connectToSortable:"#sortable"
+    });
+    $( "#drag_btn4" ).draggable({
+        appendTo:"body",
+        helper:"clone",
+        opacity:1,
+        connectToSortable:"#sortable"
+    });
+
+    // $( "#droppable" ).droppable({
+    //     drop: function() {
+    //         alert( "dropped" );
+    //     }
+    // });
+
+    $("#droppable").droppable({
+        drop:function(event,ui){
+            // $(this).append($("<p style='position:absolute;left:"+
+            //     ui.offset.left+";top:"+ui.offset.top+"'>clone</p>"));
+            $(this).append($(ui.draggable).clone());
+        }
+    });
+
+
+    function handleDropEvent(event,ui){
+
+
+    }
+    // $( "#draggable" ).draggable('option','scroll',false);
+
+    // var a=$( "#draggable" ).draggable('option','scroll');
+    // console.log("aaa :"+a);
+    $("#drag_btn1").button();
+    $("#drag_btn2").button();
+    $("#drag_btn3").button();
+    $("#drag_btn4").button();
+</script>
+</body>
+</html>
