@@ -1,0 +1,25 @@
+ManifestFileVersion: 0
+CRC: 1365238407
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: l0.data
+      Dependencies: {}
+    Info_1:
+      Name: l1.data
+      Dependencies: {}
+    Info_2:
+      Name: l2.data
+      Dependencies: {}
+    Info_3:
+      Name: l3.data
+      Dependencies: {}
+    Info_4:
+      Name: l4.data
+      Dependencies: {}
+    Info_5:
+      Name: l5.data
+      Dependencies: {}
+    Info_6:
+      Name: l6.data
+      Dependencies: {}
