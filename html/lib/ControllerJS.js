@@ -739,6 +739,7 @@ function CreateButton(node,father) {
     if (node.getAttribute("style")) {
         btn_cmd.style=node.getAttribute("style");
     }
+
     else {
         setTimeout("$( \"#"+btn_cmd.id+"\" ).button()",20);
     }
@@ -796,35 +797,42 @@ function CreateButton(node,father) {
         for (var i=0;i<fun_list.length;i++){
             if (fun_list[i].indexOf("$")!==-1){
 
-                var con_str=[];
                 if (fun_list[i].indexOf("ShowUI")!==-1){
-                    var con_str_showUI=GetInnerID(fun_list[i]);
-                    // btn_cmd.onclick+=function(){ ShowUI(con_str_showUI[0]);};
-                    AddClickEvent(btn_cmd,function(){ ShowUI(con_str_showUI[0]);});
+                    AddShowEvent(fun_list[i],btn_cmd);
                 }
                 else if (fun_list[i].indexOf("HideUI")!==-1){
-                    var con_str_hideUI=GetInnerID(fun_list[i]);
-                    // btn_cmd.onclick+=function(){ HideUI(id_str);};
-                    con_str[con_str.length]=GetInnerID(fun_list[i]);
-                    AddClickEvent(btn_cmd,function(){ HideUI(con_str_hideUI[0]);});
-
-                    // btn_cmd.addEventListener("onclick",function(){ HideUI(con_str_hideUI[0]);})
+                    AddHideEvent(fun_list[i],btn_cmd);
                 }
                 else if (fun_list[i].indexOf("Disable")!==-1){
-                    var con_str_dis=GetInnerID(fun_list[i]);
-                    // btn_cmd.onclick+=function(){ HideUI(id_str);};
-                    AddClickEvent(btn_cmd,function(){ DisableUI(con_str_dis[0]);});
-                    // btn_cmd.addEventListener("onclick",function(){ DisableUI(con_str_dis[0]);})
+                    AddDisableEvent(fun_list[i],btn_cmd);
                 }
                 else if (fun_list[i].indexOf("Enable")!==-1){
-                    var con_str_en=GetInnerID(fun_list[i]);
-                    // btn_cmd.onclick+=function(){ HideUI(id_str);};
-                    AddClickEvent(btn_cmd,function(){ EnableUI(con_str_en[0]);});
+                    AddEnableEvent(fun_list[i],btn_cmd);
                 }
             }
         }
     }
 
+}
+
+function AddShowEvent(funStr,btn) {
+    var con_str_showUI=GetInnerID(funStr);
+    AddClickEvent(btn,function(){ ShowUI(con_str_showUI[0]);});
+}
+
+function AddHideEvent(funStr,btn) {
+    var con_str_showUI=GetInnerID(funStr);
+    AddClickEvent(btn,function(){ HideUI(con_str_showUI[0]);});
+}
+
+function AddDisableEvent(funStr,btn) {
+    var con_str_showUI=GetInnerID(funStr);
+    AddClickEvent(btn,function(){ DisableUI(con_str_showUI[0]);});
+}
+
+function AddEnableEvent(funStr,btn) {
+    var con_str_showUI=GetInnerID(funStr);
+    AddClickEvent(btn,function(){ EnableUI(con_str_showUI[0]);});
 }
 
 function AddClickEvent(el,fn){
@@ -876,7 +884,7 @@ function Btn_cmd_onclick(str,return_str){
         else if (type_str.indexOf("Spinner")!==-1){
             id_value=$("#"+id_str).spinner("value");
         }
-        console.log(id_value);
+        console.log("id:"+id_str+"; value: "+ id_value);
         var old_str=str.substr(index_0,index_2-index_0+1);
         Btn_cmd_onclick(str.replace(old_str,id_value),return_str);
     }
@@ -1147,7 +1155,7 @@ function AnalizeBotData(buffer) {
                 SendDataToWinForm("get_part_pq@"+pq);
                 if (gameInstance!=null){
                     gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
-                    //console.log("get part pq: "+pq);
+                    console.log("get part pq: "+pq);
                 }
             }
 

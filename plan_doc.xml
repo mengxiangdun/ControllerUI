@@ -1,6 +1,7 @@
 <ContrlServer name="rokae_xb4">
 
 <InterfaceRoot lang="eng">
+    <!--lang:eng;chs-->
     <UiIdPoolObject >
         <Id name="id_1"  value="id_1"/>
         <Id name="id_2"  value="id_2"/>
@@ -64,6 +65,7 @@
     <!--layout 为页面布局，必须包括ui-layout-center。布局可相互嵌套-->
     <!--layout id必须有-->
     <!--可以设置size，一般center不设置size，会自动浮动-->
+    <!--layout 的第一级子节点要么是CmdInterfacePoolObject，要么是View3DInterfacePoolObject-->
     <Layout pos="ui-layout-center"  id="id_1001">
         <CmdInterfacePoolObject>
             <Panel text="My CMD|CMD" id="id_1">
