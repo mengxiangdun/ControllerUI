@@ -741,9 +741,9 @@ function CreateButton(node,father) {
     }
 
     else {
-        setTimeout("$( \"#"+btn_cmd.id+"\" ).button()",20);
-    }
 
+    }
+    setTimeout("$( \"#"+btn_cmd.id+"\" ).button()",20);
     father.appendChild(btn_cmd);
 
     if (node.getAttribute("cmd")!==null){
