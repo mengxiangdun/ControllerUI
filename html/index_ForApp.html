@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title >Kaanh Intelligence</title>
+    <link rel='stylesheet' href='lib/style.css' />
+    <script src="external/jquery/jquery.js"></script>
+    <script src="lib/jquery-ui.js"></script>
+    <script src="lib/echarts.js"></script>
+    <script src="lib/js.cookie.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script src="lib/FileSaver.js"></script>
+    <title>Servo Press Monitor</title>
+    <link href="lib/jquery-ui.css" rel="stylesheet">
+    <link href="lib/jquery-ui.css" rel="stylesheet">
+    <script src="lib/ControllerJS.js"></script>
+</head>
+<body>
+<div id="interface_div" style="width: 250px">
+
+</div>
+
+<script type="text/javascript">
+
+    var show3D=false;
+    var language="eng";
+    function ReturnUI_Text(str) {
+        if (str!==null&&str!==""){
+            var str_list=str.split('|');
+            switch (language) {
+                case "eng":
+                    return str_list[0];
+                case "chs":
+                    return str_list[1];
+                default:
+                    return null;
+
+            }
+        }
+    }
+    //获得xml后的回调
+    function GetXmlDoc(data){
+        $("#interface_div").empty();
+        // console.log(data);
+
+        var parser=new DOMParser();
+        var xmlDoc=parser.parseFromString(data,"text/xml");
+
+        //robot name
+        // var root_ele=xmlDoc.getElementsByTagName("ControlServer");
+        // var robot_name=root_ele[0].getAttribute("name");
+        // console.log("robot name: "+robot_name);
+        //plan_interface
+        var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
+        GetUI_ID_List(interface_node[0]);
+        ShowInterface(interface_node[0],"Teaching|",document.getElementById("interface_div"));
+        ShowInterface(interface_node[0],"My CMD|CMD",document.getElementById("interface_div"));
+
+        SetUITheme();
+
+    }
+    var serverIP="ws://127.0.0.1:5866";
+    var ws;
+    buildWS();
+    setTimeout(QueryXml,3500);
+    $("button").button();
+    function SetUITheme(){
+        setTimeout("$(\"button\").button()",1050);
+        setTimeout("$(\"button\").width(80)",1050);
+        setTimeout("$(\"#interface_div\").show()",1065);
+
+        // setTimeout(function () {
+        //     if (!show3D){
+        //         $("#chart_dom").show();
+        //     }
+        // },2065);
+    }
+</script>
+</body>
+</html>
