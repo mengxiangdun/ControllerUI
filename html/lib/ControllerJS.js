@@ -10,6 +10,7 @@ var dataSetLength=[];
 var dataMap_chartID=[];
 var dataMap_dataIndex=[];
 var id_list=0;//自动添加的id，++
+var demoWorkspace
 
 function GetUI_ID_List(node) {
     var id_pool_node=node.getElementsByTagName("UiIdPoolObject");
@@ -198,6 +199,9 @@ function CreateUI(node,father) {
                 break;
             case "Dragable":
                 CreateDragable(sonNodes[j],father);
+                break;
+            case "BlockProgram":
+                CreateBlockProgram(sonNodes[j],father);
                 break;
         }
 
@@ -609,13 +613,41 @@ function CreateTable(node,father) {
 function CreateBlockProgram(node,father) {
     var block_div=document.createElement("div");
     block_div.id=ReturnUI_ID(node.getAttribute("id"));
-    var demoWorkspace = Blockly.inject(block_div.id,
+    var id_str=block_div.id;
+    block_div.style="display: inline-block; height: 300px; width: 500px";
+    father.appendChild(block_div);
+    demoWorkspace = Blockly.inject(id_str,
         {media: '../../media/',
             toolbox: document.getElementById('toolbox')});
     Blockly.Xml.domToWorkspace(document.getElementById('workspaceBlocks'),
         demoWorkspace);
+
+    father.appendChild(document.createElement("br"));
+    var btn=document.createElement("button");
+    btn.innerText="Run";
+    btn.id=ReturnUI_ID("");
+    btn.onclick=function () {
+        var code=generateCodeAndLoadIntoInterpreter();
+        eval(code);
+    };
+    setTimeout("$( \"#"+btn.id+"\" ).button()",20);
+    father.appendChild(btn);
 }
 
+function generateCodeAndLoadIntoInterpreter() {
+    // Generate JavaScript code and parse it.
+    Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+    Blockly.JavaScript.addReservedWords('highlightBlock');
+    var latestCode = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+    console.log("code : "+latestCode);
+    //resetStepUi(true);
+    return latestCode;
+}
+
+function highlightBlock(id) {
+    demoWorkspace.highlightBlock(id);
+    highlightPause = true;
+}
 function CreateBinaryLabel(node,father) {
     var input_para=document.createElement("input");
     input_para.id=ReturnUI_ID(node.getAttribute("id"));
@@ -926,6 +958,10 @@ function Btn_cmd_onclick(str,return_str){
         else if (type_str.indexOf("Spinner")!==-1){
             id_value=$("#"+id_str).spinner("value");
         }
+        else if (type_str.indexOf("BlockProgram")!==-1){
+
+
+        }
         console.log("id:"+id_str+"; value: "+ id_value);
         var old_str=str.substr(index_0,index_2-index_0+1);
         Btn_cmd_onclick(str.replace(old_str,id_value),return_str);
@@ -1074,7 +1110,7 @@ function SendCmd(cmd,code_return_str){
             //     PackBotCmd("0&1&"+now+"&0&0&"+cmd);
             // }
             PackBotCmd("0&1&"+now+"&0&0&"+cmd);
-            console.log("send cmd :"+cmd);
+            //console.log("send cmd :"+cmd);
             break;
         case  WebSocket.CLOSING:
             break;
@@ -1198,7 +1234,7 @@ function AnalizeBotData(buffer) {
                 SendDataToWinForm("get_part_pq@"+pq);
                 if (gameInstance!=null){
                     gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
-                    console.log("get part pq: "+pq);
+                    //console.log("get part pq: "+pq);
                 }
             }
 

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Blockly Demo: Step Execution with JS Interpreter</title>
+    <script src="acorn_interpreter.js"></script>
+    <script src="blockly_compressed.js"></script>
+    <script src="blocks_compressed.js"></script>
+    <script src="javascript_compressed.js"></script>
+    <script src="RobotControlworkspace.js"></script>
+    <script src="lib/ControllerJS.js"></script>
+    <script src="en.js"></script>
+    <style>
+        body {
+            background-color: #fff;
+            font-family: sans-serif;
+        }
+        h1 {
+            font-weight: normal;
+            font-size: 140%;
+        }
+    </style>
+</head>
+<body>
+<h1></h1>
+
+<p>This is a demo of executing code step-by-step with a sandboxed JavaScript interpreter.</p>
+
+<p>The generator's <code>Blockly.JavaScript.STATEMENT_PREFIX</code> is assigned <code>'highlightBlock(%1);\n'</code>,
+    where <code>%1</code> is the block id. The call to <code>highlightBlock()</code> will highlight the identified block
+    and set the variable <code>highlightPause</code> to <code>true</code>.</p>
+
+<p>"Parse JavaScript" will generate the code and load it into the interpreter. Then, each press of the
+    "Step JavaScript" button will run the interpreter one step until the <code>highlightPause</code> is true.
+    That is, until <code>highlightBlock()</code> has highlighted the block that will be executed on the next step.</p>
+
+<p>
+    <button onclick="stepCode()" id="stepButton">Step JavaScript</button>
+</p>
+
+<div style="width: 100%">
+    <div id="blocklyDiv"
+         style="display: inline-block; height: 480px; width: 58%"></div>
+    <textarea id="output" disabled="disabled"
+              style="display: inline-block; height: 480px; width: 38%;">
+    </textarea>
+</div>
+
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+    <category name="RobotControl">
+        <block type="robotcontrol_movejr">
+            <field name="m_select">1</field>
+            <field name="jointAngle">90</field>
+        </block>
+    </category>
+    <category name="Logic" colour="#5C81A6">
+        <block type="controls_if"></block>
+        <block type="logic_compare">
+            <field name="OP">EQ</field>
+        </block>
+        <block type="logic_operation">
+            <field name="OP">AND</field>
+        </block>
+        <block type="logic_negate"></block>
+        <block type="logic_boolean">
+            <field name="BOOL">TRUE</field>
+        </block>
+        <block type="logic_null"></block>
+        <block type="logic_ternary"></block>
+    </category>
+    <category name="Loops" colour="#5CA65C">
+        <block type="controls_repeat_ext">
+            <value name="TIMES">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_whileUntil">
+            <field name="MODE">WHILE</field>
+        </block>
+        <block type="controls_for">
+            <field name="VAR" id="d=1FvwLL?)zrT3HTa:@[" variabletype="">i</field>
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+            <value name="BY">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_forEach">
+            <field name="VAR" id="j~]MQMCogT4R51qRmfbn" variabletype="">j</field>
+        </block>
+        <block type="controls_flow_statements">
+            <field name="FLOW">BREAK</field>
+        </block>
+    </category>
+    <category name="Math" colour="#5C68A6">
+        <block type="math_number">
+            <field name="NUM">0</field>
+        </block>
+        <block type="math_arithmetic">
+            <field name="OP">ADD</field>
+            <value name="A">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="B">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_single">
+            <field name="OP">ROOT</field>
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">9</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_trig">
+            <field name="OP">SIN</field>
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">45</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_constant">
+            <field name="CONSTANT">PI</field>
+        </block>
+        <block type="math_number_property">
+            <mutation divisor_input="false"></mutation>
+            <field name="PROPERTY">EVEN</field>
+            <value name="NUMBER_TO_CHECK">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_round">
+            <field name="OP">ROUND</field>
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">3.1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_on_list">
+            <mutation op="SUM"></mutation>
+            <field name="OP">SUM</field>
+        </block>
+        <block type="math_modulo">
+            <value name="DIVIDEND">
+                <shadow type="math_number">
+                    <field name="NUM">64</field>
+                </shadow>
+            </value>
+            <value name="DIVISOR">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_constrain">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">50</field>
+                </shadow>
+            </value>
+            <value name="LOW">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="HIGH">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_random_int">
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_random_float"></block>
+    </category>
+    <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
+</xml>
+
+<xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display:none"></xml>
+
+<script>
+    var demoWorkspace = Blockly.inject('blocklyDiv',
+        {media: '../../media/',
+            toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(document.getElementById('workspaceBlocks'),
+        demoWorkspace);
+
+    var outputArea = document.getElementById('output');
+    var stepButton = document.getElementById('stepButton');
+    var myInterpreter = null;
+
+    function initApi(interpreter, scope) {
+        // Add an API function for the alert() block, generated for "text_print" blocks.
+        interpreter.setProperty(scope, 'alert',
+            interpreter.createNativeFunction(function(text) {
+                text = text ? text.toString() : '';
+                outputArea.value += '\n' + text;
+            }));
+
+        // Add an API function for the prompt() block.
+        var wrapper = function(text) {
+            text = text ? text.toString() : '';
+            return interpreter.createPrimitive(prompt(text));
+        };
+        interpreter.setProperty(scope, 'prompt',
+            interpreter.createNativeFunction(wrapper));
+
+        // Add an API function for highlighting blocks.
+        var wrapper = function(id) {
+            id = id ? id.toString() : '';
+            return interpreter.createPrimitive(highlightBlock(id));
+        };
+        interpreter.setProperty(scope, 'highlightBlock',
+            interpreter.createNativeFunction(wrapper));
+    }
+
+    var highlightPause = false;
+    var latestCode = '';
+
+    function highlightBlock(id) {
+        demoWorkspace.highlightBlock(id);
+        highlightPause = true;
+    }
+
+    function resetStepUi(clearOutput) {
+        demoWorkspace.highlightBlock(null);
+        highlightPause = false;
+
+        if (clearOutput) {
+            outputArea.value = 'Program output:\n=================';
+        }
+    }
+
+    function generateCodeAndLoadIntoInterpreter() {
+        // Generate JavaScript code and parse it.
+        Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+        Blockly.JavaScript.addReservedWords('highlightBlock');
+        latestCode = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+        console.log("code : "+latestCode);
+        resetStepUi(true);
+    }
+
+    function stepCode() {
+        generateCodeAndLoadIntoInterpreter();
+        //eval(latestCode);
+        if (!myInterpreter) {
+            // First statement of this code.
+            // Clear the program output.
+            resetStepUi(true);
+            myInterpreter = new Interpreter(latestCode, initApi);
+
+            // And then show generated code in an alert.
+            // In a timeout to allow the outputArea.value to reset first.
+            setTimeout(function() {
+                alert('Ready to execute the following code\n' +
+                    '===================================\n' + latestCode);
+                highlightPause = true;
+                stepCode();
+            }, 1);
+            return;
+        }
+        highlightPause = false;
+        do {
+            try {
+                var hasMoreCode = myInterpreter.step();
+            } finally {
+                if (!hasMoreCode) {
+                    // Program complete, no more code to execute.
+                    outputArea.value += '\n\n<< Program complete >>';
+
+                    myInterpreter = null;
+                    resetStepUi(false);
+
+                    // Cool down, to discourage accidentally restarting the program.
+                    stepButton.disabled = 'disabled';
+                    setTimeout(function() {
+                        stepButton.disabled = '';
+                    }, 2000);
+
+                    return;
+                }
+            }
+            // Keep executing until a highlight statement is reached,
+            // or the code completes or errors.
+        } while (hasMoreCode && !highlightPause);
+    }
+
+    // Load the interpreter now, and upon future changes.
+
+    demoWorkspace.addChangeListener(function(event) {
+        if (!(event instanceof Blockly.Events.Ui)) {
+            // Something changed. Parser needs to be reloaded.
+            generateCodeAndLoadIntoInterpreter();
+        }
+    });
+</script>
+<script type="text/javascript">
+    var serverIP="ws://127.0.0.1:5866";
+
+    var ip_addr = document.location.hostname;
+    var ip_port=window.location.port;
+    if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+        serverIP="ws://"+ip_addr+":5866";
+        console.log("ip address"+ip_addr+"/ControllerUI");
+    }
+    function GetXmlDoc(data) {
+
+    }
+    var ws;
+    buildWS("get_xml","get_xml");
+</script>
+</body>
+</html>
