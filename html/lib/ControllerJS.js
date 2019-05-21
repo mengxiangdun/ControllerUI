@@ -439,12 +439,16 @@ function CreateTabs(node,father) {
             var tabOne_div=document.createElement("div");
             tabOne_div.id=tabs_div.id+"tab-"+(tab_i+1);
             tabs_div.appendChild(tabOne_div);
-            var cmd_panel_node=sonNodes[tab_i].getElementsByTagName("Panel");
-            for (var i=0;i<cmd_panel_node.length;i++){
-                if (cmd_panel_node[i].nodeType===1){
-                    CreatePanel(cmd_panel_node[i],tabOne_div);
-                }
-            }
+
+            CreateUI(sonNodes[tab_i],tabOne_div);
+            // var cmd_panel_node=sonNodes[tab_i].getElementsByTagName("Panel");
+            // for (var i=0;i<cmd_panel_node.length;i++){
+            //     if (cmd_panel_node[i].nodeType===1){
+            //         CreatePanel(cmd_panel_node[i],tabOne_div);
+            //     }
+            // }
+
+
 
             var li_div=document.createElement("li");
             var a_div=document.createElement("a");
@@ -477,12 +481,17 @@ function CreateAccordion(node,father) {
 
         var content_div=document.createElement("div");
         accor_div.appendChild(content_div);
-        var panel_list=item_node.childNodes;
-        for (var j=0;j<panel_list.length;j++){
-            if (panel_list[j].nodeName==="Panel"){
-                CreatePanel(panel_list[j],content_div);
-            }
-        }
+
+        CreateUI(item_node,content_div);
+
+        // var panel_list=item_node.childNodes;
+        // for (var j=0;j<panel_list.length;j++){
+        //     if (panel_list[j].nodeName==="Panel"){
+        //         CreatePanel(panel_list[j],content_div);
+        //     }
+        // }
+
+
     }
 
     setTimeout("$( \"#"+accor_div.id+"\" ).accordion({\n" +
