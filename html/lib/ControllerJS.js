@@ -302,6 +302,7 @@ function CreatePanel(node,father) {
     }
     if (panel_text!==null&&panel_text!==""){
         div_syncm.innerText=ReturnUI_Text(panel_text)+"\n";
+        div_syncm.style="white-space:pre";
     }
     else {
         div_syncm.innerText="";
@@ -359,10 +360,17 @@ function CreatePanel(node,father) {
 }
 
 function CreateInput(node,father) {
+    // var input_para=document.createElement("b");
+    // if (node.getAttribute("parameter")!==null){
+    //     input_para.innerText="  "+ReturnUI_Text( node.getAttribute("parameter"));
+    // }
+
     var input_para=document.createElement("b");
     if (node.getAttribute("parameter")!==null){
         input_para.innerText="  "+ReturnUI_Text( node.getAttribute("parameter"));
     }
+    input_para.style="white-space:pre";
+
 
     father.appendChild(input_para);
     var input_div=document.createElement("input");
@@ -390,6 +398,7 @@ function CreateSpinner(node,father) {
     var input_para=document.createElement("b");
     if (node.getAttribute("parameter")!==null){
         input_para.innerText="  "+ReturnUI_Text( node.getAttribute("parameter"));
+    input_para.style="white-space:pre";
     }
 
     father.appendChild(input_para);
@@ -454,6 +463,7 @@ function CreateTabs(node,father) {
             var a_div=document.createElement("a");
             a_div.setAttribute("href","#"+tabOne_div.id);
             a_div.innerText=ReturnUI_Text((sonNodes[tab_i].getAttribute(("text"))));
+            a_div.style="white-space:pre";
             // a_div.innerText=ReturnUI_Text(sonNodes[tab_i].getAttribute(("text")));
             // a_div.innerText="123";
             li_div.appendChild(a_div);
@@ -476,6 +486,7 @@ function CreateAccordion(node,father) {
         var item_node=item_list[i];
         var head_div=document.createElement("div");
         head_div.innerText=ReturnUI_Text(item_node.getAttribute("text"));
+        head_div.style="white-space:pre";
         head_div.id=ReturnUI_ID(item_node.getAttribute("id"));
         accor_div.appendChild(head_div);
 
@@ -505,6 +516,7 @@ function CreateLabel(node,father) {
     var b=document.createElement("b");
     if (node.getAttribute("text")!==null){
         b.innerText="\n"+ReturnUI_Text( node.getAttribute("text"));
+        b.style="white-space:pre";
     }
     father.appendChild(b);
     var input_para=document.createElement("input");
@@ -527,6 +539,7 @@ function CreateFigure(node,father) {
     figure_div.id=ReturnUI_ID(node.getAttribute("id"));
     var figure_caption=document.createElement("figcaption");
     figure_caption.innerText=ReturnUI_Text(node.getAttribute("text"));
+    figure_caption.style="white-space:pre";
     if (figure_caption.innerText){
         figure_div.appendChild(figure_caption);
     }
@@ -542,6 +555,7 @@ function CreateSlider(node,father) {
     var b=document.createElement("b");
     if (node.getAttribute("parameter")!==null){
         b.innerText="\n"+ReturnUI_Text( node.getAttribute("parameter"));
+        b.style="white-space:pre";
     }
     father.appendChild(b);
     var input_para=document.createElement("div");
@@ -576,6 +590,7 @@ function CreateSelect(node,father) {
     var b=document.createElement("b");
     if (node.getAttribute("parameter")!==null){
         b.innerText="\n"+ReturnUI_Text(node.getAttribute("parameter"));
+        b.style="white-space:pre";
     }
     father.appendChild(b);
     var select_div=document.createElement("b");
@@ -584,6 +599,10 @@ function CreateSelect(node,father) {
     father.appendChild(select_div);
     var id_str=node.getAttribute("id");
      setTimeout("$( \"#"+id_str+"\" ).selectmenu()",6);
+
+}
+
+function CreateTable(node,father) {
 
 }
 
@@ -717,6 +736,7 @@ function CreateSortable(node,father) {
 function CreateDragable(node,father) {
     var div=document.createElement("div");
     div.innerText=ReturnUI_Text(node.getAttribute("text"));
+    div.style="white-space:pre";
     div.id=ReturnUI_ID(node.getAttribute("id"));
     if (node.getAttribute("dragable")==="true"){
         var sort_id=node.getAttribute("connectToSortable");
@@ -738,6 +758,7 @@ function CreateButton(node,father) {
     // btn_cmd.innerHTML="<button>"+node.getAttribute('text')+"</button>";
     var btn_text=node.getAttribute('text');
     btn_cmd.innerText=ReturnUI_Text(btn_text);
+    btn_cmd.style="white-space:pre";
     var btn_id=ReturnUI_ID(node.getAttribute("id"));
     if (btn_id!==null&&btn_id!==""){
         btn_cmd.id=btn_id;
