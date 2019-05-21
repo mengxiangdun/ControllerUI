@@ -606,6 +606,16 @@ function CreateTable(node,father) {
 
 }
 
+function CreateBlockProgram(node,father) {
+    var block_div=document.createElement("div");
+    block_div.id=ReturnUI_ID(node.getAttribute("id"));
+    var demoWorkspace = Blockly.inject(block_div.id,
+        {media: '../../media/',
+            toolbox: document.getElementById('toolbox')});
+    Blockly.Xml.domToWorkspace(document.getElementById('workspaceBlocks'),
+        demoWorkspace);
+}
+
 function CreateBinaryLabel(node,father) {
     var input_para=document.createElement("input");
     input_para.id=ReturnUI_ID(node.getAttribute("id"));
@@ -895,8 +905,8 @@ function Btn_cmd_onclick(str,return_str){
     if (str.indexOf("$")!==-1) {
         var index_0=str.indexOf("$");
 
-        var index_1 = (str.substr(index_0,str.length-index_0-1)).indexOf("{")+index_0;
-        var index_2 = (str.substr(index_0,str.length-index_0-1)).indexOf("}")+index_0;
+        var index_1 = (str.substr(index_0,str.length-index_0)).indexOf("{")+index_0;
+        var index_2 = (str.substr(index_0,str.length-index_0)).indexOf("}")+index_0;
         console.log("sub str ::"+str.substr(index_0,str.length-index_0-1));
         var con_str=GetInnerID(str);
         var type_str=con_str[1];
@@ -963,8 +973,8 @@ function PackBotCmd(str) {
 function GetInnerID(str) {
     if (str.indexOf("$")!==-1) {
         var index_0 = str.indexOf("$");
-        var index_1 = (str.substr(index_0,str.length-index_0-1)).indexOf("{")+index_0;
-        var index_2 = (str.substr(index_0,str.length-index_0-1)).indexOf("}")+index_0;
+        var index_1 = (str.substr(index_0,str.length-index_0)).indexOf("{")+index_0;
+        var index_2 = (str.substr(index_0,str.length-index_0)).indexOf("}")+index_0;
         var type_str = str.substr(index_0 + 1, index_1 - index_0 - 1);
         var id_str = str.substr(index_1 + 1, index_2 - index_1 - 1);
         return [id_str,type_str];
@@ -1064,6 +1074,7 @@ function SendCmd(cmd,code_return_str){
             //     PackBotCmd("0&1&"+now+"&0&0&"+cmd);
             // }
             PackBotCmd("0&1&"+now+"&0&0&"+cmd);
+            console.log("send cmd :"+cmd);
             break;
         case  WebSocket.CLOSING:
             break;
