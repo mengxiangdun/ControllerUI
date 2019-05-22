@@ -66,96 +66,201 @@
     <!--layout id必须有-->
     <!--可以设置size，一般center不设置size，会自动浮动-->
     <!--layout 的第一级子节点要么是CmdInterfacePoolObject，要么是View3DInterfacePoolObject-->
-    <Layout pos="ui-layout-center"  id="id_1001">
+    <Layout pos="ui-layout-center" id="id_1001">
         <CmdInterfacePoolObject>
-            <Panel text="My CMD|CMD" id="id_1">
-                <Panel text="mvaj|CMD" id="id_2">
-                    <Input id="id_3" default="" parameter="m" style="width:30px"/>
-                    <!--default：input内的默认值-->
-                    <!--parameter:所对应的参数名称，会显示在输入框的前面-->
-                    <!--<Input id="id_4" default="" parameter="pos"/>-->
-                    <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
-                    <Select id="id_6" parameter="vel">
-                        <Option value="1" selected="selected">world</Option>
-                        <Option value="2">end</Option>
-                        <Option value="3">abc</Option>
-                    </Select>
-                    <!--Select:下拉选择框;显示text，取值用value-->
-                    <Br/>
-                    <!--Br插入一个换行-->
-                    <Spinner id="id_7" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
-                    <!--spinner:点动输入-->
-                    <Button id="id_5" text="mvaj" style="width: 100px;background-color: #8e846b;color: #a45b13" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6} --acc=$Spinner{id_7}" function="Disable(${id_1023})" return_attached=""/>
-                    <Button id="id_8" text="Hide" function="HideUI(${id_5});HideUI(${id_7});" return_attached=""/>
-                    <!--text:显示在UI上的文字-->
-                    <!---->
-                    <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
-                    <!--rate:cmd send rate 重复发送的间隔ms-->
-                    <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
-                    <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI-->
-                    <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
-                </Panel>
-                <Panel>
-                    <Button  text="b" cmd="b" return_attached="$Label{id_7}"/>
-                    <Label id="id_7"/>
-                    <!--Label：返回的数据为字符串-->
-                </Panel>
-                <Panel text="Get EE Pq|">
-                    <Button id="" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
-                    <BinaryLabel id="id_27"/>
-                    <!--BinaryLabel:返回的数据为二进制：float类型-->
-                </Panel>
-                <Panel text="" id="id_24">
-                    <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
-                    <Chart id="id_26" text="" length="100"/>
-                    <!--length:图表显示的数据的长度，默认为1000-->
-                    <!--chart 的返回数据需要两个，前一个显示在X轴，后一个显示在Y轴-->
-                </Panel>
-            </Panel>
-            <Panel>
-                <!--可拖动排序的控件-->
-                <Sortable id="id_1017" style="width: 100px;height: 200px;background-color: #0074c7"/>
-            </Panel>
-        </CmdInterfacePoolObject>
-    </Layout>
-    <Layout pos="ui-layout-north" size="100" id="id_1002">
-        <CmdInterfacePoolObject>
-            <Figure text="logo" src="images/logo.png" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
-            <!--Figure，显示图片-->
-        </CmdInterfacePoolObject>
-
-    </Layout>
-    <Layout pos="ui-layout-south" size="100" id="id_1003">
-        <CmdInterfacePoolObject>
-            <Tabs id="">
-                <TabItem text="tab_1">
-                    <Panel text="">
-                        <Button text="abc"/>
+            <Tabs id="id_44" text="Tab">
+                <TabItem text="Controller">
+                    <Panel text="|CMD" id="id_80">
+                        <Button id="id_81" text="ClearController" cmd="clearCon" return_attached=""/>
+                    </Panel>
+                    <Panel text="|CMD" id="id_54">
+                        <Input id="id_55" default="0" parameter="motion phyid " style="width:100px"/>
+                        <Br/>
+                        <Button id="id_57" text="AddMotion" cmd="setCon --motion_phyid=${id_55}" return_attached=""/>
+                        <Br/>
+                        <Br/>
+                        <Input id="id_56" default="6" parameter="ecslave phyid" style="width:100px"/>
+                        <Br/>
+                        <Input id="id_78" default="768" parameter="ecslave dc     " style="width:100px"/>
+                        <Br/>
+                        <Button id="id_58" text="AddECSlave" cmd="setCon --ecslave_phyid=${id_56} --ecslave_dc=${id_78}" return_attached=""/>
+                        <Br/>
+                    </Panel>
+                    <Panel text="|CMD" id="id_74">
+                        <Select id="id_59" parameter="motion" style="width:30px">
+                            <Option value="0" selected="selected">axis0</Option>
+                            <Option value="1">axis1</Option>
+                            <Option value="2">axis2</Option>
+                            <Option value="3">axis3</Option>
+                            <Option value="4">axis4</Option>
+                            <Option value="5">axis5</Option>
+                            <Option value="6">axis6</Option>
+                        </Select>
+                        <Br/>
+                        <Input id="id_60" default="131072.0 * 81" parameter="pos factor " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_61" default="170.0" parameter="pos max    " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_62" default="-170.0" parameter="pos min     " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_63" default="310.0" parameter="vel max     " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_64" default="-310.0" parameter="vel min      " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_65" default="1500.0" parameter="acc max     " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_66" default="-1500.0" parameter="acc min     " style="width:200px"/>
+                        <Br/>
+                        <Input id="id_67" default="0.0" parameter="pos offset  " style="width:200px"/>
+                        <Br/>
+                        <Button id="id_68" text="Set Motions&apos; Parameters" cmd="setDriver -m=${id_59} --pos_factor=${id_60} --pos_max=${id_61} --pos_min=${id_62} --vel_max=${id_63} --vel_min=${id_64} --acc_max=${id_65} --acc_min=${id_66} --pos_offset=${id_67}" return_attached=""/>
+                        <Br/>
                     </Panel>
                 </TabItem>
-                <TabItem text="tab_2">
-                    <Panel text="">
-                        <Button text="def"/>
+                <TabItem text="Model">
+                    <Accordion id="id_87">
+                        <AccordionItem text="6 Axes" id="id_73">
+                            <Input id="id_69" default="{0.3295, 0.04, 0.275, 0.0, 0.025, 0.28}" parameter="DH_Param" style="width:600px"/>
+                            <Br/>
+                            <Br/>
+                            <Input id="id_70" default="0.078" parameter="Tool_Offset" style="width:100px"/>
+                            <Br/>
+                            <Br/>
+                            <Button id="id_76" text="Set DH" cmd="setDH --six_axes --dh_six_axes=${id_69} --tool_offset_sixaxes=${id_70}" return_attached=""/>
+                        </AccordionItem>
+                        <AccordionItem text="7 Axes" id="id_75">
+                            <Input id="id_71" default="{0.3705, 0.330, 0.320}" parameter="DH_Param" style="width:600px"/>
+                            <Br/>
+                            <Br/>
+                            <Input id="id_72" default="0.2205" parameter="Tool_Offset" style="width:100px"/>
+                            <Br/>
+                            <Br/>
+                            <Button id="id_77" text="Set DH" cmd="setDH --seven_axes --dh_seven_axes=${id_71} --tool_offset_sevenaxes=${id_72}" return_attached=""/>
+                        </AccordionItem>
+                    </Accordion>
+                    <Select id="id_89" parameter="Part ID" style="width:30px">
+                        <Option value="0" selected="selected">ground</Option>
+                        <Option value="1">part1</Option>
+                        <Option value="2">part2</Option>
+                        <Option value="3">part3</Option>
+                        <Option value="4">part4</Option>
+                        <Option value="5">part5</Option>
+                        <Option value="6">part6</Option>
+                        <Option value="7">part7</Option>
+                    </Select>
+                    <Br/>
+                    <Br/>
+                    <Input id="id_90" default="test" parameter="Name" style="width:350px"/>
+                    <Br/>
+                    <Br/>
+                    <Input id="id_91" default="{0, 0, 0, -0, 0, -0}" parameter="PE     " style="width:350px"/>
+                    <Br/>
+                    <Br/>
+                    <Input id="id_92" default="/RobotGallery/Rokae/XB4/L0.data" parameter="Path  " style="width:350px"/>
+                    <Br/>
+                    <Br/>
+                    <Button id="id_93" text="Set Part Geometry" cmd="setPG --name=${id_90} --pe=${id_91} --part_id=${id_89} --file_path=${id_92}" return_attached=""/>
+                    <Br/>
+                    <Br/>
+                    <Button id="id_83" text="SaveConfig" cmd="saveConfig" return_attached=""/>
+                </TabItem>
+                <TabItem text="Command">
+                    <Panel text="|CMD" id="id_84">
+                        <Button id="id_85" text="StartCS" cmd="startCS" return_attached=""/>
+                        <Button id="id_86" text="StopCS" cmd="stopCS" return_attached=""/>
                     </Panel>
+                    <Panel text="|CMD" id="id_1">
+                        <!--default：input内的默认值-->
+                        <!--parameter:所对应的参数名称，会显示在输入框的前面-->
+                        <Button id="id_48" text="ds" cmd="ds" style="width: 100px" return_attached=""/>
+                        <Button id="id_49" text="md" cmd="md" style="width: 100px" return_attached=""/>
+                        <Button id="id_50" text="en" cmd="en;rc" style="width: 100px" return_attached=""/>
+                        <!--text:显示在UI上的文字-->
+                        <!---->
+                        <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
+                        <!--rate:cmd send rate 重复发送的间隔ms-->
+                        <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
+                        <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
+                    </Panel>
+                </TabItem>
+                <TabItem text="BlockProgram">
+                    <BlockProgram id="id_1029"/>
                 </TabItem>
             </Tabs>
         </CmdInterfacePoolObject>
     </Layout>
-    <Layout pos="ui-layout-west" size="100" id="id_1004">
+    <Layout pos="ui-layout-north" size="100" id="id_1002">
         <CmdInterfacePoolObject>
-            <Accordion id="">
-                <AccordionItem text="拖动" id="">
+            <Figure src="images/logo.PNG" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
+            <!--Figure，显示图片-->
+        </CmdInterfacePoolObject>
+    </Layout>
+    <Layout pos="ui-layout-south" size="100" id="id_1005">
+
+    </Layout>
+    <Layout pos="ui-layout-west" size="100" id="id_1006">
+        <CmdInterfacePoolObject>
+            <Accordion id="51">
+                <AccordionItem text="single axis_jog" id="52">
                     <Panel>
-                        <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="abc"/>
-                        <!--可拖动控件-->
-                        <!--connectToSortable：连接到可接受的目标区域-->
-                        <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="def"/>
-                        <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="ghi"/>
+                        <Panel text="|CMD" id="id_27">
+                            <Button id="id_28" text="start" cmd="moveJP --start" return_attached=""/>
+                            <Button id="id_30" text="stop" cmd="moveJP --stop" return_attached=""/>
+                        </Panel>
+                        <Panel text="|CMD" id="id_7">
+                            <Slider id="id_9" default="10" max="100" min="0" step="1" parameter="vel_percent"/>
+                            <Br/>
+                            <Button id="id_31" text="j0-" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=0 --direction=-1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Button id="id_32" text="j0+" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=0 --direction=1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_33" text="j1-" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=1 --direction=-1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Button id="id_34" text="j1+" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=1 --direction=1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_35" text="j2-" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=2 --direction=-1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Button id="id_36" text="j2+" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=2 --direction=1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_37" text="j3-" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=3 --direction=-1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Button id="id_38" text="j3+" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=3 --direction=1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_39" text="j4-" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=4 --direction=-1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Button id="id_40" text="j4+" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=4 --direction=1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_41" text="j5-" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=5 --direction=-1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                            <Button id="id_42" text="j5+" repeat="0" rate="20" style="width: 100px" cmd="moveJP -m=5 --direction=1 --vel_percent=$Slider{id_9}" return_attached=""/>
+                        </Panel>
                     </Panel>
                 </AccordionItem>
-                <AccordionItem text="def" id="">
+                <AccordionItem text="coordinate jog" id="53">
                     <Panel>
-                        <Button id="" text="defg"/>
+                        <Panel text="|CMD" id="id_23">
+                            <Button id="id_24" text="start" cmd="movePoint --start" return_attached=""/>
+                            <Button id="id_26" text="stop" cmd="movePoint --stop" return_attached=""/>
+                        </Panel>
+                        <Panel text="|CMD" id="id_22">
+                            <Select id="id_8" parameter="cor">
+                                <Option value="0" selected="selected">world</Option>
+                                <Option value="1">end</Option>
+                            </Select>
+                            <Slider id="id_6" default="10" max="100" min="0" step="1" parameter="vel_percent"/>
+                            <Br/>
+                            <Button id="id_10" text="x-" repeat="0" rate="20" style="width: 100px" cmd="movePoint --x=-1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Button id="id_11" text="x+" repeat="0" rate="20" style="width: 100px" cmd="movePoint --x=1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_12" text="y-" repeat="0" rate="20" style="width: 100px" cmd="movePoint --y=-1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Button id="id_13" text="y+" repeat="0" rate="20" style="width: 100px" cmd="movePoint --y=1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_14" text="z-" repeat="0" rate="20" style="width: 100px" cmd="movePoint --z=-1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Button id="id_15" text="z+" repeat="0" rate="20" style="width: 100px" cmd="movePoint --z=1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_16" text="a-" repeat="0" rate="20" style="width: 100px" cmd="movePoint --a=-1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Button id="id_17" text="a+" repeat="0" rate="20" style="width: 100px" cmd="movePoint --a=1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_18" text="b-" repeat="0" rate="20" style="width: 100px" cmd="movePoint --b=-1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Button id="id_19" text="b+" repeat="0" rate="20" style="width: 100px" cmd="movePoint --b=1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Br/>
+                            <Button id="id_20" text="c-" repeat="0" rate="20" style="width: 100px" cmd="movePoint --c=-1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                            <Button id="id_21" text="c+" repeat="0" rate="20" style="width: 100px" cmd="movePoint --c=1 --cor=${id_8} --vel_percent=$Slider{id_6}" return_attached=""/>
+                        </Panel>
                     </Panel>
                 </AccordionItem>
             </Accordion>
