@@ -369,7 +369,12 @@
         setInterval(GetPartPq,100);
         if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
             if (gameInstance!=null){
-                gameInstance.SendMessage("empt","GetUrlFromJs","http://"+ip_addr+":"+ip_port);
+                if (ip_port){
+                    gameInstance.SendMessage("empt","GetUrlFromJs","http://"+ip_addr+":"+ip_port);
+                }
+                else {
+                    gameInstance.SendMessage("empt","GetUrlFromJs","http://"+ip_addr);
+                }
 
             }
             //console.log("send to unity address: "+ip_addr+"/ControllerUI");
