@@ -690,7 +690,7 @@ function resetStepUi(clearOutput) {
     highlightPause = false;
 
     if (clearOutput) {
-        outputArea.value = 'Program output:\n=================';
+        //outputArea.value = 'Program output:\n=================';
     }
 }
 
