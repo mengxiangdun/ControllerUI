@@ -1201,7 +1201,7 @@ function SendCmd(cmd,code_return_str){
             //     PackBotCmd("0&1&"+now+"&0&0&"+cmd);
             // }
             PackBotCmd("0&1&"+now+"&0&0&"+cmd);
-            //console.log("send cmd :"+cmd);
+            console.log("send cmd :"+cmd);
             break;
         case  WebSocket.CLOSING:
             break;
