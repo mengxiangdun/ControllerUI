@@ -1053,7 +1053,7 @@ function Btn_cmd_onclick(str,return_str){
 
 
         }
-        console.log("id:"+id_str+"; value: "+ id_value_1);
+        console.log("id:"+id_str+"; value: "+ id_value);
         //var id_value_1=id_value.replace(/ /g,"");
 
         var old_str=str.substr(index_0,index_2-index_0+1);
