@@ -1030,7 +1030,7 @@ function Btn_cmd_onclick(str,return_str){
 
         var index_1 = (str.substr(index_0,str.length-index_0)).indexOf("{")+index_0;
         var index_2 = (str.substr(index_0,str.length-index_0)).indexOf("}")+index_0;
-        console.log("sub str ::"+str.substr(index_0,str.length-index_0-1));
+        console.log("sub str ::"+str.substr(index_0,str.length-index_0));
         var con_str=GetInnerID(str);
         var type_str=con_str[1];
         var id_str = con_str[0];
@@ -1053,18 +1053,26 @@ function Btn_cmd_onclick(str,return_str){
 
 
         }
-        console.log("id:"+id_str+"; value: "+ id_value);
+        console.log("id:"+id_str+"; value: "+ id_value_1);
+        var id_value_1=id_value.replace(/ /g,"");
+
         var old_str=str.substr(index_0,index_2-index_0+1);
-        Btn_cmd_onclick(str.replace(old_str,id_value),return_str);
+        Btn_cmd_onclick(str.replace(old_str,id_value_1),return_str);
     }
 
     if (str.indexOf("$")===-1){
         var myDate=new Date();
         var now=myDate.getTime();
         var str_2=str.split(';');
+        var return_str_2=return_str.split(';');
         for (var j=0;j<str_2.length;j++){
-            SendCmd(str_2[j],return_str);
-            AfterBtnClick(str_2[j]);
+            if (j<return_str_2.length){
+                SendCmd(str_2[j],return_str_2[j]);
+            } else {
+                SendCmd(str_2[j],return_str_2[return_str_2.length-1]);
+            }
+
+            //AfterBtnClick(str_2[j]);
         }
     }
 }
@@ -1367,6 +1375,14 @@ function DisableUI(id_str) {
 function  EnableUI(id_str) {
     document.getElementById(id_str).disabled=false;
     document.getElementById(id_str).style="color:black";
+}
+
+function ClearUI() {
+    $(".ui-layout-center").remove();
+    $(".ui-layout-south").remove();
+    $(".ui-layout-north").remove();
+    $(".ui-layout-east").remove();
+    $(".ui-layout-west").remove();
 }
 
 function GenerateUUID() {

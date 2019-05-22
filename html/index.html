@@ -183,6 +183,9 @@
     }
 </style>
 <body id="body">
+<!--<div id="body_1" style="width: 100%;height: 100%">-->
+
+</div>
 <p id="title_id"></p>
 
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
@@ -446,8 +449,6 @@
         console.log("ip address"+ip_addr+"/ControllerUI");
     }
 
-
-
     // document.getElementById("serverIP").onchange=function(){
     //     var str=document.getElementById("serverIP").value;
     //     if (str!==""&&str!=null){
@@ -459,12 +460,11 @@
     //          }
     // };
 
-
-
     //业务
     //获得xml后的回调
     function GetXmlDoc(data){
-        $("#interface_div").empty();
+        //$("#body").empty();
+
 
         robotXmlStr=data;
         var parser=new DOMParser();
