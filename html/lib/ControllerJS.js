@@ -1036,7 +1036,7 @@ function Btn_cmd_onclick(str,return_str){
         var id_str = con_str[0];
         var id_value;
         if (type_str.indexOf("Input")!==-1||type_str===""){
-            id_value = $("#" + id_str).val();
+            id_value = ($("#" + id_str).val()).replace(/ /g,"");
         }
         else if(type_str.indexOf("Slider")!==-1){
             id_value = $("#" + id_str).slider("value");
