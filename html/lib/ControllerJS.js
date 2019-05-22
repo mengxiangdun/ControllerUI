@@ -1054,10 +1054,10 @@ function Btn_cmd_onclick(str,return_str){
 
         }
         console.log("id:"+id_str+"; value: "+ id_value_1);
-        var id_value_1=id_value.replace(/ /g,"");
+        //var id_value_1=id_value.replace(/ /g,"");
 
         var old_str=str.substr(index_0,index_2-index_0+1);
-        Btn_cmd_onclick(str.replace(old_str,id_value_1),return_str);
+        Btn_cmd_onclick(str.replace(old_str,id_value),return_str);
     }
 
     if (str.indexOf("$")===-1){
