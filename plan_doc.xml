@@ -68,6 +68,33 @@
     <!--layout 的第一级子节点要么是CmdInterfacePoolObject，要么是View3DInterfacePoolObject-->
     <Layout pos="ui-layout-center" id="id_1001">
         <CmdInterfacePoolObject>
+            <!--表格控件-->
+            <Table id="id_1030">
+                <tr style="width: 100px;height: 30px">
+                    <td>
+                        <Button id="" text="SaveConfig1" cmd="" return_attached="" function=""/>
+                    </td>
+                    <td>
+                        <Figure src="images/logo.PNG" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <Button id="" text="SaveConfig3" cmd="" return_attached="" function=""/>
+                    </td>
+                    <td>
+                        <Button id="" text="SaveConfig4" cmd="" return_attached="" function=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <Button id="" text="SaveConfig5" cmd="" return_attached="" function=""/>
+                    </td>
+                    <td>
+                        <Button id="" text="SaveConfig6" cmd="" return_attached="" function=""/>
+                    </td>
+                </tr>
+            </Table>
             <Tabs id="id_44" text="Tab">
                 <TabItem text="Controller">
                     <Panel text="|CMD" id="id_80">
