@@ -10,7 +10,7 @@ var dataSetLength=[];
 var dataMap_chartID=[];
 var dataMap_dataIndex=[];
 var id_list=0;//自动添加的id，++
-var demoWorkspace
+var demoWorkspace;
 
 function GetUI_ID_List(node) {
     var id_pool_node=node.getElementsByTagName("UiIdPoolObject");
