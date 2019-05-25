@@ -234,6 +234,9 @@ function CreateUI(node,father) {
                 //     "\n" +
                 //     "    });",6);
                 break;
+            case "B":
+                CreateB(sonNodes[j],father);
+                break;
         }
     }
 }
@@ -325,6 +328,13 @@ function CreatePanel(node,father) {
     // }
     father.appendChild(document.createElement("h"));
     father.appendChild(div_syncm);
+}
+
+function CreateB(node,father) {
+    var b_div=document.createElement("b");
+    b_div.id=ReturnUI_ID(node.getAttribute("id"));
+    b_div.innerText=ReturnUI_Text(node.getAttribute("text"));
+    father.appendChild(b_div);
 }
 
 function CreateInput(node,father) {
@@ -886,7 +896,6 @@ function Btn_cmd_onclick(str,return_str){
         }
         else if (type_str.indexOf("BlockProgram")!==-1){
 
-
         }
         console.log("id:"+id_str+"; value: "+ id_value);
         //var id_value_1=id_value.replace(/ /g,"");
@@ -1111,12 +1120,15 @@ function CreateSyncManagerUI(node,father,ethercat_id,sm_id_local) {
     div_syncm.innerText="SyncManager "+sm_id_local.toString();
 
     father.appendChild(div_syncm);
-    var b=document.createElement("b");
-    b.innerText="is_tx";
+    var b=document.createElement("div");
+    b.innerHTML="is_tx <input id="+div_syncm.id+"_is_tx"+" value="+node.getAttribute('is_tx')+" style='width: 100px' />";
     div_syncm.appendChild(b);
-    var ix_tx_input=document.createElement("input");
-
-    ix_tx_input.id=div_syncm.id+"_is_tx"
+    // b.innerText="is_tx";
+    // div_syncm.appendChild(b);
+    // var ix_tx_input=document.createElement("input");
+    //
+    // ix_tx_input.id=div_syncm.id+"_is_tx";
+    // ix_tx_input.
     var pdo_id_local=0;
     if (node.hasChildNodes()) {
         var sonNodes = node.childNodes;
