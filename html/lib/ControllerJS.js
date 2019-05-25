@@ -246,7 +246,7 @@ function Create3DVidw(node,father) {
     var d=node;
     var ifView3D=d.getAttribute("show");
     if (ifView3D==="true"){
-        father.innerHTML="<div id=\"gameContainer\"  style=\"width: 100%;height: 100%\"></div>\n" +
+        father.innerHTML+="<div id=\"gameContainer\"  style=\"width: 100%;height: 100%\"></div>\n" +
             "        <div id=\"loader\" style=\"width: 500%;height: 100%;left: auto\">\n" +
             "            <!--<img class=\"logo\" src=\"logo.png\">-->\n" +
             "            <div class=\"spinner\" style=\"width: 50%;float: left\"></div>\n" +
@@ -1116,6 +1116,7 @@ function CreateSyncManagerUI(node,father,ethercat_id,sm_id_local) {
     div_syncm.appendChild(b);
     var ix_tx_input=document.createElement("input");
 
+    ix_tx_input.id=div_syncm.id+"_is_tx"
     var pdo_id_local=0;
     if (node.hasChildNodes()) {
         var sonNodes = node.childNodes;
