@@ -1108,16 +1108,21 @@ function CreateSyncManagerUI(node,father,ethercat_id,sm_id_local) {
     // console.log("sm id: "+sm_id_local.toString());
     var div_syncm=document.createElement("fieldset");
     div_syncm.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString();
-    div_syncm.innerText="sm_"+sm_id_local.toString();
+    div_syncm.innerText="SyncManager "+sm_id_local.toString();
 
     father.appendChild(div_syncm);
+    var b=document.createElement("b");
+    b.innerText="is_tx";
+    div_syncm.appendChild(b);
+    var ix_tx_input=document.createElement("input");
+
     var pdo_id_local=0;
     if (node.hasChildNodes()) {
         var sonNodes = node.childNodes;
 
         for (var j = 0; j < sonNodes.length; j++) {
-            if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="Pdo") {
-                CreatePdoUI(sonNodes[j],father,ethercat_id,sm_id_local,pdo_id_local);
+            if (sonNodes[j].nodeType === 1 && sonNodes[j].nodeName==="Pdo") {
+                CreatePdoUI(sonNodes[j],div_syncm,ethercat_id,sm_id_local,pdo_id_local);
                 pdo_id_local++;
             }
         }
@@ -1136,7 +1141,7 @@ function CreatePdoUI(node,father,ethercat_id,sm_id,pdo_id_local) {
 
     var div_pdo=document.createElement("fieldset");
     var div_Pdo_index=document.createElement("b");
-    div_Pdo_index.innerText="index";
+    div_Pdo_index.innerText="Pdo index";
     div_pdo.appendChild(div_Pdo_index);
     var div_input=document.createElement("input");
     div_input.innerHTML="<input/>";
