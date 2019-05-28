@@ -64,7 +64,6 @@ function ShowInterface(node,father) {
     CreateUI(node,father);
 }
 
-
 //region CreateUI
 
 function CreateLayout(node,father) {
@@ -939,16 +938,204 @@ function GetInnerID(str) {
 //#endregion
 
 //region Ethercat Controller
+class EthercatController_Element{
+    // constructor(slavePool){
+    //     this.slavePool=slavePool;
+    // }
+    LoadFromXml(node){
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="SlavePoolObject") {
+                var sp=new SlavePool_Element();
+                sp.LoadFromXml(sonNodes[i]);
+                this.slavePool=(sp);
+            }
+        }
+    }
+}
+
+class SlavePool_Element{
+    // constructor(motionList,slaveList){
+    //     this.motionList=motionList;
+    //     this.slaveList=slaveList;
+    // }
+
+    LoadFromXml(node) {
+        this.motionList=[];
+        this.slaveList=[];
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="EthercatMotion") {
+                var moiton=new EthercatMotion_Element();
+                moiton.LoadFromXml(sonNodes[i]);
+                this.motionList.push(moiton);
+            }
+            else if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="EthercatSlave") {
+                var slave=new EthercatSlave_Element();
+                slave.LoadFromXml(sonNodes[i]);
+                this.slaveList.push(slave);
+            }
+        }
+    }
+
+}
+
+class EthercatMotion_Element{
+
+    // constructor(phy_id,vendor_id){
+    //     this.phy_id=phy_id;
+    //     this.vendor_id=vendor_id;
+    //     //this.smList=smList;
+    // }
+    LoadFromXml(node){
+        this.phy_id=node.getAttribute("phy_id");
+        this.phy_id_UI;
+        this.vendor_id=node.getAttribute("vendor_id");
+        this.vendor_id_UI;
+        this.smPool;
+        //this.smList=node.getAttribute("smList");
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="SyncManagerPoolObject") {
+                var sm=new SyncManagerPool_Element();
+                sm.LoadFromXml(sonNodes[i]);
+                this.smPool=(sm);
+            }
+        }
+    }
+}
+
+class EthercatSlave_Element {
+    LoadFromXml(node){
+        this.phy_id=node.getAttribute("phy_id");
+        this.phy_id_UI;
+        this.vendor_id=node.getAttribute("vendor_id");
+        this.vendor_id_UI;
+        this.smPool;
+        //this.smList=node.getAttribute("smList");
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="SyncManagerPoolObject") {
+                var sm=new SyncManagerPool_Element();
+                sm.LoadFromXml(sonNodes[i]);
+                this.smPool=(sm);
+            }
+        }
+    }
+}
+
+class SyncManagerPool_Element{
+    // constructor(SyncManagerList){
+    //     this.SyncManagerList=SyncManagerList;
+    // }
+
+    LoadFromXml(node) {
+        this.smList=[];
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="SyncManager") {
+                var sm=new SyncManager_Element();
+                sm.LoadFromXml(sonNodes[i]);
+                this.smList.push(sm);
+            }
+        }
+    }
+
+}
+
+class SyncManager_Element{
+    // constructor(is_tx,is_tx_ui_id,PdoList){
+    //
+    //     this.is_tx=is_tx;
+    //     this.is_txUI=is_tx_ui_id;
+    //     this.PdoList=PdoList;
+    // }
+    LoadFromXml(node) {
+        this.is_tx=node.getAttribute("is_tx");
+        this.pdoList=[];
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="Pdo") {
+                var pdo=new Pdo_Element();
+                pdo.LoadFromXml(sonNodes[i]);
+                this.pdoList.push(pdo);
+            }
+        }
+    }
+}
+
+class Pdo_Element{
+    // constructor(index,index_ui_id,PdoEntryList){
+    //     this.index=index;
+    //     this.indexUI=index_ui_id;
+    //     this.PeoEntryList=PdoEntryList;
+    // }
+    LoadFromXml(node) {
+        this.index=node.getAttribute("index");
+        this.pdoEntryList=[];
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="PdoEntry") {
+                var pdoEntry=new PdoEntry_Element();
+                pdoEntry.LoadeFromXml(sonNodes[i]);
+                this.pdoEntryList.push(pdoEntry);
+            }
+        }
+    }
+}
+
+class PdoEntry_Element {
+
+    // constructor(name,name_ui_id,index,index_ui_id,subindex,subindex_ui_id,size,size_ui_id) {
+    //     this.name=name;
+    //     this.nameUI=name_ui_id;
+    //     this.index=index;
+    //     this.indexUI=index_ui_id;
+    //     this.subindex=subindex;
+    //     this.subindexUI=subindex_ui_id;
+    //     this.size=size;
+    //     this.sizeUI=size_ui_id;
+    // }
+
+    constructor() {
+        this.name;
+        this.nameUI;
+        this.index;
+        this.indexUI;
+        this.subindex;
+        this.subindexUI;
+        this.size;
+        this.sizeUI;
+
+
+    }
+    LoadeFromXml(node){
+        this.name=node.getAttribute("name");
+        this.nameUI;
+        this.index=node.getAttribute("index");
+        this.indexUI;
+        this.subindex=node.getAttribute("subindex");
+        this.subindexUI;
+        this.size=node.getAttribute("size");
+        this.sizeUI;
+    }
+
+}
+
+var Ecc;
+
 function CreateEthercatControllerUI(node,father) {
     var btn=document.createElement("button");
     btn.innerText="Save";
     btn.id=ReturnUI_ID("");
     btn.onclick=function () {
-        ethercat_id_world=-1;
-        sm_id_world=-1;
-        pdo_id_world=-1;
-        pdo_entry_id_world=-1;
-        CollectNodeName(xmlDoc.documentElement,"");
+        // ethercat_id_world=-1;
+        // sm_id_world=-1;
+        // pdo_id_world=-1;
+        // pdo_entry_id_world=-1;
+        // CollectNodeName(xmlDoc.documentElement,"");
+        CollectUIValue_Ecc(Ecc);
+        GenerateXmlNode_EthercatController(Ecc);
         var text = (new XMLSerializer()).serializeToString(xmlDoc);
         //console.log(text);
         SendCmd("set_xml --xml={"+text+"}","");
@@ -969,96 +1156,110 @@ function CreateEthercatControllerUI(node,father) {
         "    });",6);
 
 
-    var sonNodes = master_node[0].childNodes;
-    for (var j = 0; j < sonNodes.length; j++) {
-        if (sonNodes[j].nodeType === 1 && sonNodes[j].nodeName==="SlavePoolObject") {
-            CreaterSlavePoolObjectUI(sonNodes[j],e_div);
-        }
+    Ecc=new EthercatController_Element();
+    Ecc.LoadFromXml(master_node[0]);
+    if (Ecc.slavePool!==null){
+        CreaterSlavePoolObjectUI(Ecc.slavePool,e_div);
     }
+    // var sonNodes = master_node[0].childNodes;
+    // for (var j = 0; j < sonNodes.length; j++) {
+    //     if (sonNodes[j].nodeType === 1 && sonNodes[j].nodeName==="SlavePoolObject") {
+    //         CreaterSlavePoolObjectUI(sonNodes[j],e_div);
+    //     }
+    // }
 
 }
 
-function CreaterSlavePoolObjectUI(node,father) {
-    if (node.hasChildNodes()) {
-        var sonNodes = node.childNodes;
-        var ethercat_id_local=0;
-        for (var j = 0; j < sonNodes.length; j++) {
-            if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="EthercatMotion") {
-                CreateEthercatMotionUI(sonNodes[j],father,ethercat_id_local);
-                ethercat_id_local++;
-            }
-            if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="EthercatSlave") {
-                CreateEthercatSlaveUI(sonNodes[j],father,ethercat_id_local);
-                ethercat_id_local++;
-            }
-        }
+function CreaterSlavePoolObjectUI(slavePool,father) {
+    for (var i=0;i<slavePool.motionList.length;i++){
+        CreateEthercatMotionUI(slavePool,slavePool.motionList[i],father,i);
     }
+    for (var j=0;j<slavePool.slaveList.length;j++){
+        CreateEthercatSlaveUI(slavePool,slavePool.slaveList[j],father,j);
+    }
+
+    // if (node.hasChildNodes()) {
+    //     var sonNodes = node.childNodes;
+    //     var ethercat_id_local=0;
+    //     for (var j = 0; j < sonNodes.length; j++) {
+    //         if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="EthercatMotion") {
+    //             //Ecc.slavePool.motionList[Ecc.slavePool.motionList.length]=new EhercatMotion_Element();
+    //             CreateEthercatMotionUI(sonNodes[j],father,ethercat_id_local);
+    //             ethercat_id_local++;
+    //         }
+    //         if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="EthercatSlave") {
+    //             CreateEthercatSlaveUI(sonNodes[j],father,ethercat_id_local);
+    //             //Ecc.slavePool.slavePool[Ecc.slavePool.slavePool.length]=new EhercatSlave_Element();
+    //             ethercat_id_local++;
+    //         }
+    //     }
+    // }
 }
 
-function CreateEthercatMotionUI(node,father,ethercat_id_local) {
-    if (node.nodeName==="EthercatMotion"){
-        // ethercat_id_local++;
-        //sm_id=-1;
-        // console.log("ethercat id: "+ethercat_id_local);
-        //input UI
-        //$("#accordion").show();
+function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
+    var head_div=document.createElement("div");
+    head_div.innerText="Motion_"+ethercat_id_local.toString();
+    father.appendChild(head_div);
+    var content_div=document.createElement("div");
+    father.appendChild(content_div);
 
-        var head_div=document.createElement("div");
-        head_div.innerText="Motion_"+ethercat_id_local.toString();
-        father.appendChild(head_div);
-        var content_div=document.createElement("div");
-        father.appendChild(content_div);
+    var motion_table=document.createElement("table");
+    var motion_table_row=motion_table.insertRow(-1);
+    var id_str=ReturnUI_ID("");
+    motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 100px' /></td>";
+    emEle.phy_id_UI=id_str+"_phy_id";
+    motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 100px' /></td>";
+    emEle.vendor_id_UI=id_str+"_vendor_id";
+    // motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+    //
+    // motion_table_row=motion_table.insertRow(-1);
+    // motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+    //
+    // motion_table_row=motion_table.insertRow(-1);
+    // motion_table_row.innerHTML="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+    //
+    // motion_table_row=motion_table.insertRow(-1);
+    // motion_table_row.innerHTML="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+    //
+    // motion_table_row=motion_table.insertRow(-1);
+    // motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+    // motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+    //
+    // motion_table_row=motion_table.insertRow(-1);
+    // motion_table_row.innerHTML="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
 
-        var motion_table=document.createElement("table");
-        var motion_table_row=motion_table.insertRow(-1);
-        var id_str="motion_"+ethercat_id_local.toString();
-        motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+    content_div.appendChild(motion_table);
+    var p_=document.createElement("p");
+    p_.innerHTML="<p></p>";
 
-        motion_table_row=motion_table.insertRow(-1);
-        motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+    content_div.appendChild(p_);
 
-        motion_table_row=motion_table.insertRow(-1);
-        motion_table_row.innerHTML="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+    var p_2=document.createElement("p");
+    p_2.innerHTML="<p></p>";
+    content_div.appendChild(p_2);
 
-        motion_table_row=motion_table.insertRow(-1);
-        motion_table_row.innerHTML="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
 
-        motion_table_row=motion_table.insertRow(-1);
-        motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
-
-        motion_table_row=motion_table.insertRow(-1);
-        motion_table_row.innerHTML="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
-
-        content_div.appendChild(motion_table);
-        var p_=document.createElement("p");
-        p_.innerHTML="<p></p>";
-
-        content_div.appendChild(p_);
-
-        var p_2=document.createElement("p");
-        p_2.innerHTML="<p></p>";
-        content_div.appendChild(p_2);
-
-        if (node.hasChildNodes()) {
-            var sonNodes = node.childNodes;
-            for (var j = 0; j < sonNodes.length; j++) {
-                if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManagerPoolObject") {
-                    CreateSyncManagerPoolObjectUI(sonNodes[j],content_div,ethercat_id_local);
-                }
-            }
-        }
+    if (emEle.smPool!==null){
+        CreateSyncManagerPoolObjectUI(emEle.smPool,content_div);
     }
+
+    var btn=document.createElement("button");
+    btn.innerText="Del Motion";
+    btn.onclick=function () {
+        DelEthercatSlave(spEle,emEle,head_div,content_div);
+    }
+
+    content_div.appendChild(btn);
 }
+
+
 
 function CreateEthercatSlaveUI(node,father,ethercat_id_local) {
     if (node.nodeName==="EthercatSlave"){
@@ -1101,59 +1302,57 @@ function CreateEthercatSlaveUI(node,father,ethercat_id_local) {
     }
 }
 
-function CreateSyncManagerPoolObjectUI(node,father,ethercat_id) {
-    if (node.hasChildNodes()) {
-        var sonNodes = node.childNodes;
-        var sm_id_local=0;
-        for (var j = 0; j < sonNodes.length; j++) {
-            if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManager") {
-                CreateSyncManagerUI(sonNodes[j],father,ethercat_id,sm_id_local);
-                sm_id_local++;
-            }
-        }
+function CreateSyncManagerPoolObjectUI(smPoolEle,father) {
+    for (var i=0;i<smPoolEle.smList.length;i++){
+        CreateSyncManagerUI(smPoolEle.smList[i],father,i);
     }
+    // if (node.hasChildNodes()) {
+    //     var sonNodes = node.childNodes;
+    //     var sm_id_local=0;
+    //     for (var j = 0; j < sonNodes.length; j++) {
+    //         if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManager") {
+    //             CreateSyncManagerUI(sonNodes[j],father,ethercat_id,sm_id_local);
+    //             sm_id_local++;
+    //         }
+    //     }
+    // }
 }
 
-function CreateSyncManagerUI(node,father,ethercat_id,sm_id_local) {
-    //sm_id_local++;
-    //pdo_id=-1;
-    // console.log("sm id: "+sm_id_local.toString());
+function CreateSyncManagerUI(smEle,father,sm_id_local) {
     var div_syncm=document.createElement("fieldset");
-    div_syncm.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString();
+    div_syncm.id=ReturnUI_ID("");
     div_syncm.innerText="SyncManager "+sm_id_local.toString();
 
     father.appendChild(div_syncm);
     var b=document.createElement("div");
-    b.innerHTML="is_tx <input id="+div_syncm.id+"_is_tx"+" value="+node.getAttribute('is_tx')+" style='width: 100px' />";
+    b.innerHTML="is_tx <input id="+div_syncm.id+"_is_tx"+" value="+smEle.is_tx+" style='width: 100px' />";
+    smEle.is_txUI=div_syncm.id+"_is_tx";
     div_syncm.appendChild(b);
-    // b.innerText="is_tx";
-    // div_syncm.appendChild(b);
-    // var ix_tx_input=document.createElement("input");
-    //
-    // ix_tx_input.id=div_syncm.id+"_is_tx";
-    // ix_tx_input.
-    var pdo_id_local=0;
-    if (node.hasChildNodes()) {
-        var sonNodes = node.childNodes;
-
-        for (var j = 0; j < sonNodes.length; j++) {
-            if (sonNodes[j].nodeType === 1 && sonNodes[j].nodeName==="Pdo") {
-                CreatePdoUI(sonNodes[j],div_syncm,ethercat_id,sm_id_local,pdo_id_local);
-                pdo_id_local++;
-            }
-        }
+    for (var i=0;i<smEle.pdoList.length;i++){
+        CreatePdoUI(smEle,smEle.pdoList[i],div_syncm);
     }
+    // var pdo_id_local=0;
+    // if (node.hasChildNodes()) {
+    //     var sonNodes = node.childNodes;
+    //
+    //     for (var j = 0; j < sonNodes.length; j++) {
+    //         if (sonNodes[j].nodeType === 1 && sonNodes[j].nodeName==="Pdo") {
+    //             CreatePdoUI(sonNodes[j],div_syncm,ethercat_id,sm_id_local,pdo_id_local);
+    //             pdo_id_local++;
+    //         }
+    //     }
+    // }
 
     var btn_addPdo=document.createElement("div");
     btn_addPdo.innerHTML="<button>Add Pdo</button>";
     btn_addPdo.onclick=function(){
-        AddPdoBtnClick(node,div_syncm,pdo_id_local);
+        AddPdo(smEle,div_syncm);
     };
     div_syncm.appendChild(btn_addPdo);
 
 }
 
-function CreatePdoUI(node,father,ethercat_id,sm_id,pdo_id_local) {
+function CreatePdoUI(smEle,pdoEle,father) {
 
     var div_pdo=document.createElement("fieldset");
     var div_Pdo_index=document.createElement("b");
@@ -1161,16 +1360,16 @@ function CreatePdoUI(node,father,ethercat_id,sm_id,pdo_id_local) {
     div_pdo.appendChild(div_Pdo_index);
     var div_input=document.createElement("input");
     div_input.innerHTML="<input/>";
-    var id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id_local.toString();
-
+    var id_str=ReturnUI_ID("");
     div_input.id=id_str+"_index";
-    div_input.value=node.getAttribute("index");
+    pdoEle.indexUI=id_str+"_index";
+    div_input.value=pdoEle.index;
     div_pdo.appendChild(div_input);
     father.appendChild(div_pdo);
 
     var  t;
     t = document.createElement('table');
-    t.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id_local.toString()+ "_pdoEntry_table_"+pdo_id_local.toString();
+    t.id=ReturnUI_ID("");
     var r_ = t.insertRow(0);
     var c_ = r_.insertCell(0);
     c_.innerHTML = "name";
@@ -1183,69 +1382,100 @@ function CreatePdoUI(node,father,ethercat_id,sm_id,pdo_id_local) {
     //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(t);
     div_pdo.appendChild(t);
 
-    var pdoEntry_id_local=0;
-    if (node.hasChildNodes()) {
-        var sonNodes = node.childNodes;
-        for (var j = 0; j < sonNodes.length; j++) {
-            if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="PdoEntry") {
-                CreatePdoEntryUI(sonNodes[j],t,ethercat_id,sm_id,pdo_id_local,pdoEntry_id_local);
-                pdoEntry_id_local++;
-            }
-        }
+    for (var i=0;i<pdoEle.pdoEntryList.length;i++){
+        CreatePdoEntryUI(pdoEle,pdoEle.pdoEntryList[i],t);
     }
+    // var pdoEntry_id_local=0;
+    // if (node.hasChildNodes()) {
+    //     var sonNodes = node.childNodes;
+    //     for (var j = 0; j < sonNodes.length; j++) {
+    //         if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="PdoEntry") {
+    //             CreatePdoEntryUI(sonNodes[j],t,ethercat_id,sm_id,pdo_id_local,pdoEntry_id_local);
+    //             pdoEntry_id_local++;
+    //         }
+    //     }
+    // }
 
     var btn_addPdoEntry=document.createElement("div");
     btn_addPdoEntry.innerHTML="<button>Add PdoEntry</button>";
     btn_addPdoEntry.onclick=function(){
-        AddPdoEntryBtnClick(node,t,pdoEntry_id_local);
+        AddPdoEntry(pdoEle,t);
     };
     div_pdo.appendChild(btn_addPdoEntry);
 
+
+    var btn_DelPdo=document.createElement("div");
+    btn_DelPdo.innerHTML="<button>Del Pdo</button>";
+    btn_DelPdo.onclick=function () {
+        DelPdo(smEle,pdoEle,div_pdo);
+    }
+    div_pdo.appendChild(btn_DelPdo);
 }
 
-function CreatePdoEntryUI(node,father,ethercat_id,sm_id,pdo_id,pdoEntry_id_local) {
-    //pdoEntry_id_local++;
-    // console.log("pdo Entry id: "+pdoEntry_id_local.toString());
-    // console.log("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
-    //var t_1=document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+function CreatePdoEntryUI(pdoEle,pdoEntryEle,father) {
     var t_1=father;
     var r=t_1.insertRow(-1);
     var c=r.insertCell(0);
     // c.innerHTML = node.nodeName;
-    var id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_"+pdoEntry_id_local.toString();
-
-    c.innerHTML ="<input id=" + id_str+"_name"+" value="+node.getAttribute('name')+" style='width: 80px'/>";
+    var id_str=ReturnUI_ID("");
+    c.innerHTML ="<input id=" + id_str+"_name"+" value="+pdoEntryEle.name+" style='width: 80px'/>";
+    pdoEntryEle.nameUI=id_str+"_name";
 
     c = r.insertCell(1);
-    c.innerHTML ="<input id=" + id_str+"_index"+" value="+node.getAttribute('index')+" style='width: 80px'/>";
+    c.innerHTML ="<input id=" + id_str+"_index"+" value="+pdoEntryEle.index+" style='width: 80px'/>";
+    pdoEntryEle.indexUI=id_str+"_index";
     // console.log(c.innerHTML);
     c = r.insertCell(-1);
-    c.innerHTML ="<input id="+id_str+"_subindex"+" value="+node.getAttribute('subindex')+" style='width: 80px'/>";
+    c.innerHTML ="<input id="+id_str+"_subindex"+" value="+pdoEntryEle.subindex+" style='width: 80px'/>";
+    pdoEntryEle.subindexUI=id_str+"_subindex";
     c = r.insertCell(-1);
-    c.innerHTML ="<input id="+id_str+"_size"+" value="+node.getAttribute('size')+" style='width: 60px'/>";
+    c.innerHTML ="<input id="+id_str+"_size"+" value="+pdoEntryEle.size+" style='width: 60px'/>";
+    pdoEntryEle.sizeUI=id_str+"_size";
 
     c=r.insertCell(-1);
     var btn_del_pdoEntry=document.createElement("button");
-    btn_del_pdoEntry.innerText="Del"+pdoEntry_id_local;
+    btn_del_pdoEntry.innerText="Del";
     btn_del_pdoEntry.onclick=function () {
-        DelPdoEntry(node,r,pdoEntry_id_local);
+        DelPdoEntry(pdoEle,pdoEntryEle,r);
     };
     c.appendChild(btn_del_pdoEntry);
 
 }
-function DelPdoEntry(node,father,pdo_entry_id) {
-    var father_id=father.id;
 
-    father_id=father_id.replace("_pdoEntry_table_0","");
+function AddEthercatMotion(spEle,father) {
+    var emEle=new EthercatMotion_Element();
+    spEle.motionList.push(emEle);
+    var smPoolEle=new SyncManagerPool_Element();
+    emEle.smPool=smPoolEle;
+    for (var i=0;i<4;i++){
 
-    var sonnodes_pdo_entry=node.getElementsByTagName("PdoEntry");
-    node.parentNode.removeChild(node);
-    //father.remove();
-    father.parentNode.removeChild(father);
-    //father.deleteRow(pdo_entry_id);
+    }
+}
 
-    var pdoEntry_node=xmlDoc.createElement("PdoEntry");
-    node.appendChild(pdoEntry_node);
+function DelEthercatSlave(spEle,emEle,headDiv,contentDiv) {
+    var index=spEle.motionList.indexOf(emEle);
+    if (index>-1){
+        spEle.motionList.splice(index,1);
+    }
+    index=spEle.slaveList.indexOf(emEle);
+    if (index>-1){
+        spEle.slaveList.splice(index,1);
+    }
+    headDiv.parentNode.removeChild(headDiv);
+    contentDiv.parentNode.removeChild(contentDiv);
+}
+
+function DelPdo(smEle,pdoEle,pdoUI) {
+    var index= smEle.pdoList.indexOf(pdoEle);
+    smEle.pdoList.splice(index,1);
+    pdoUI.parentNode.removeChild(pdoUI);
+}
+
+function DelPdoEntry(pdoEle,pdoEntryEle,row) {
+    var index=pdoEle.pdoEntryList.indexOf(pdoEntryEle);
+    pdoEle.pdoEntryList.splice(index,1);
+    //node.parentNode.removeChild(node);
+    row.parentNode.removeChild(row);
 
     // var r=father.insertRow(-1);
     // var c=r.insertCell(0);
@@ -1261,103 +1491,237 @@ function DelPdoEntry(node,father,pdo_entry_id) {
     // c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
 }
 
-function AddPdoBtnClick(node,father,pdo_id_local) {
-    var father_id=father.id;
-    var pdo_node=xmlDoc.createElement("Pdo");
-    node.appendChild(pdo_node);
-    //pdo_node.setAttribute("index","");
-    //pdo_id_local++;
-    var pdo_entry_id=0;
-    // console.log("pdo id: "+pdo_id_local.toString());
-    var div_pdo=document.createElement("fieldset");
-    //div_pdo.innerText="pdo_"+pdo_id_local.toString()+" Name:"+node.nodeName+"  ";
-    var div_Pdo_index=document.createElement("b");
-    div_Pdo_index.innerText="index";
-    div_pdo.appendChild(div_Pdo_index);
-    var div_input=document.createElement("input");
-    div_input.innerHTML="<input/>";
-    //id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString();
-    id_str=father_id+"_pdo_"+pdo_id_local.toString();
-    div_input.id=id_str+"_index";
-    div_input.value=node.getAttribute("index");
-    div_pdo.appendChild(div_input);
-    father.appendChild(div_pdo);
-    // document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()).appendChild(div_pdo);
+function AddPdo(smEle,father) {
+    var pdoEle=new Pdo_Element();
+    pdoEle.pdoEntryList=[];
+    smEle.pdoList.push(pdoEle);
 
-    var  t;
-    t = document.createElement('table');
-    //t.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString()+ "_pdoEntry_table_"+pdo_id_local.toString();
-    t.id=father_id +"_pdo_"+pdo_id_local.toString()+ "_pdoEntry_table_"+pdo_id_local.toString();
+    var pdoEntryEle=new PdoEntry_Element();
+    pdoEntryEle.name="name";
+    pdoEntryEle.index="index";
+    pdoEntryEle.subindex="subindex";
+    pdoEntryEle.size="size";
+    pdoEle.pdoEntryList.push(pdoEntryEle);
+    CreatePdoUI(smEle,pdoEle,father);
 
-    var r_ = t.insertRow(0);
-    var c_ = r_.insertCell(0);
-    c_.innerHTML = "PdoEntryName";
-    c_ = r_.insertCell(1);
-    c_.innerHTML = "index";
-    c_ = r_.insertCell(2);
-    c_.innerHTML = "subindex";
-    c_ = r_.insertCell(-1);
-    c_.innerHTML = "size";
-    //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()).appendChild(t);
-    div_pdo.appendChild(t);
-
-    //var pdoEntryName=["status_word","mode"]
-    for (var i=0;i<5;i++){
-        var pdoEntry_node=xmlDoc.createElement("PdoEntry");
-        pdo_node.appendChild(pdoEntry_node);
-
-        var r=t.insertRow(-1);
-        var c=r.insertCell(0);
-        //c.innerHTML = "status_word";
-        //id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_"+pdo_entry_id.toString();;
-        id_str=father_id+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_"+pdo_entry_id.toString();;
-
-        c.innerHTML ="<input id=" + id_str +"_name"+" value="+"name"+" style='width: 80px'/>";
-        c = r.insertCell(1);
-        var id_str=father_id+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_"+pdo_entry_id.toString();
-        c.innerHTML ="<input id=" + id_str+"_index"+" value="+"index"+" style='width: 80px'/>";
-        // console.log(c.innerHTML);
-        c = r.insertCell(-1);
-        c.innerHTML ="<input id="+id_str+"_subindex"+" value="+"subindex"+" style='width: 80px'/>";
-        c = r.insertCell(-1);
-        c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
-        pdo_entry_id++;
-    }
-
-    var btn_addPdoEntry=document.createElement("div");
-    btn_addPdoEntry.innerHTML="<button>Add PdoEntry</button>";
-    btn_addPdoEntry.onclick=function(){
-        AddPdoEntryBtnClick(node,t,pdo_entry_id);
-    };
-    div_pdo.appendChild(btn_addPdoEntry);
+    //
+    // var div_pdo=document.createElement("fieldset");
+    // var div_Pdo_index=document.createElement("b");
+    // div_Pdo_index.innerText="index";
+    // div_pdo.appendChild(div_Pdo_index);
+    // var div_input=document.createElement("input");
+    // div_input.innerHTML="<input/>";
+    // var id_str=ReturnUI_ID("");
+    // div_input.id=id_str+"_index";
+    // pdoEle.indexUI=id_str+"_index";
+    // pdoEle.pdoEntryList=[];
+    //
+    // div_pdo.appendChild(div_input);
+    // father.appendChild(div_pdo);
+    //
+    // var  t;
+    // t = document.createElement('table');
+    //  t.id=ReturnUI_ID("");
+    //
+    // var r_ = t.insertRow(0);
+    // var c_ = r_.insertCell(0);
+    // c_.innerHTML = "PdoEntryName";
+    // c_ = r_.insertCell(1);
+    // c_.innerHTML = "index";
+    // c_ = r_.insertCell(2);
+    // c_.innerHTML = "subindex";
+    // c_ = r_.insertCell(-1);
+    // c_.innerHTML = "size";
+    //  div_pdo.appendChild(t);
+    //
+    // AddPdoEntry(pdoEle,t);
+    //
+    // var btn_addPdoEntry=document.createElement("div");
+    // btn_addPdoEntry.innerHTML="<button>Add PdoEntry</button>";
+    // btn_addPdoEntry.onclick=function(){
+    //     AddPdoEntry(pdoEle,t);
+    // };
+    // div_pdo.appendChild(btn_addPdoEntry);
 
 }
 
-function AddPdoEntryBtnClick(node,father,pdo_entry_id) {
-    var father_id=father.id;
+function AddPdoEntry(pdoEle,father) {
+    var pdoEntryEle=new PdoEntry_Element();
+    pdoEntryEle.name="name";
+    pdoEntryEle.index="index";
+    pdoEntryEle.subindex="subindex";
+    pdoEntryEle.size="size";
+    CreatePdoEntryUI(pdoEle,pdoEntryEle,father);
+    // var r=father.insertRow(-1);
+    // var id_str=ReturnUI_ID("");
+    //
+    // var c=r.insertCell(0);
+    // c.innerHTML ="<input id=" + id_str +"_name"+" value="+"name"+" style='width: 80px'/>";
+    // pdoEntryEle.nameUI=id_str +"_name";
+    // c = r.insertCell(1);
+    // c.innerHTML ="<input id=" + id_str+"_index"+" value="+"index"+" style='width: 80px'/>";
+    // pdoEntryEle.indexUI=id_str+"_index";
+    // // console.log(c.innerHTML);
+    // c = r.insertCell(-1);
+    // c.innerHTML ="<input id="+id_str+"_subindex"+" value="+"subindex"+" style='width: 80px'/>";
+    // pdoEntryEle.subindexUI=id_str+"_subindex";
+    // c = r.insertCell(-1);
+    // c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
+    // pdoEntryEle.sizeUI=id_str+"_size";
 
-    father_id=father_id.replace("_pdoEntry_table_0","");
-    var pdoEntry_node=xmlDoc.createElement("PdoEntry");
-    node.appendChild(pdoEntry_node);
-
-    var r=father.insertRow(-1);
-    var c=r.insertCell(0);
-    var id_str=father_id+"_pdoEntry_"+pdo_entry_id.toString();
-
-    c.innerHTML ="<input id=" + id_str +"_name"+" value="+"name"+" style='width: 80px'/>";
-    c = r.insertCell(1);
-    c.innerHTML ="<input id=" + id_str+"_index"+" value="+"index"+" style='width: 80px'/>";
-    // console.log(c.innerHTML);
-    c = r.insertCell(-1);
-    c.innerHTML ="<input id="+id_str+"_subindex"+" value="+"subindex"+" style='width: 80px'/>";
-    c = r.insertCell(-1);
-    c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
+    pdoEle.pdoEntryList.push(pdoEntryEle);
 }
 
 var ethercat_id_world=-1;
 var sm_id_world=-1;
 var pdo_id_world=-1;
 var pdo_entry_id_world=-1;
+
+function CollectUIValue_Ecc(eccEle) {
+    if (eccEle.slavePool!==null){
+        CollectUIValue_SlavePool(eccEle.slavePool);
+    }
+}
+
+function CollectUIValue_SlavePool(slavePool) {
+    for (var i=0;i<slavePool.motionList.length;i++){
+        // CreateEthercatMotionUI(slavePool.motionList[i],father,i);
+        CollectUIValue_EthercatMotion(slavePool.motionList[i]);
+    }
+    for (var j=0;j<slavePool.slaveList.length;j++){
+        // CreateEthercatSlaveUI(slavePool.slaveList[j],father,j);
+        CollectUIValue_EtherSlave(slavePool.slaveList[j]);
+    }
+}
+
+function CollectUIValue_EtherSlave(emEle) {
+    emEle.phy_id=$("#"+emEle.phy_id_UI).val();
+    emEle.vendor_id=$("#"+emEle.vendor_id_UI).val();
+    if (emEle.smPool!==null){
+        CollectUIValue_SyncManagerPool(emEle.smPool);
+    }
+}
+
+function CollectUIValue_EthercatMotion(emEle) {
+    emEle.phy_id=$("#"+emEle.phy_id_UI).val();
+    emEle.vendor_id=$("#"+emEle.vendor_id_UI).val();
+    if (emEle.smPool!==null){
+        CollectUIValue_SyncManagerPool(emEle.smPool);
+    }
+}
+
+function CollectUIValue_SyncManagerPool(smPoolEle) {
+    for (var i=0;i<smPoolEle.smList.length;i++){
+        CollectUIValue_SyncManager(smPoolEle.smList[i]);
+    }
+}
+
+function CollectUIValue_SyncManager(smEle) {
+    smEle.is_tx=$("#"+smEle.is_txUI).val();
+    for (var i=0;i<smEle.pdoList.length;i++){
+        CollectUIValue_Pdo(smEle.pdoList[i]);
+    }
+}
+
+function CollectUIValue_Pdo(pdoEle) {
+    pdoEle.index=$("#"+pdoEle.indexUI).val();
+    for (var i=0;i<pdoEle.pdoEntryList.length;i++){
+        CollectUIValue_PdoEntry(pdoEle.pdoEntryList[i]);
+    }
+}
+
+function CollectUIValue_PdoEntry(pdoEntryEle) {
+    if (document.getElementById(pdoEntryEle.nameUI)!==null){
+        pdoEntryEle.name=$("#"+pdoEntryEle.nameUI).val();
+        pdoEntryEle.index=$("#"+pdoEntryEle.indexUI).val();
+        pdoEntryEle.subindex=$("#"+pdoEntryEle.subindexUI).val();
+        pdoEntryEle.size=$("#"+pdoEntryEle.sizeUI).val();
+        return true;
+    }
+    else {
+        return false;
+    }
+
+
+}
+
+function GenerateXmlNode_EthercatController(eccEle) {
+    var node=xmlDoc.getElementsByTagName("EthercatController");
+    var spNode=node[0].getElementsByTagName("SlavePoolObject");
+    node[0].removeChild(spNode[0]);
+    if (eccEle.slavePool!==null) {
+        node[0].appendChild(GenerateXmlNode_SlavePool(eccEle.slavePool));
+    }
+   // return node;
+}
+
+function GenerateXmlNode_SlavePool(spEle) {
+    var node=xmlDoc.createElement("SlavePoolObject");
+    for (var i=0;i<spEle.motionList.length;i++){
+        node.appendChild(GenerateXmlNode_EthercatMotion(spEle.motionList[i]));
+    }
+    for (var j=0;j<spEle.slaveList.length;j++){
+        node.appendChild(GenerateXmlNode_EthercatSlave(spEle.slaveList[j]));
+    }
+    return node;
+}
+
+function GenerateXmlNode_EthercatMotion(emEle) {
+
+    var node=xmlDoc.createElement("EthercatMotion");
+    node.setAttribute("phy_id",emEle.phy_id);
+    node.setAttribute("vendor_id",emEle.vendor_id);
+    if (emEle.smPool!==null) {
+        node.appendChild(GenerateXmlNode_SyncManagerPool(emEle.smPool));
+    }
+    return node;
+}
+
+function GenerateXmlNode_EthercatSlave(emEle) {
+    var node=xmlDoc.createElement("EthercatSlave");
+    if (emEle.smPool!==null) {
+        node.appendChild(GenerateXmlNode_SyncManagerPool(emEle.smPool));
+    }
+    return node;
+}
+
+function GenerateXmlNode_SyncManagerPool(smPoolEle) {
+    var node=xmlDoc.createElement("SyncManagerPoolObject");
+    for (var i=0;i<smPoolEle.smList.length;i++){
+        node.appendChild(GenerateXmlNode_SyncManager(smPoolEle.smList[i]));
+    }
+    return node;
+}
+
+function GenerateXmlNode_SyncManager(smEle) {
+    var node=xmlDoc.createElement("SyncManager");
+    node.setAttribute("is_tx",smEle.is_tx);
+
+    for (var i=0;i<smEle.pdoList.length;i++){
+        node.appendChild(GenerateXmlNode_Pdo(smEle.pdoList[i]));
+    }
+    return node;
+}
+
+function GenerateXmlNode_Pdo(pdoEle) {
+    var node=xmlDoc.createElement("Pdo");
+    node.setAttribute("index",pdoEle.index);
+
+    for (var i=0;i<pdoEle.pdoEntryList.length;i++){
+        node.appendChild(GenerateXmlNode_PdoEntry(pdoEle.pdoEntryList[i]));
+    }
+    return node;
+}
+
+function GenerateXmlNode_PdoEntry(pdoEntryEle) {
+    var node=xmlDoc.createElement("PdoEntry");
+    node.setAttribute("name",pdoEntryEle.name);
+    node.setAttribute("index",pdoEntryEle.index);
+    node.setAttribute("subindex",pdoEntryEle.subindex);
+    node.setAttribute("size",pdoEntryEle.size);
+
+    return node;
+}
 
 function CollectNodeName(node, name) {
     if (node.nodeType === 1){
