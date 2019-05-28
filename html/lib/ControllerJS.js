@@ -334,6 +334,9 @@ function CreateB(node,father) {
     var b_div=document.createElement("b");
     b_div.id=ReturnUI_ID(node.getAttribute("id"));
     b_div.innerText=ReturnUI_Text(node.getAttribute("text"));
+    if (node.getAttribute("style")){
+        b_div.style=node.getAttribute("style");
+    }
     father.appendChild(b_div);
 }
 
@@ -1221,19 +1224,51 @@ function CreatePdoEntryUI(node,father,ethercat_id,sm_id,pdo_id,pdoEntry_id_local
     c = r.insertCell(-1);
     c.innerHTML ="<input id="+id_str+"_size"+" value="+node.getAttribute('size')+" style='width: 60px'/>";
 
+    c=r.insertCell(-1);
+    var btn_del_pdoEntry=document.createElement("button");
+    btn_del_pdoEntry.innerText="Del"+pdoEntry_id_local;
+    btn_del_pdoEntry.onclick=function () {
+        DelPdoEntry(node,r,pdoEntry_id_local);
+    };
+    c.appendChild(btn_del_pdoEntry);
 
+}
+function DelPdoEntry(node,father,pdo_entry_id) {
+    var father_id=father.id;
+
+    father_id=father_id.replace("_pdoEntry_table_0","");
+
+    var sonnodes_pdo_entry=node.getElementsByTagName("PdoEntry");
+    node.parentNode.removeChild(node);
+    //father.remove();
+    father.parentNode.removeChild(father);
+    //father.deleteRow(pdo_entry_id);
+
+    var pdoEntry_node=xmlDoc.createElement("PdoEntry");
+    node.appendChild(pdoEntry_node);
+
+    // var r=father.insertRow(-1);
+    // var c=r.insertCell(0);
+    // var id_str=father_id+"_pdoEntry_"+pdo_entry_id.toString();
+    //
+    // c.innerHTML ="<input id=" + id_str +"_name"+" value="+"name"+" style='width: 80px'/>";
+    // c = r.insertCell(1);
+    // c.innerHTML ="<input id=" + id_str+"_index"+" value="+"index"+" style='width: 80px'/>";
+    // // console.log(c.innerHTML);
+    // c = r.insertCell(-1);
+    // c.innerHTML ="<input id="+id_str+"_subindex"+" value="+"subindex"+" style='width: 80px'/>";
+    // c = r.insertCell(-1);
+    // c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
 }
 
 function AddPdoBtnClick(node,father,pdo_id_local) {
     var father_id=father.id;
-
     var pdo_node=xmlDoc.createElement("Pdo");
     node.appendChild(pdo_node);
     //pdo_node.setAttribute("index","");
     //pdo_id_local++;
     var pdo_entry_id=0;
     // console.log("pdo id: "+pdo_id_local.toString());
-
     var div_pdo=document.createElement("fieldset");
     //div_pdo.innerText="pdo_"+pdo_id_local.toString()+" Name:"+node.nodeName+"  ";
     var div_Pdo_index=document.createElement("b");
@@ -1288,6 +1323,14 @@ function AddPdoBtnClick(node,father,pdo_id_local) {
         c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
         pdo_entry_id++;
     }
+
+    var btn_addPdoEntry=document.createElement("div");
+    btn_addPdoEntry.innerHTML="<button>Add PdoEntry</button>";
+    btn_addPdoEntry.onclick=function(){
+        AddPdoEntryBtnClick(node,t,pdo_entry_id);
+    };
+    div_pdo.appendChild(btn_addPdoEntry);
+
 }
 
 function AddPdoEntryBtnClick(node,father,pdo_entry_id) {
