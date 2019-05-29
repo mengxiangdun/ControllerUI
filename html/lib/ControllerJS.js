@@ -12,6 +12,7 @@ var dataMap_dataIndex=[];
 var id_list=0;//自动添加的id，++
 var demoWorkspace;
 
+
 function GetUI_ID_List(node) {
     var id_pool_node=node.getElementsByTagName("UiIdPoolObject");
     var id_list=id_pool_node[0].childNodes;
@@ -939,9 +940,9 @@ function GetInnerID(str) {
 
 //region Ethercat Controller
 class EthercatController_Element{
-    // constructor(slavePool){
-    //     this.slavePool=slavePool;
-    // }
+    constructor(){
+        this.slavePool;
+    }
     LoadFromXml(node){
         var sonNodes=node.childNodes;
         for (var i=0;i<sonNodes.length;i++){
@@ -955,10 +956,10 @@ class EthercatController_Element{
 }
 
 class SlavePool_Element{
-    // constructor(motionList,slaveList){
-    //     this.motionList=motionList;
-    //     this.slaveList=slaveList;
-    // }
+    constructor(){
+        this.motionList;
+        this.slaveList;
+    }
 
     LoadFromXml(node) {
         this.motionList=[];
@@ -982,16 +983,45 @@ class SlavePool_Element{
 
 class EthercatMotion_Element{
 
-    // constructor(phy_id,vendor_id){
-    //     this.phy_id=phy_id;
-    //     this.vendor_id=vendor_id;
-    //     //this.smList=smList;
-    // }
+    constructor(){
+        this.phy_id;
+        this.vendor_id;
+        this.smPool;
+        //this.smList=smList;
+    }
     LoadFromXml(node){
         this.phy_id=node.getAttribute("phy_id");
         this.phy_id_UI;
         this.vendor_id=node.getAttribute("vendor_id");
         this.vendor_id_UI;
+        this.product_code=node.getAttribute("product_code");
+        this.product_code_UI;
+        this.revision_num=node.getAttribute("revision_num");
+        this.revision_num_UI;
+        this.dc_assign_activate=node.getAttribute("dc_assign_activate");
+        this.dc_assign_activate_UI;
+        this.max_pos=node.getAttribute("max_pos");
+        this.max_pos_UI;
+        this.min_pos=node.getAttribute("min_pos");
+        this.min_pos_UI;
+        this.max_vel=node.getAttribute("max_vel");
+        this.max_vel_UI;
+        this.min_vel=node.getAttribute("min_vel");
+        this.min_vel_UI;
+        this.max_acc=node.getAttribute("max_acc");
+        this.max_acc_UI;
+        this.min_acc=node.getAttribute("min_acc");
+        this.min_acc_UI;
+        this.max_pos_following_error=node.getAttribute("max_pos_following_error");
+        this.max_pos_following_error_UI;
+        this.max_vel_following_error=node.getAttribute("max_vel_following_error");
+        this.max_vel_following_error_UI;
+        this.pos_factor=node.getAttribute("pos_factor");
+        this.pos_factor_UI;
+        this.pos_offset=node.getAttribute("pos_offset");
+        this.pos_offset_UI;
+        this.home_pos=node.getAttribute("home_pos");
+        this.home_pos_UI;
         this.smPool;
         //this.smList=node.getAttribute("smList");
         var sonNodes=node.childNodes;
@@ -1006,11 +1036,24 @@ class EthercatMotion_Element{
 }
 
 class EthercatSlave_Element {
+    constructor(){
+        this.phy_id;
+        this.phy_id_UI;
+        this.vendor_id;
+        this.vendor_id_UI;
+        this.smPool;
+    }
     LoadFromXml(node){
         this.phy_id=node.getAttribute("phy_id");
         this.phy_id_UI;
         this.vendor_id=node.getAttribute("vendor_id");
         this.vendor_id_UI;
+        this.product_code=node.getAttribute("product_code");
+        this.product_code_UI;
+        this.revision_num=node.getAttribute("revision_num");
+        this.revision_num_UI;
+        this.dc_assign_activate=node.getAttribute("dc_assign_activate");
+        this.dc_assign_activate_UI;
         this.smPool;
         //this.smList=node.getAttribute("smList");
         var sonNodes=node.childNodes;
@@ -1025,9 +1068,9 @@ class EthercatSlave_Element {
 }
 
 class SyncManagerPool_Element{
-    // constructor(SyncManagerList){
-    //     this.SyncManagerList=SyncManagerList;
-    // }
+    constructor(){
+        this.SyncManagerList;
+    }
 
     LoadFromXml(node) {
         this.smList=[];
@@ -1044,12 +1087,12 @@ class SyncManagerPool_Element{
 }
 
 class SyncManager_Element{
-    // constructor(is_tx,is_tx_ui_id,PdoList){
-    //
-    //     this.is_tx=is_tx;
-    //     this.is_txUI=is_tx_ui_id;
-    //     this.PdoList=PdoList;
-    // }
+    constructor(){
+
+        this.is_tx;
+        this.is_txUI;
+        this.PdoList;
+    }
     LoadFromXml(node) {
         this.is_tx=node.getAttribute("is_tx");
         this.pdoList=[];
@@ -1065,11 +1108,11 @@ class SyncManager_Element{
 }
 
 class Pdo_Element{
-    // constructor(index,index_ui_id,PdoEntryList){
-    //     this.index=index;
-    //     this.indexUI=index_ui_id;
-    //     this.PeoEntryList=PdoEntryList;
-    // }
+    constructor(){
+        this.index;
+        this.indexUI;
+        this.PeoEntryList;
+    }
     LoadFromXml(node) {
         this.index=node.getAttribute("index");
         this.pdoEntryList=[];
@@ -1106,8 +1149,6 @@ class PdoEntry_Element {
         this.subindexUI;
         this.size;
         this.sizeUI;
-
-
     }
     LoadeFromXml(node){
         this.name=node.getAttribute("name");
@@ -1151,6 +1192,7 @@ function CreateEthercatControllerUI(node,father) {
     //CreateEthercatControllerUI(master_node[0],e_div);
     setTimeout("$( \"#"+e_div.id+"\" ).accordion({\n" +
         "        heightStyle:\"content\",\n" +
+        "active:\"false\",\n"+
         "        collapsible: \"true\"\n" +
         "\n" +
         "    });",6);
@@ -1171,12 +1213,32 @@ function CreateEthercatControllerUI(node,father) {
 }
 
 function CreaterSlavePoolObjectUI(slavePool,father) {
+    var btn_addMotion=document.createElement("button");
+    btn_addMotion.innerText="Add Motion";
+    btn_addMotion.onclick=function () {
+        AddEthercatMotion(slavePool,father,i);
+    };
+    father.parentNode.appendChild(btn_addMotion);
+
+    var btn_addSlave=document.createElement("button");
+    btn_addSlave.innerText="Add Slave";
+    btn_addSlave.onclick=function () {
+        AddEthercatSlave(slavePool,father,i);
+    };
+    father.parentNode.appendChild(btn_addSlave);
+
+
     for (var i=0;i<slavePool.motionList.length;i++){
         CreateEthercatMotionUI(slavePool,slavePool.motionList[i],father,i);
     }
     for (var j=0;j<slavePool.slaveList.length;j++){
         CreateEthercatSlaveUI(slavePool,slavePool.slaveList[j],father,j);
     }
+
+    // setTimeout(function () {
+    //     AddEthercatMotion(slavePool,father,i);
+    // },100);
+
 
     // if (node.hasChildNodes()) {
     //     var sonNodes = node.childNodes;
@@ -1203,6 +1265,13 @@ function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
     var content_div=document.createElement("div");
     father.appendChild(content_div);
 
+    var btn=document.createElement("button");
+    btn.innerText="Del Motion";
+    btn.onclick=function () {
+        DelEthercatSlave(spEle,emEle,head_div,content_div);
+    };
+    content_div.appendChild(btn);
+
     var motion_table=document.createElement("table");
     var motion_table_row=motion_table.insertRow(-1);
     var id_str=ReturnUI_ID("");
@@ -1210,6 +1279,93 @@ function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
     emEle.phy_id_UI=id_str+"_phy_id";
     motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 100px' /></td>";
     emEle.vendor_id_UI=id_str+"_vendor_id";
+    motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+emEle.product_code+" style='width: 100px' /></td>";
+    emEle.product_code_UI=id_str+"_product_code";
+
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+emEle.dc_assign_activate+" style='width: 100px' /></td>";
+    emEle.dc_assign_activate_UI=id_str+"_dc_assign_activate";
+    motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+emEle.revision_num+" style='width: 100px' /></td>";
+    emEle.revision_num_UI=id_str+"_revision_num";
+    motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+emEle.max_pos+" style='width: 100px' /></td>";
+    emEle.max_pos_UI=id_str+"_max_pos";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+emEle.min_pos+" style='width: 100px' /></td>";
+    emEle.min_pos_UI=id_str+"_min_pos";
+    motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+emEle.max_vel+" style='width: 100px' /></td>";
+    emEle.max_vel_UI=id_str+"_max_vel";
+    motion_table_row.innerHTML+="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+emEle.min_vel+" style='width: 100px' /></td>";
+    emEle.min_vel_UI=id_str+"_min_vel";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+emEle.max_pos_following_error+" style='width: 100px' /></td>";
+    emEle.max_pos_following_error_UI=id_str+"_max_pos_following_error";
+    motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+emEle.max_acc+" style='width: 100px' /></td>";
+    emEle.max_acc_UI=id_str+"_max_acc";
+    motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+emEle.min_acc+" style='width: 100px' /></td>";
+    emEle.min_acc_UI=id_str+"_min_acc";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+emEle.max_vel_following_error+" style='width: 100px' /></td>";
+    emEle.max_vel_following_error_UI=id_str+"_max_vel_following_error";
+    motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+emEle.pos_factor+" style='width: 100px' /></td>";
+    emEle.pos_factor_UI=id_str+"_pos_factor";
+    motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+emEle.pos_offset+" style='width: 100px' /></td>";
+    emEle.pos_offset_UI=id_str+"_pos_offset";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+emEle.home_pos+" style='width: 100px' /></td>";
+    emEle.home_pos_UI=id_str+"_home_pos";
+
+    content_div.appendChild(motion_table);
+    var p_=document.createElement("p");
+    p_.innerHTML="<p></p>";
+
+    content_div.appendChild(p_);
+
+    var p_2=document.createElement("p");
+    p_2.innerHTML="<p></p>";
+    content_div.appendChild(p_2);
+
+
+    if (emEle.smPool!==null){
+        CreateSyncManagerPoolObjectUI(emEle.smPool,content_div);
+    }
+
+
+
+    setTimeout(function () {
+       var active=$("#"+father.id).accordion("option","active");
+        $("#"+father.id).accordion("refresh");
+        $("#"+father.id).accordion("option","active",active);
+    },6);
+   // setTimeout("$( \"#"+father.id+"\" ).accordion(\"refresh\");",6);
+}
+
+function CreateEthercatSlaveUI(spEle,emEle,father,ethercat_id_local) {
+    var head_div=document.createElement("div");
+    head_div.innerText="Slave_"+ethercat_id_local.toString();
+    father.appendChild(head_div);
+    var content_div=document.createElement("div");
+    father.appendChild(content_div);
+
+    var motion_table=document.createElement("table");
+    var motion_table_row=motion_table.insertRow(-1);
+    var id_str=ReturnUI_ID("");
+    motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 100px' /></td>";
+    emEle.phy_id_UI=id_str+"_phy_id";
+    motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 100px' /></td>";
+    emEle.vendor_id_UI=id_str+"_vendor_id";
+    motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+emEle.product_code+" style='width: 100px' /></td>";
+    emEle.product_code_UI=id_str+"_product_code";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+emEle.dc_assign_activate+" style='width: 100px' /></td>";
+    emEle.dc_assign_activate_UI=id_str+"_dc_assign_activate";
+    motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+emEle.revision_num+" style='width: 100px' /></td>";
+    emEle.revision_num_UI=id_str+"_revision_num";
     // motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
     //
     // motion_table_row=motion_table.insertRow(-1);
@@ -1254,53 +1410,57 @@ function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
     btn.innerText="Del Motion";
     btn.onclick=function () {
         DelEthercatSlave(spEle,emEle,head_div,content_div);
-    }
+    };
 
     content_div.appendChild(btn);
+
+    setTimeout(function () {
+        var active=$("#"+father.id).accordion("option","active");
+        $("#"+father.id).accordion("refresh");
+        $("#"+father.id).accordion("option","active",active);
+    },6);
 }
 
-
-
-function CreateEthercatSlaveUI(node,father,ethercat_id_local) {
-    if (node.nodeName==="EthercatSlave"){
-
-        var head_div=document.createElement("div");
-        head_div.innerText="Slave_"+ethercat_id_local.toString();
-        father.appendChild(head_div);
-        var content_div=document.createElement("div");
-        father.appendChild(content_div);
-
-        var motion_table=document.createElement("table");
-        var motion_table_row=motion_table.insertRow(-1);
-        var id_str="motion_"+ethercat_id_local.toString();
-        motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
-
-        motion_table_row=motion_table.insertRow(-1);
-        motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
-        motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
-
-        content_div.appendChild(motion_table);
-        var p_=document.createElement("p");
-        p_.innerHTML="<p></p>";
-
-        content_div.appendChild(p_);
-
-        var p_2=document.createElement("p");
-        p_2.innerHTML="<p></p>";
-        content_div.appendChild(p_2);
-
-        if (node.hasChildNodes()) {
-            var sonNodes = node.childNodes;
-            for (var j = 0; j < sonNodes.length; j++) {
-                if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManagerPoolObject") {
-                    CreateSyncManagerPoolObjectUI(sonNodes[j],content_div,ethercat_id_local);
-                }
-            }
-        }
-    }
-}
+// function CreateEthercatSlaveUI(node,father,ethercat_id_local) {
+//     if (node.nodeName==="EthercatSlave"){
+//
+//         var head_div=document.createElement("div");
+//         head_div.innerText="Slave_"+ethercat_id_local.toString();
+//         father.appendChild(head_div);
+//         var content_div=document.createElement("div");
+//         father.appendChild(content_div);
+//
+//         var motion_table=document.createElement("table");
+//         var motion_table_row=motion_table.insertRow(-1);
+//         var id_str="motion_"+ethercat_id_local.toString();
+//         motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
+//         motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
+//         motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+//
+//         motion_table_row=motion_table.insertRow(-1);
+//         motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
+//         motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
+//
+//         content_div.appendChild(motion_table);
+//         var p_=document.createElement("p");
+//         p_.innerHTML="<p></p>";
+//
+//         content_div.appendChild(p_);
+//
+//         var p_2=document.createElement("p");
+//         p_2.innerHTML="<p></p>";
+//         content_div.appendChild(p_2);
+//
+//         if (node.hasChildNodes()) {
+//             var sonNodes = node.childNodes;
+//             for (var j = 0; j < sonNodes.length; j++) {
+//                 if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManagerPoolObject") {
+//                     CreateSyncManagerPoolObjectUI(sonNodes[j],content_div,ethercat_id_local);
+//                 }
+//             }
+//         }
+//     }
+// }
 
 function CreateSyncManagerPoolObjectUI(smPoolEle,father) {
     for (var i=0;i<smPoolEle.smList.length;i++){
@@ -1442,14 +1602,30 @@ function CreatePdoEntryUI(pdoEle,pdoEntryEle,father) {
 
 }
 
-function AddEthercatMotion(spEle,father) {
+function AddEthercatMotion(spEle,father,ethercat_id) {
     var emEle=new EthercatMotion_Element();
     spEle.motionList.push(emEle);
     var smPoolEle=new SyncManagerPool_Element();
     emEle.smPool=smPoolEle;
+    smPoolEle.smList=[];
     for (var i=0;i<4;i++){
-
+        var smEle=new SyncManager_Element();
+        smPoolEle.smList.push(smEle);
+        smEle.pdoList=[];
     }
+    CreateEthercatMotionUI(spEle,emEle,father,ethercat_id);
+}
+
+function AddEthercatSlave(spEle,father,ethercat_id) {
+    var emEle=new EthercatSlave_Element();
+    spEle.slaveList.push(emEle);
+    var smPoolEle=new SyncManagerPool_Element();
+    emEle.smPool=smPoolEle;
+    for (var i=0;i<4;i++){
+        var smEle=new SyncManager_Element();
+        smPoolEle.smList.push(smEle);
+    }
+    CreateEthercatSlaveUI(spEle,emEle,father,ethercat_id);
 }
 
 function DelEthercatSlave(spEle,emEle,headDiv,contentDiv) {
@@ -1597,6 +1773,9 @@ function CollectUIValue_SlavePool(slavePool) {
 function CollectUIValue_EtherSlave(emEle) {
     emEle.phy_id=$("#"+emEle.phy_id_UI).val();
     emEle.vendor_id=$("#"+emEle.vendor_id_UI).val();
+    emEle.product_code=$("#"+ emEle.product_code_UI).val();
+    emEle.revision_num=$("#"+ emEle.revision_num_UI).val();
+    emEle.dc_assign_activate=$("#"+ emEle.dc_assign_activate_UI).val();
     if (emEle.smPool!==null){
         CollectUIValue_SyncManagerPool(emEle.smPool);
     }
@@ -1605,6 +1784,20 @@ function CollectUIValue_EtherSlave(emEle) {
 function CollectUIValue_EthercatMotion(emEle) {
     emEle.phy_id=$("#"+emEle.phy_id_UI).val();
     emEle.vendor_id=$("#"+emEle.vendor_id_UI).val();
+    emEle.product_code=$("#"+ emEle.product_code_UI).val();
+    emEle.revision_num=$("#"+ emEle.revision_num_UI).val();
+    emEle.dc_assign_activate=$("#"+ emEle.dc_assign_activate_UI).val();
+    emEle.max_pos=$("#"+ emEle.max_pos_UI).val();
+    emEle.min_pos=$("#"+emEle.min_pos_UI).val();
+    emEle.max_vel=$("#"+ emEle.max_vel_UI).val();
+    emEle.min_vel=$("#"+ emEle.min_vel_UI).val();
+    emEle.max_acc=$("#"+ emEle.max_acc_UI).val();
+    emEle.min_acc=$("#"+ emEle.min_acc_UI).val();
+    emEle.max_pos_following_error=$("#"+ emEle.max_pos_following_error_UI).val();
+    emEle.max_vel_following_error=$("#"+ emEle.max_vel_following_error_UI).val();
+    emEle.pos_factor=$("#"+ emEle.pos_factor_UI).val();
+    emEle.pos_offset=$("#"+ emEle.pos_offset_UI).val();
+    emEle.home_pos=$("#"+ emEle.home_pos_UI).val();
     if (emEle.smPool!==null){
         CollectUIValue_SyncManagerPool(emEle.smPool);
     }
@@ -1671,6 +1864,20 @@ function GenerateXmlNode_EthercatMotion(emEle) {
     var node=xmlDoc.createElement("EthercatMotion");
     node.setAttribute("phy_id",emEle.phy_id);
     node.setAttribute("vendor_id",emEle.vendor_id);
+    node.setAttribute("product_code",emEle.product_code);
+    node.setAttribute("revision_num",emEle.revision_num);
+    node.setAttribute("dc_assign_activate",emEle.dc_assign_activate);
+    node.setAttribute("max_pos",emEle.max_pos);
+    node.setAttribute("min_pos",emEle.min_pos);
+    node.setAttribute("max_vel",emEle.max_vel);
+    node.setAttribute("min_vel",emEle.min_vel);
+    node.setAttribute("max_acc",emEle.max_acc);
+    node.setAttribute("min_acc",emEle.min_acc);
+    node.setAttribute("max_pos_following_error",emEle.max_pos_following_error);
+    node.setAttribute("max_vel_following_error",emEle.max_vel_following_error);
+    node.setAttribute("pos_factor",emEle.pos_factor);
+    node.setAttribute("pos_offset",emEle.pos_offset);
+    node.setAttribute("home_pos",emEle.home_pos);
     if (emEle.smPool!==null) {
         node.appendChild(GenerateXmlNode_SyncManagerPool(emEle.smPool));
     }
@@ -1679,6 +1886,11 @@ function GenerateXmlNode_EthercatMotion(emEle) {
 
 function GenerateXmlNode_EthercatSlave(emEle) {
     var node=xmlDoc.createElement("EthercatSlave");
+    node.setAttribute("phy_id",emEle.phy_id);
+    node.setAttribute("vendor_id",emEle.vendor_id);
+    node.setAttribute("product_code",emEle.product_code);
+    node.setAttribute("revision_num",emEle.revision_num);
+    node.setAttribute("dc_assign_activate",emEle.dc_assign_activate);
     if (emEle.smPool!==null) {
         node.appendChild(GenerateXmlNode_SyncManagerPool(emEle.smPool));
     }
@@ -1807,6 +2019,15 @@ function CollectNodeName(node, name) {
 //#endregion
 
 //#region block program
+var curPq="";
+function GetEePq() {
+    SendCmd("get_ee_pq","$BinaryVariable{curPq}");
+    setTimeout(function () {
+        console.log(curPq);
+    },1000);
+}
+
+
 function CreateBlockProgram(node,father) {
     var block_div=document.createElement("div");
     block_div.id=ReturnUI_ID(node.getAttribute("id"));
@@ -1838,6 +2059,17 @@ function CreateBlockProgram(node,father) {
     setTimeout("$( \"#"+btn.id+"\" ).button()",20);
     father.appendChild(btn);
 }
+
+function onCreateVariable(event) {//
+
+    if (event.type === Blockly.Events.VAR_CREATE ) {
+        console.log('new variable');
+        GetEePq();
+        demoWorkspace.getBlockById(event.blockId).setFieldValue(curPq,"value");
+    }
+
+}
+
 function stepCode() {
     generateCodeAndLoadIntoInterpreter();
     //eval(latestCode);
@@ -1882,6 +2114,7 @@ function stepCode() {
         // or the code completes or errors.
     } while (hasMoreCode && !highlightPause);
 }
+
 function resetStepUi(clearOutput) {
     demoWorkspace.highlightBlock(null);
     highlightPause = false;
@@ -2108,27 +2341,48 @@ function AnalizeBotData(buffer) {
 
                 if (code_return_str.indexOf("$BinaryLabel")!==-1){
                     // $("#" + id_str).val(return_str);
-                    var pq="";
-                    var data_1;
-                    // console.log("data view length:"+buffer.byteLength)
-                    for(var i=0;i<(buffer.byteLength-40)/8;i++){
-                        data_1=dataView.getFloat64(40+i*8,true).toString();
-                        //SendDataToWinForm(data_1);
-                        $("#"+list_id_str[i]).val(data_1);
-                        if (i!==0){
-                            pq+=","+data_1;
-                        }
-                        if (i===0){
-                            pq+=data_1;
-                        }
-                    }
+                    var pq=AnalizeBinaryDataReturn(dataView);
+                    // var data_1;
+                    // // console.log("data view length:"+buffer.byteLength)
+                    // for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                    //     data_1=dataView.getFloat64(40+i*8,true).toString();
+                    //     //SendDataToWinForm(data_1);
+                    //     $("#"+list_id_str[i]).val(data_1);
+                    //     if (i!==0){
+                    //         pq+=","+data_1;
+                    //     }
+                    //     if (i===0){
+                    //         pq+=data_1;
+                    //     }
+                    // }
                     console.log("receive mess:"+pq);
                     $("#" + list_id_str[0]).val(pq);
                 }
 
+                if (code_return_str.indexOf("$BinaryVariable")!==-1){
+                    // $("#" + id_str).val(return_str);
+                    var pq=AnalizeBinaryDataReturn(buffer);
+                    // var data_1;
+                    // // console.log("data view length:"+buffer.byteLength)
+                    // for(var i=0;i<(buffer.byteLength-40)/8;i++){
+                    //     data_1=dataView.getFloat64(40+i*8,true).toString();
+                    //     //SendDataToWinForm(data_1);
+                    //     $("#"+list_id_str[i]).val(data_1);
+                    //     if (i!==0){
+                    //         pq+=","+data_1;
+                    //     }
+                    //     if (i===0){
+                    //         pq+=data_1;
+                    //     }
+                    // }
+                    console.log("receive mess:"+pq);
+                    var run_str=list_id_str[0]+"=\'"+pq+"\'";
+                    console.log("run str :" +run_str);
+                    eval(run_str);
+
+                }
                 if (code_return_str.indexOf("Chart")!==-1){
                     var data_index=dataMap_dataIndex[dataMap_chartID.indexOf(list_id_str[0])];
-
 
                     var count=dataView.getFloat64(40,true);
                     var count_data=dataView.getFloat64(48,true);
@@ -2198,6 +2452,24 @@ function AnalizeBotData(buffer) {
 
     }
 
+}
+
+function AnalizeBinaryDataReturn(buffer) {
+    var dataView=new DataView(buffer);
+    var pq="";
+    var data_1=[];
+    // console.log("data view length:"+buffer.byteLength)
+    for(var i=0;i<(buffer.byteLength-40)/8;i++){
+        var data=dataView.getFloat64(40+i*8,true).toString();
+        data_1.push(data);
+        if (i!==0){
+            pq+=","+data;
+        }
+        if (i===0){
+            pq+=data;
+        }
+    }
+    return pq;
 }
 
 function  QueryXml() {

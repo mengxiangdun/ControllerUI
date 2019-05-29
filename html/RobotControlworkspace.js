@@ -31,3 +31,23 @@ Blockly.JavaScript['robotcontrol_movejr'] = function(block) {
 
     return code;
 };
+
+Blockly.Blocks['robotcontrol_plane_get_rows'] = {
+    // Block for row variable getter.
+    init: function() {
+        this.setHelpUrl(Blockly.Msg['VARIABLES_GET_HELPURL']);
+        this.setColour(330);
+        this.appendDummyInput()
+            .appendField(1, 'title');
+        this.setOutput(true, 'Number');
+    },
+    customUpdate: function() {
+        this.setFieldValue(
+            Plane.getMsg('Plane_getRows').replace('%1', Plane.rows1st), 'title');
+    }
+};
+
+Blockly.JavaScript['robotcontrol_plane_get_rows'] = function(block) {
+    // Generate JavaScript for row variable getter.
+    return ['Plane.rows1st', Blockly.JavaScript.ORDER_MEMBER];
+};
