@@ -491,15 +491,22 @@
 
         //interface
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
-
+        GetUI_ID_List(interface_node[0]);
 
         //GetUI_ID_List(interface_node[0]);
 
         //3D view
         // show3D=(interface_node[0].getElementsByTagName("View3DInterfacePoolObject"))[0].getAttribute("show");
         // Show3DView();
+        var pageNodes=interface_node[0].childNodes;
+        for (var i=0;i<pageNodes.length;i++){
+            if (pageNodes[i].nodeType===1 && pageNodes[i].nodeName=== "Page" && pageNodes[i].getAttribute("name")==="index") {
+                ShowInterface(pageNodes[i],document.getElementById("body"));
 
-        ShowInterface(interface_node[0],document.getElementById("body"));
+            }
+        }
+
+
 
 
         //setTimeout(GetEePq(),1000);

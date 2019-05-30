@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kaanh Intelligence</title>
+    <link rel='stylesheet' href='./style.css' />
+    <script src="external/jquery/jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="echarts.js"></script>
+    <title>Servo Press Monitor</title>
+    <link href="jquery-ui.css" rel="stylesheet">
+    <script src="lib/ControllerJS.js"></script>
+</head>
+<body>
+<p>Welcome to Kaanh Intelligence</p>
+
+<input id="serverIP" placeholder="Enter server ip"/>
+<button id="getXml" >Get Configuration</button>
+<button id="saveXml">Save</button>
+
+<div id="ControllerSetup_div"></div>
+<div id="accordion">
+    <div id="Device_0">Device_0 </div>
+    <div id="xPdo_0"></div>
+    <div id="Device_1">Device_1 </div>
+    <div id="xPdo_1"></div>
+    <div id="Device_2">Device_2 </div>
+    <div id="xPdo_2"></div>
+    <div id="Device_3">Device_3 </div>
+    <div id="xPdo_3"></div>
+    <div id="Device_4">Device_4 </div>
+    <div id="xPdo_4"></div>
+    <div id="Device_5">Device_5 </div>
+    <div id="xPdo_5"></div>
+    <div id="Device_6">Device_6 </div>
+    <div id="xPdo_6"></div>
+    <div id="Device_7">Device_7 </div>
+    <div id="xPdo_7"></div>
+    <div id="Device_8">Device_8 </div>
+    <div id="xPdo_8"></div>
+    <div id="Device_9">Device_9 </div>
+    <div id="xPdo_9"></div>
+</div>
+<table id="InputTable_Temp" border="1" style="width: 600px">
+    <tr bgcolor="#ffe4c4">
+        <td style="width: 40%">Attribute Name</td>
+        <td style="width: 20%">Value</td>
+    </tr>
+</table>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+    $("#InputTable_Temp").hide();
+    $("#accordion").hide();
+    var xmlDoc;
+    var setupList=[];
+    var serverIP="ws://127.0.0.1:5866";
+
+    var SetupElement=function (attribute_name,node_name,parent_node_name) {
+
+        this.attribute_name=attribute_name;
+        this.node_name=node_name;
+        this.parent_node_name=parent_node_name;
+    };
+
+    class EthercatController_Element{
+        constructor(slavePool){
+            this.slavePool=slavePool;
+        }
+    }
+
+    class SlavePool_Element{
+        constructor(motionList,slaveList){
+            this.motionList=motionList;
+            this.slaveList=slaveList;
+        }
+    }
+
+    class EhercatMotion_Element {
+        constructor(phy_id,vendor_id,smList){
+            this.phy_id=phy_id;
+            this.vendor_id=vendor_id;
+            this.smList=smList;
+        }
+    }
+
+    class SyncManagerPool_Element{
+        constructor(SyncManagerList){
+            this.SyncManagerList=SyncManagerList;
+        }
+    }
+
+    class SyncManager_Element{
+        constructor(is_tx,is_tx_ui_id,PdoList){
+
+            this.is_tx=is_tx;
+            this.is_txUI=is_tx_ui_id;
+            this.PdoList=PdoList;
+        }
+    }
+
+    class Pdo_Element{
+        constructor(index,index_ui_id,PdoEntryList){
+            this.index=index;
+            this.indexUI=index_ui_id;
+            this.PeoEntryList=PdoEntryList;
+        }
+    }
+
+    class PdoEntry_Element {
+        constructor(name,name_ui_id,index,index_ui_id,subindex,subindex_ui_id,size,size_ui_id) {
+            this.name=name;
+            this.nameUI=name_ui_id;
+            this.index=index;
+            this.indexUI=index_ui_id;
+            this.subindex=subindex;
+            this.subindexUI=subindex_ui_id;
+            this.size=size;
+            this.sizeUI=size_ui_id;
+        }
+
+    }
+
+    function GetSetupList() {
+        setupList[setupList.length]=new SetupElement("type","sm","sm_pool");
+        setupList[setupList.length]=new SetupElement("type","index_1600","sm");
+    };
+
+    GetSetupList();
+
+    document.getElementById("serverIP").onchange=function(){
+        var str=document.getElementById("serverIP").value;
+        if (str!=""&&str!=null){
+            serverIP="ws://"+str+":5866";
+            // console.log(serverIP);
+        }
+    };
+
+    document.getElementById("getXml").onclick=function(){
+        //$("#InputTable_Temp").show();
+        SendCmd("2&1&0&0&0&GetXml --check_none");
+    };
+
+    var input_id=-1;
+    // var ethercat_id=-1;
+    // var sm_id=-1;
+    // var pdo_id=-1;
+    // var pdo_entry_id=-1;
+
+    function CreateEthercatControllerUI(node,father) {
+        if (node.hasChildNodes()) {
+            var sonNodes = node.childNodes;
+            for (var j = 0; j < sonNodes.length; j++) {
+                if (sonNodes[j].nodeType === 1 && sonNodes[j].nodeName==="SlavePoolObject") {
+                    CreaterSlavePoolObjectUI(sonNodes[j],father);
+                }
+            }
+        }
+    }
+
+    function CreaterSlavePoolObjectUI(node,father) {
+        if (node.hasChildNodes()) {
+            var sonNodes = node.childNodes;
+            var ethercat_id_local=0;
+            for (var j = 0; j < sonNodes.length; j++) {
+                if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="EthercatMotion") {
+                    CreateEthercatMotionUI(sonNodes[j],father,ethercat_id_local);
+                    ethercat_id_local++;
+                }
+            }
+        }
+    }
+
+    function CreateEthercatMotionUI(node,father,ethercat_id_local) {
+        if (node.nodeName==="EthercatMotion"){
+            // ethercat_id_local++;
+            //sm_id=-1;
+            // console.log("ethercat id: "+ethercat_id_local);
+            //input UI
+            //$("#accordion").show();
+
+            var head_div=document.createElement("div");
+            head_div.innerText="Motion_"+ethercat_id_local.toString();
+            father.appendChild(head_div);
+            var content_div=document.createElement("div");
+            father.appendChild(content_div);
+
+            var motion_table=document.createElement("table");
+            var motion_table_row=motion_table.insertRow(-1);
+            var id_str="motion_"+ethercat_id_local.toString();
+            motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
+
+            motion_table_row=motion_table.insertRow(-1);
+            motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+
+            motion_table_row=motion_table.insertRow(-1);
+            motion_table_row.innerHTML="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+
+            motion_table_row=motion_table.insertRow(-1);
+            motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+            motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
+
+            content_div.appendChild(motion_table);
+            var p_=document.createElement("p");
+            p_.innerHTML="<p></p>";
+
+            content_div.appendChild(p_);
+
+            var p_2=document.createElement("p");
+            p_2.innerHTML="<p></p>";
+            content_div.appendChild(p_2);
+
+            if (node.hasChildNodes()) {
+                var sonNodes = node.childNodes;
+                for (var j = 0; j < sonNodes.length; j++) {
+                    if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManagerPoolObject") {
+                        CreateSyncManagerPoolObjectUI(sonNodes[j],content_div,ethercat_id_local);
+                    }
+                }
+            }
+        }
+    }
+
+    function CreateSyncManagerPoolObjectUI(node,father,ethercat_id) {
+        if (node.hasChildNodes()) {
+            var sonNodes = node.childNodes;
+            var sm_id_local=0;
+            for (var j = 0; j < sonNodes.length; j++) {
+                if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="SyncManager") {
+                    CreateSyncManagerUI(sonNodes[j],father,ethercat_id,sm_id_local);
+                    sm_id_local++;
+                }
+            }
+        }
+    }
+
+    function CreateSyncManagerUI(node,father,ethercat_id,sm_id_local) {
+        //sm_id_local++;
+        //pdo_id=-1;
+        // console.log("sm id: "+sm_id_local.toString());
+        var div_syncm=document.createElement("fieldset");
+        div_syncm.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString();
+        div_syncm.innerText="sm_"+sm_id_local.toString();
+
+        father.appendChild(div_syncm);
+        var pdo_id_local=0;
+        if (node.hasChildNodes()) {
+            var sonNodes = node.childNodes;
+
+            for (var j = 0; j < sonNodes.length; j++) {
+                if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="Pdo") {
+                    CreatePdoUI(sonNodes[j],father,ethercat_id,sm_id_local,pdo_id_local);
+                    pdo_id_local++;
+                }
+            }
+        }
+
+        var btn_addPdo=document.createElement("div");
+        btn_addPdo.innerHTML="<button>Add Pdo</button>";
+        btn_addPdo.onclick=function(){
+            AddPdoBtnClick(node,div_syncm,pdo_id_local);
+        };
+        div_syncm.appendChild(btn_addPdo);
+
+    }
+
+    function CreatePdoUI(node,father,ethercat_id,sm_id,pdo_id_local) {
+       // pdo_id_local++;
+        //pdo_entry_id=-1;
+        // console.log("pdo id: "+pdo_id_local.toString());
+        var div_pdo=document.createElement("fieldset");
+        //div_pdo.innerText="pdo_"+pdo_id_local.toString()+" Name:"+node.nodeName+"  ";
+        var div_Pdo_index=document.createElement("b");
+        div_Pdo_index.innerText="index";
+        div_pdo.appendChild(div_Pdo_index);
+        var div_input=document.createElement("input");
+        div_input.innerHTML="<input/>";
+        var id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id_local.toString();
+
+        div_input.id=id_str+"_index";
+        div_input.value=node.getAttribute("index");
+        div_pdo.appendChild(div_input);
+        father.appendChild(div_pdo);
+        //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(div_pdo);
+
+        var  t;
+        t = document.createElement('table');
+        t.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id_local.toString()+ "_pdoEntry_table_"+pdo_id_local.toString();
+        var r_ = t.insertRow(0);
+        var c_ = r_.insertCell(0);
+        c_.innerHTML = "name";
+        c_ = r_.insertCell(1);
+        c_.innerHTML = "index";
+        c_ = r_.insertCell(2);
+        c_.innerHTML = "subindex";
+        c_ = r_.insertCell(-1);
+        c_.innerHTML = "size";
+        //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(t);
+        div_pdo.appendChild(t);
+
+        var pdoEntry_id_local=0;
+        if (node.hasChildNodes()) {
+            var sonNodes = node.childNodes;
+            for (var j = 0; j < sonNodes.length; j++) {
+                if (sonNodes[j].nodeType === 1&&sonNodes[j].nodeName==="PdoEntry") {
+                    CreatePdoEntryUI(sonNodes[j],t,ethercat_id,sm_id,pdo_id_local,pdoEntry_id_local);
+                    pdoEntry_id_local++;
+                }
+            }
+        }
+    }
+
+    function CreatePdoEntryUI(node,father,ethercat_id,sm_id,pdo_id,pdoEntry_id_local) {
+        //pdoEntry_id_local++;
+        // console.log("pdo Entry id: "+pdoEntry_id_local.toString());
+        // console.log("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+        //var t_1=document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+        var t_1=father;
+        var r=t_1.insertRow(-1);
+        var c=r.insertCell(0);
+        // c.innerHTML = node.nodeName;
+        var id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_"+pdoEntry_id_local.toString();
+
+        c.innerHTML ="<input id=" + id_str+"_name"+" value="+node.getAttribute('name')+" style='width: 80px'/>";
+
+        c = r.insertCell(1);
+        c.innerHTML ="<input id=" + id_str+"_index"+" value="+node.getAttribute('index')+" style='width: 80px'/>";
+        // console.log(c.innerHTML);
+        c = r.insertCell(-1);
+        c.innerHTML ="<input id="+id_str+"_subindex"+" value="+node.getAttribute('subindex')+" style='width: 80px'/>";
+        c = r.insertCell(-1);
+        c.innerHTML ="<input id="+id_str+"_size"+" value="+node.getAttribute('size')+" style='width: 60px'/>";
+
+
+    }
+
+    function AddPdoBtnClick(node,father,pdo_id_local) {
+        var father_id=father.id;
+
+        var pdo_node=xmlDoc.createElement("Pdo");
+        node.appendChild(pdo_node);
+        //pdo_node.setAttribute("index","");
+        //pdo_id_local++;
+        var pdo_entry_id=0;
+        // console.log("pdo id: "+pdo_id_local.toString());
+
+        var div_pdo=document.createElement("fieldset");
+        //div_pdo.innerText="pdo_"+pdo_id_local.toString()+" Name:"+node.nodeName+"  ";
+        var div_Pdo_index=document.createElement("b");
+        div_Pdo_index.innerText="index";
+        div_pdo.appendChild(div_Pdo_index);
+        var div_input=document.createElement("input");
+        div_input.innerHTML="<input/>";
+        //id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString();
+        id_str=father_id+"_pdo_"+pdo_id_local.toString();
+        div_input.id=id_str+"_index";
+        div_input.value=node.getAttribute("index");
+        div_pdo.appendChild(div_input);
+        father.appendChild(div_pdo);
+        // document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()).appendChild(div_pdo);
+
+        var  t;
+        t = document.createElement('table');
+        //t.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString()+ "_pdoEntry_table_"+pdo_id_local.toString();
+        t.id=father_id +"_pdo_"+pdo_id_local.toString()+ "_pdoEntry_table_"+pdo_id_local.toString();
+
+        var r_ = t.insertRow(0);
+        var c_ = r_.insertCell(0);
+        c_.innerHTML = "PdoEntryName";
+        c_ = r_.insertCell(1);
+        c_.innerHTML = "index";
+        c_ = r_.insertCell(2);
+        c_.innerHTML = "subindex";
+        c_ = r_.insertCell(-1);
+        c_.innerHTML = "size";
+        //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()).appendChild(t);
+        div_pdo.appendChild(t);
+
+        //var pdoEntryName=["status_word","mode"]
+        for (var i=0;i<5;i++){
+            var pdoEntry_node=xmlDoc.createElement("PdoEntry");
+            pdo_node.appendChild(pdoEntry_node);
+            //pdoEntry_node.setAttribute("type","PdoEntry");
+
+            // console.log("pdo Entry id: "+pdo_entry_id.toString());
+            // console.log("motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_table_"+pdo_id_local.toString());
+            //var t_1=document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_table_"+pdo_id_local.toString());
+            //var t_1=document.getElementById(father_id+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_table_"+pdo_id_local.toString());
+
+            var r=t.insertRow(-1);
+            var c=r.insertCell(0);
+            //c.innerHTML = "status_word";
+            //id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id_local.toString()+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_"+pdo_entry_id.toString();;
+            id_str=father_id+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_"+pdo_entry_id.toString();;
+
+            c.innerHTML ="<input id=" + id_str +"_name"+" value="+"name"+" style='width: 80px'/>";
+            c = r.insertCell(1);
+            var id_str=father_id+"_pdo_"+pdo_id_local.toString()+"_pdoEntry_"+pdo_entry_id.toString();
+            c.innerHTML ="<input id=" + id_str+"_index"+" value="+"index"+" style='width: 80px'/>";
+            // console.log(c.innerHTML);
+            c = r.insertCell(-1);
+            c.innerHTML ="<input id="+id_str+"_subindex"+" value="+"subindex"+" style='width: 80px'/>";
+            c = r.insertCell(-1);
+            c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
+            pdo_entry_id++;
+        }
+    }
+
+    function printNodeName(node, name) {
+        if (node.nodeType === 1){
+            // console.log(node.nodeName);
+            // console.log(node.getAttribute("type"));
+            name+=node.nodeName+":";
+            //type = EthercatMotion
+            if (node.nodeName==="PdoEntry"){
+                pdo_entry_id++;
+                // console.log("pdo Entry id: "+pdo_entry_id.toString());
+                // console.log("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+                var t_1=document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+                var r=t_1.insertRow(-1);
+                var c=r.insertCell(0);
+                // c.innerHTML = node.nodeName;
+                var id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_"+pdo_entry_id.toString();
+
+                c.innerHTML ="<input id=" + id_str+"_name"+" value="+node.getAttribute('name')+" style='width: 80px'/>";
+
+                c = r.insertCell(1);
+                c.innerHTML ="<input id=" + id_str+"_index"+" value="+node.getAttribute('index')+" style='width: 80px'/>";
+                // console.log(c.innerHTML);
+                c = r.insertCell(-1);
+                c.innerHTML ="<input id="+id_str+"_subindex"+" value="+node.getAttribute('subindex')+" style='width: 80px'/>";
+                c = r.insertCell(-1);
+                c.innerHTML ="<input id="+id_str+"_size"+" value="+node.getAttribute('size')+" style='width: 60px'/>";
+
+            }
+
+            if (node.nodeName==="Pdo"){
+                pdo_id++;
+                pdo_entry_id=-1;
+                // console.log("pdo id: "+pdo_id.toString());
+                var div_pdo=document.createElement("fieldset");
+                //div_pdo.innerText="pdo_"+pdo_id.toString()+" Name:"+node.nodeName+"  ";
+                var div_Pdo_index=document.createElement("b");
+                div_Pdo_index.innerText="index";
+                div_pdo.appendChild(div_Pdo_index);
+                var div_input=document.createElement("input");
+                div_input.innerHTML="<input/>";
+                id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString();
+
+                div_input.id=id_str+"_index";
+                div_input.value=node.getAttribute("index");
+                div_pdo.appendChild(div_input);
+                document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(div_pdo);
+
+                var  t;
+                t = document.createElement('table');
+                t.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+ "_pdoEntry_table_"+pdo_id.toString();
+                var r_ = t.insertRow(0);
+                var c_ = r_.insertCell(0);
+                c_.innerHTML = "name";
+                c_ = r_.insertCell(1);
+                c_.innerHTML = "index";
+                c_ = r_.insertCell(2);
+                c_.innerHTML = "subindex";
+                c_ = r_.insertCell(-1);
+                c_.innerHTML = "size";
+                //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(t);
+                div_pdo.appendChild(t);
+
+                //$("#xPdo_"+(ethercat_id).toString()).append(div_pdo);
+
+            }
+
+            if (node.nodeName==="SyncManager"){
+                sm_id++;
+                pdo_id=-1;
+                // console.log("sm id: "+sm_id.toString());
+                var div_syncm=document.createElement("fieldset");
+                div_syncm.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString();
+                div_syncm.innerText="sm_"+sm_id.toString();
+
+                var btn_addPdo=document.createElement("div");
+                btn_addPdo.innerHTML="<button>Add Pdo</button>";
+                btn_addPdo.onclick=function(){
+                    // var pdo_node=xmlDoc.createElement("Pdo");
+                    // node.appendChild(pdo_node);
+                    // //pdo_node.setAttribute("index","");
+                    // pdo_id++;
+                    // pdo_entry_id=-1;
+                    // // console.log("pdo id: "+pdo_id.toString());
+                    //
+                    // var div_pdo=document.createElement("fieldset");
+                    // //div_pdo.innerText="pdo_"+pdo_id.toString()+" Name:"+node.nodeName+"  ";
+                    // var div_Pdo_index=document.createElement("b");
+                    // div_Pdo_index.innerText="index";
+                    // div_pdo.appendChild(div_Pdo_index);
+                    // var div_input=document.createElement("input");
+                    // div_input.innerHTML="<input/>";
+                    // id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString();
+                    //
+                    // div_input.id=id_str+"_index";
+                    // div_input.value=node.getAttribute("index");
+                    // div_pdo.appendChild(div_input);
+                    // div_syncm.appendChild(div_pdo);
+                    // // document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(div_pdo);
+                    //
+                    // var  t;
+                    // t = document.createElement('table');
+                    // t.id="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+ "_pdoEntry_table_"+pdo_id.toString();
+                    // var r_ = t.insertRow(0);
+                    // var c_ = r_.insertCell(0);
+                    // c_.innerHTML = "PdoEntryName";
+                    // c_ = r_.insertCell(1);
+                    // c_.innerHTML = "index";
+                    // c_ = r_.insertCell(2);
+                    // c_.innerHTML = "subindex";
+                    // c_ = r_.insertCell(-1);
+                    // c_.innerHTML = "size";
+                    // //document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()).appendChild(t);
+                    // div_pdo.appendChild(t);
+                    //
+                    // //var pdoEntryName=["status_word","mode"]
+                    // for (var i=0;i<5;i++){
+                    //     var pdoEntry_node=xmlDoc.createElement("PdoEntry");
+                    //     pdo_node.appendChild(pdoEntry_node);
+                    //     //pdoEntry_node.setAttribute("type","PdoEntry");
+                    //
+                    //     pdo_entry_id++;
+                    //     // console.log("pdo Entry id: "+pdo_entry_id.toString());
+                    //     // console.log("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+                    //     var t_1=document.getElementById("motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_table_"+pdo_id.toString());
+                    //     var r=t_1.insertRow(-1);
+                    //     var c=r.insertCell(0);
+                    //     //c.innerHTML = "status_word";
+                    //     id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_"+pdo_entry_id.toString();;
+                    //     c.innerHTML ="<input id=" + id_str +"_name"+" value="+"name"+" style='width: 80px'/>";
+                    //
+                    //     c = r.insertCell(1);
+                    //     var id_str="motion_"+ethercat_id.toString()+"_syncm_"+sm_id.toString()+"_pdo_"+pdo_id.toString()+"_pdoEntry_"+pdo_entry_id.toString();
+                    //     c.innerHTML ="<input id=" + id_str+"_index"+" value="+"index"+" style='width: 80px'/>";
+                    //     // console.log(c.innerHTML);
+                    //     c = r.insertCell(-1);
+                    //     c.innerHTML ="<input id="+id_str+"_subindex"+" value="+"subindex"+" style='width: 80px'/>";
+                    //     c = r.insertCell(-1);
+                    //     c.innerHTML ="<input id="+id_str+"_size"+" value="+"size"+" style='width: 60px'/>";
+                    //
+                    // }
+
+                    AddPdoBtnClick(node,div_syncm,pdo_id);
+                };
+                div_syncm.appendChild(btn_addPdo);
+
+                document.getElementById("motion_"+ethercat_id.toString()).appendChild(div_syncm);
+
+
+            }
+
+            if (node.nodeName==="EthercatMotion"){
+                var xpdo_id="xPdo_"+(ethercat_id).toString();
+                console.log(xpdo_id)
+                CreateEthercatMotionUI(node,ethercat_id++,document.getElementById(xpdo_id));
+                // ethercat_id++;
+                // sm_id=-1;
+                // // console.log("ethercat id: "+ethercat_id);
+                // //input UI
+                // $("#accordion").show();
+                //
+                // var div_3=document.createElement("fieldset");
+                // div_3.id="motion_"+ethercat_id.toString();
+                // div_3.innerHTML="<div></div>";
+                // div_3.innerText="Motion_"+ethercat_id.toString();
+                // // var div_5=document.createElement("b");
+                // // div_5.innerText="Motion "+(ethercat_id).toString()+"_Name";
+                // // div_3.appendChild(div_5);
+                //
+                // var motion_table=document.createElement("table");
+                // var motion_table_row=motion_table.insertRow(-1);
+                // id_str="motion_"+ethercat_id.toString();
+                // motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
+                //
+                // motion_table_row=motion_table.insertRow(-1);
+                // motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+                //
+                // motion_table_row=motion_table.insertRow(-1);
+                // motion_table_row.innerHTML="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+                //
+                // motion_table_row=motion_table.insertRow(-1);
+                // motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
+                //
+                // // motion_table_row.innerHTML="<td>phy_id</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>product_code</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
+                // //
+                // // motion_table_row=motion_table.insertRow(-1);
+                // // motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+                // //
+                // // motion_table_row=motion_table.insertRow(-1);
+                // // motion_table_row.innerHTML="<td>min_vel</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+                // //
+                // // motion_table_row=motion_table.insertRow(-1);
+                // // motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+                // // motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
+                //
+                // div_3.appendChild(motion_table);
+                //
+                //
+                //
+                // var p_=document.createElement("p");
+                // p_.innerHTML="<p></p>";
+                //
+                // div_3.appendChild(p_);
+                //
+                // var p_2=document.createElement("p");
+                // p_2.innerHTML="<p></p>";
+                // div_3.appendChild(p_2);
+                // $("#xPdo_"+(ethercat_id).toString()).append(div_3);
+                //
+                $("#Device_"+(ethercat_id).toString()).show();
+                $("#xPdo_"+(ethercat_id).toString()).show();
+                for (var i=ethercat_id;i<12;i++){
+                    $("#Device_"+(i+1).toString()).hide();
+                    $("#xPdo_"+(i+1).toString()).hide();
+
+                }
+
+            }
+
+            if (node.nodeName==="EthercatSlave"){
+                ethercat_id++;
+                sm_id=-1;
+                // console.log("ethercat id: "+ethercat_id);
+                //input UI
+                $("#accordion").show();
+
+                var div_3=document.createElement("fieldset");
+                div_3.id="motion_"+ethercat_id.toString();
+                div_3.innerHTML="<div></div>";
+                div_3.innerText="Slave_"+ethercat_id.toString();
+                // var div_5=document.createElement("b");
+                // div_5.innerText="Motion "+(ethercat_id).toString()+"_Name";
+                // div_3.appendChild(div_5);
+
+
+                var motion_table=document.createElement("table");
+                var motion_table_row=motion_table.insertRow(-1);
+                id_str="motion_"+ethercat_id.toString();
+                motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+node.getAttribute('phy_id')+" style='width: 100px' /></td>";
+                motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+node.getAttribute('vendor_id')+" style='width: 100px' /></td>";
+                motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
+                motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+node.getAttribute('revision_num')+" style='width: 100px' /></td>";
+
+                motion_table_row=motion_table.insertRow(-1);
+                motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+node.getAttribute('dc_assign_activate')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+                //
+                // motion_table_row=motion_table.insertRow(-1);
+                // motion_table_row.innerHTML="<td>min_vel</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+                //
+                // motion_table_row=motion_table.insertRow(-1);
+                // motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+                // motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
+
+                div_3.appendChild(motion_table);
+
+                var btn_1=document.createElement("div");
+                //btn_1.innerText="MotionConfig";
+                //btn_1.id="btn_"+ethercat_id.toString();
+                //$("#"+"btn_"+ethercat_id.toString()).button();
+                //btn_1.button();
+                btn_1.innerHTML="<button >MotionConfig</button>"
+                btn_1.onclick=function () {
+                    if (node.getAttribute("type")!="EthercatMotion") {
+                        node.setAttribute("type","EthercatMotion");
+
+
+                        motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+
+                        motion_table_row=motion_table.insertRow(-1);
+                        motion_table_row.innerHTML="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+
+                        motion_table_row=motion_table.insertRow(-1);
+                        motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+                        motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
+
+                        // motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_pos')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_pos')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_vel')+" style='width: 100px' /></td>";
+                        //
+                        // motion_table_row=motion_table.insertRow(-1);
+                        // motion_table_row.innerHTML="<td>min_vel</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_vel')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_acc')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('min_acc')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_pos_following_error')+" style='width: 100px' /></td>";
+                        //
+                        // motion_table_row=motion_table.insertRow(-1);
+                        // motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('max_vel_following_error')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('pos_factor')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('pos_offset')+" style='width: 100px' /></td>";
+                        // motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+(input_id++).toString()+" value="+node.getAttribute('home_pos')+" style='width: 100px' /></td>";
+
+                    }
+
+
+                }
+                div_3.appendChild(btn_1);
+
+
+                var p_=document.createElement("p");
+                p_.innerHTML="<p></p>";
+
+                div_3.appendChild(p_);
+
+                var p_2=document.createElement("p");
+                p_2.innerHTML="<p></p>";
+                div_3.appendChild(p_2);
+                $("#xPdo_"+(ethercat_id).toString()).append(div_3);
+
+                $("#Device_"+(ethercat_id).toString()).show();
+                $("#xPdo_"+(ethercat_id).toString()).show();
+                for (var i=ethercat_id;i<12;i++){
+                    $("#Device_"+(i+1).toString()).hide();
+                    $("#xPdo_"+(i+1).toString()).hide();
+
+                }
+
+            }
+
+            if (node.hasChildNodes()) {
+                var sonNodes = node.childNodes;
+                for (var j = 0; j < sonNodes.length; j++) {
+                    if (sonNodes[j].nodeType === 1) {
+                        printNodeName(sonNodes[j],name);
+                    }
+                }
+            }
+        }
+    }
+
+    var ethercat_id_world=-1;
+    var sm_id_world=-1;
+    var pdo_id_world=-1;
+    var pdo_entry_id_world=-1;
+
+    function CollectNodeName(node, name) {
+        if (node.nodeType === 1){
+            // console.log(node.nodeName);
+            name+=node.nodeName+":";
+            if (node.nodeName==="PdoEntry"){
+                pdo_entry_id_world++;
+                // console.log("pdo Entry id: "+pdo_entry_id_world.toString());
+                // console.log("motion_"+ethercat_id_world.toString()+"_syncm_"+sm_id_world.toString()+"_pdo_"+pdo_id_world.toString()+"_pdoEntry_table_"+pdo_id_world.toString());
+
+                id_str="motion_"+ethercat_id_world.toString()+"_syncm_"+sm_id_world.toString()+"_pdo_"+pdo_id_world.toString()+"_pdoEntry_"+pdo_entry_id_world.toString();
+
+                //console.log(id_str+"_name");
+                //console.log($("#"+id_str+"_name").val());
+                //var re_node=xmlDoc.createElement($("#"+id_str+"_name").val());
+                //re_node.setAttribute("type","PdoEntry");
+                //node.parentNode.replaceChild(re_node,node);
+
+                node.setAttribute("name",$("#"+id_str+"_name").val());
+                node.setAttribute("index",$("#"+id_str+"_index").val());
+                //console.log(id_str+"_index");
+                node.setAttribute("subindex",$("#"+id_str+"_subindex").val());
+                node.setAttribute("size",$("#"+id_str+"_size").val());
+
+                // node.setAttribute("index",$("#"+(input_id++).toString()).val());
+                // node.setAttribute("subindex",$("#"+(input_id++).toString()).val());
+                // node.setAttribute("size",$("#"+(input_id++).toString()).val());
+            }
+            if (node.nodeName==="Pdo"){
+                pdo_id_world++;
+                pdo_entry_id_world=-1;
+                // console.log("pdo id: "+pdo_id_world.toString());
+                //id_str="motion_"+ethercat_id_world.toString()+"_syncm_"+sm_id_world.toString()+"_pdo_"+pdo_id_world.toString();
+                id_str="motion_"+ethercat_id_world.toString()+"_syncm_"+sm_id_world.toString()+"_pdo_"+pdo_id_world.toString();
+                node.setAttribute("index",$("#"+id_str+"_index").val());
+
+            }
+            if (node.nodeName==="SyncManager"){
+                sm_id_world++;
+                pdo_id_world=-1;
+                // console.log("sm id: "+sm_id_world.toString());
+
+
+            }
+            if (node.nodeName==="EthercatMotion"){
+                ethercat_id_world++;
+                sm_id_world=-1;
+                // console.log("ethercat id: "+ethercat_id_world);
+
+                var id_str="motion_"+ethercat_id_world.toString();
+                node.setAttribute("phy_id",$("#"+id_str+"_phy_id").val());
+                node.setAttribute("vendor_id",$("#"+id_str+"_vendor_id").val());
+                node.setAttribute("product_code",$("#"+id_str+"_product_code").val());
+                node.setAttribute("revision_num",$("#"+id_str+"_revision_num").val());
+                node.setAttribute("dc_assign_activate",$("#"+id_str+"_dc_assign_activate").val());
+                node.setAttribute("max_pos",$("#"+id_str+"_max_pos").val());
+                node.setAttribute("min_pos",$("#"+id_str+"_min_pos").val());
+                node.setAttribute("max_vel",$("#"+id_str+"_max_vel").val());
+                node.setAttribute("min_vel",$("#"+id_str+"_min_vel").val());
+                node.setAttribute("max_acc",$("#"+id_str+"_max_acc").val());
+                node.setAttribute("min_acc",$("#"+id_str+"_min_acc").val());
+                node.setAttribute("max_pos_following_error",$("#"+id_str+"_max_pos_following_error").val());
+                node.setAttribute("max_vel_following_error",$("#"+id_str+"_max_vel_following_error").val());
+                node.setAttribute("pos_factor",$("#"+id_str+"_pos_factor").val());
+                node.setAttribute("pos_offset",$("#"+id_str+"_pos_offset").val());
+                node.setAttribute("home_pos",$("#"+id_str+"_home_pos").val());
+            }
+
+            if (node.hasChildNodes()) {
+                var sonNodes = node.childNodes;
+                for (var j = 0; j < sonNodes.length; j++) {
+                    if (sonNodes[j].nodeType === 1) {
+                        CollectNodeName(sonNodes[j],name);
+                    }
+                }
+            }
+        }
+    }
+
+    function GetXmlDoc(data){
+        //
+        console.log(data);
+        var parser=new DOMParser();
+        xmlDoc=parser.parseFromString(data,"text/xml");
+        //master
+        var master_node=xmlDoc.getElementsByTagName("EthercatController");
+        CreateEthercatControllerUI(master_node[0],document.getElementById("ControllerSetup_div"));
+        setTimeout("$( \"#"+"ControllerSetup_div"+"\" ).accordion({\n" +
+            "        heightStyle:\"content\",\n" +
+            "        collapsible: \"true\"\n" +
+            "\n" +
+            "    });",6);
+        //printNodeName(master_node[0],"");
+
+        //TraverseNodes(xmlDoc.documentElement);
+        //printNodeName(xmlDoc.documentElement,"");
+        //var x=xmlDoc.documentElement.childNodes;
+        //console.log(x.length);
+
+    }
+
+    document.getElementById("saveXml").onclick= function() {
+        input_id=-1;
+        ethercat_id=-1;
+        sm_id=-1;
+        pdo_id=-1;
+        pdo_entry_id=-1;
+        CollectNodeName(xmlDoc.documentElement,"");
+        var text = (new XMLSerializer()).serializeToString(xmlDoc);
+        console.log(text);
+        SendCmd("set_xml --xml={"+text+"}","");
+        //SendCmd("3&1&0&0&0&"+text);
+
+        // ws.close();
+        // var url="PressMonitor.html?ServerIp="+escape( serverIP);
+        // location.href=url;
+
+    }
+
+</script>
+
+
+<script type="text/javascript">
+
+    var ws;
+    buildWS("get_xml","get_xml");
+
+    // function PackBotCmd(str) {
+    //     //1&1&0&0&0&Read --check_none
+    //     var strArray=str.split("&");
+    //     if (strArray.length>3){
+    //         var cmd_id=parseInt(strArray[0]);
+    //         var cmd_option=parseInt((strArray[1]));
+    //         var res_1=parseInt((strArray[2]));
+    //         var res_2=parseInt((strArray[3]));
+    //         var res_3=parseInt((strArray[4]));
+    //
+    //         var mes_length=strArray[5].length;
+    //         var buffer=new ArrayBuffer(40+mes_length);
+    //         var headView=new DataView(buffer);
+    //
+    //         headView.setInt32(0,mes_length,true);
+    //         headView.setInt32(4,cmd_id,true);
+    //         headView.setInt32(8,cmd_option,true);
+    //         headView.setInt32(16,res_1,true);
+    //         headView.setInt32(24,res_2,true);
+    //         headView.setInt32(32,res_3,true);
+    //         for (var i=0;i<mes_length;i++){
+    //             headView.setUint8(40+i,strArray[5].charCodeAt(i));
+    //         }
+    //
+    //         ws.send(headView.buffer);
+    //         console.log("send cmd"+headView.buffer.byteLength);
+    //
+    //     }
+    // }
+    //
+    // function AnalizeBotData(buffer) {
+    //     var dataView=new DataView(buffer);
+    //     var cmd_length=dataView.getInt32(0);
+    //     console.log("cmd_length"+cmd_length);
+    //     var cmd_id=dataView.getInt32(4,true);
+    //     console.log("cmd_id"+cmd_id);
+    //     var getMess;
+    //
+    //     if (cmd_id==2){
+    //         getMess=String.fromCharCode.apply(null,new Uint8Array(buffer,40));
+    //         console.log(getMess);
+    //         GetXmlDoc(getMess);
+    //     }
+    //     //return float message
+    //     if (cmd_id=0){
+    //         var step=new Array();
+    //         for(var i=0;i<(dataView.length-40)/8;i++){
+    //             step[i]=dataView.getFloat64(432+i*8);
+    //         }
+    //
+    //     }
+    // }
+    //
+    // function buildWS() {
+    //     ws=new WebSocket(serverIP);
+    //
+    //     ws.onopen=function (evt) {
+    //         console.log("Connection open...");
+    //     }
+    //     ws.onmessage=function (evt) {
+    //         if (typeof evt.data=== String){
+    //             console.log("Received "+evt.data);
+    //             receiveStr=evt.data;
+    //         }
+    //         if (evt.data instanceof ArrayBuffer){
+    //             console.log("receive byte"+evt.data.byteLength);
+    //             AnalizeBotData(evt.data);
+    //         }
+    //
+    //
+    //     }
+    //     ws.onclose=function (evt) {
+    //         console.log("closed");
+    //     }
+    // }
+    // function SendCmd(cmd){
+    //     switch (ws.readyState) {
+    //         case WebSocket.CONNECTING:
+    //             break;
+    //         case WebSocket.OPEN:
+    //             ws.binaryType='arraybuffer';
+    //             PackBotCmd(cmd);
+    //             break;
+    //         case  WebSocket.CLOSING:
+    //             break;
+    //         case WebSocket.CLOSED:
+    //             buildWS();
+    //             break;
+    //     }
+    // }
+
+</script>
+
+
+<script type="text/javascript">
+    $("#btn_0").button();
+    $("#btn_1").button();
+    $("#getXml").button();
+    $("#saveXml").button();
+    $("#run").button();
+    $( "#accordion" ).accordion({
+        heightStyle:"content",
+        collapsible: "true"
+
+    });
+
+</script>
+</body>
+</html>
