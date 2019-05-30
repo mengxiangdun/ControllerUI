@@ -97,6 +97,10 @@
                 <B id="" text="show me"/>
                 <!--显示纯字符-->
                 <Panel text="My CMD|CMD" id="id_1">
+                    <Panel>
+                        <EthercatControllerUI id=""/>
+                        <!--Controller 配置界面-->
+                    </Panel>
                     <Panel text="mvaj|CMD" id="id_2">
                         <Input id="id_3" default="" parameter="m" style="width:30px"/>
                         <!--default：input内的默认值-->

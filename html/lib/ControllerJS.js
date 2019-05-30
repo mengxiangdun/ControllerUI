@@ -2210,7 +2210,6 @@ Blockly.Blocks['robotcontrol_movejr'] = {
     }
 };
 
-
 Blockly.JavaScript['robotcontrol_movejr'] = function(block) {
     var dropdown_m_select = block.getFieldValue('m_select');
     var angle_jointangle = block.getFieldValue('jointAngle');
@@ -2240,7 +2239,6 @@ Blockly.Blocks['robotcontrol_movel'] = {
         this.setHelpUrl("");
     }
 };
-
 
 Blockly.JavaScript['robotcontrol_movel'] = function(block) {
     var value_pq = Blockly.JavaScript.valueToCode(block, 'pq', Blockly.JavaScript.ORDER_ATOMIC);
