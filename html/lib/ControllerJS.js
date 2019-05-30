@@ -2023,10 +2023,18 @@ var curPq="";
 function GetEePq() {
     SendCmd("get_ee_pq","$BinaryVariable{curPq}");
     setTimeout(function () {
-        console.log(curPq);
+        console.log("curPq: "+curPq);
     },1000);
 }
+var variableList_name=[];
+var variableList_value=[];
 
+function ReturnVariableValue(var_name) {
+    if (var_name){
+        var index=variableList_name.indexOf(var_name);
+        return variableList_value[index];
+    }
+}
 
 function CreateBlockProgram(node,father) {
     var block_div=document.createElement("div");
@@ -2047,6 +2055,7 @@ function CreateBlockProgram(node,father) {
         }
     });
 
+    demoWorkspace.addChangeListener(onCreateVariable);
     father.appendChild(document.createElement("br"));
     var btn=document.createElement("button");
     btn.innerText="Run";
@@ -2063,9 +2072,21 @@ function CreateBlockProgram(node,father) {
 function onCreateVariable(event) {//
 
     if (event.type === Blockly.Events.VAR_CREATE ) {
-        console.log('new variable');
+        //console.log('new variable');
         GetEePq();
-        demoWorkspace.getBlockById(event.blockId).setFieldValue(curPq,"value");
+        var var_name=event.varName;
+        var run_str="var "+var_name+"="+"curPq"+";";
+        console.log("run str: "+run_str);
+        setTimeout(function () {
+            eval(run_str);
+            eval("console.log('var value:'+"+var_name+")");
+            variableList_name.push(var_name);
+            variableList_value.push(curPq);
+            var a=1;
+        },100);
+
+        //demoWorkspace.getBlockById(event.blockId).setFieldValue(curPq,"value");
+
     }
 
 }
@@ -2168,6 +2189,99 @@ function highlightBlock(id) {
     demoWorkspace.highlightBlock(id);
     highlightPause = true;
 }
+//#endregion
+
+//#region blocks
+Blockly.Blocks['robotcontrol_movejr'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("MoveJR")
+            .appendField("m=")
+            .appendField(new Blockly.FieldDropdown([["1","1"], ["2","2"], ["3","3"], ["4","4"], ["5","5"], ["6","6"]]), "m_select")
+            .appendField("   pos=")
+            .appendField(new Blockly.FieldDropdown([["+","1"], ["-","-1"]]), "dir")
+            .appendField(new Blockly.FieldAngle(90), "jointAngle");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
+
+Blockly.JavaScript['robotcontrol_movejr'] = function(block) {
+    var dropdown_m_select = block.getFieldValue('m_select');
+    var angle_jointangle = block.getFieldValue('jointAngle');
+    var dropdown_dir = block.getFieldValue('dir');
+    // TODO: Assemble JavaScript into code variable.
+    var cmd_str="moveJR -m="+dropdown_m_select+" --pos="+angle_jointangle/180*3.14*dropdown_dir;
+    var code_1 = 'SendCmd(\''+cmd_str+'\', \"\");';
+
+    var code='setTimeout(function () {\n' +
+        '    \n' +code_1+
+        '},10);';
+
+    return code;
+};
+
+Blockly.Blocks['robotcontrol_movel'] = {
+    init: function () {
+        this.appendValueInput("pq")
+            .setCheck(null)
+            .appendField("moveL --pq=");
+        this.appendDummyInput();
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
+
+Blockly.JavaScript['robotcontrol_movel'] = function(block) {
+    var value_pq = Blockly.JavaScript.valueToCode(block, 'pq', Blockly.JavaScript.ORDER_ATOMIC);
+    // TODO: Assemble JavaScript into code variable.
+
+    //console.log("pq value:"+value_pq);
+    var cmd_str="mvl --pq={"+ReturnVariableValue(value_pq)+"}";
+    var code_1 = 'SendCmd(\''+cmd_str+'\', \"\");'+'console.log("pq value:"+p1);';
+
+    var code='setTimeout(function () {\n' +
+        '    \n' +code_1+
+        '},10);';
+    return code;
+};
+
+Blockly.Blocks['robotcontrol_movej'] = {
+    init: function() {
+        this.appendValueInput("pq")
+            .setCheck(null)
+            .appendField("moveJ --pq=");
+        this.appendDummyInput();
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
+Blockly.JavaScript['robotcontrol_movej'] = function(block) {
+    var value_pq = Blockly.JavaScript.valueToCode(block, 'pq', Blockly.JavaScript.ORDER_ATOMIC);
+    // TODO: Assemble JavaScript into code variable.
+    var cmd_str="mvj --pq={"+ReturnVariableValue(value_pq)+"}";
+    var code_1 = 'SendCmd(\''+cmd_str+'\', \"\");'+'console.log("pq value:"+p1);';
+
+    var code='setTimeout(function () {\n' +
+        '    \n' +code_1+
+        '},10);';
+    return code;
+};
 //#endregion
 
 //#region websocket
@@ -2376,7 +2490,7 @@ function AnalizeBotData(buffer) {
                     //     }
                     // }
                     console.log("receive mess:"+pq);
-                    var run_str=list_id_str[0]+"=\'"+pq+"\'";
+                    var run_str=list_id_str[0]+"=\'"+pq+"\';";
                     console.log("run str :" +run_str);
                     eval(run_str);
 
