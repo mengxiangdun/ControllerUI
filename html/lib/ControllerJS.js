@@ -843,9 +843,13 @@ function CreateButton(node,father) {
                     AddEnableEvent(fun_list[i],btn_cmd);
                 }
             }
+            else if (fun_list[i].indexOf("$")===-1){
+
+                console.log("funtion :"+fun_list[i]);
+                AddClickEvent(btn_cmd,eval(fun_list[i]));
+            }
         }
     }
-
 }
 
 function AddClickEvent(el,fn){
@@ -2600,6 +2604,13 @@ function GetPartPq(){
 //#endregion
 
 //#region function
+function JumpToPage(url) {
+    console.log("jump to page: "+url);
+    ws.close();
+    location.href=url;
+
+}
+
 function ShowUI(id_str) {
     $("#"+id_str).show();
 }

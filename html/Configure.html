@@ -1,172 +1,508 @@
-﻿<!doctype html>
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title >Kaanh Intelligence</title>
+    <script src="external/jquery/jquery.js"></script>
+    <script src="lib/jquery-ui.js"></script>
+    <script src="lib/echarts.js"></script>
+    <script src="lib/js.cookie.js"></script>
 
-<title>Kaanh Controller Configure</title>
-<meta charset="utf-8"/>
-<script src="lib/ControllerJS.js"></script>
-<link rel='stylesheet' href='lib/style.css' />
-<script src="external/jquery/jquery.js"></script>
-<script src="lib/jquery-ui.js"></script>
-<link href="lib/jquery-ui.css" rel="stylesheet">
-<link href="lib/jquery-ui.css" rel="stylesheet">
-
-<link rel="stylesheet" href="lib/codemirror.css">
-<link rel="stylesheet" href="addon/fold/foldgutter.css" />
-<script src="lib/codemirror.js"></script>
-<script src="addon/fold/foldcode.js"></script>
-<script src="addon/fold/foldgutter.js"></script>
-<script src="addon/fold/brace-fold.js"></script>
-<script src="addon/fold/xml-fold.js"></script>
-<script src="addon/fold/indent-fold.js"></script>
-<script src="addon/fold/markdown-fold.js"></script>
-<script src="addon/fold/comment-fold.js"></script>
-<script src="mode/javascript/javascript.js"></script>
-<script src="mode/xml/xml.js"></script>
-<script src="mode/css/css.js"></script>
-<script src="mode/htmlmixed/htmlmixed.js"></script>
-<script src="mode/python/python.js"></script>
-<script src="mode/markdown/markdown.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script src="lib/FileSaver.js"></script>
+    <title>Servo Press Monitor</title>
+    <link href="lib/jquery-ui.css" rel="stylesheet">
+    <link href="jquery-ui.css" rel="stylesheet">
+    <script src="external/jquery/jquery.js"></script>
+    <script src="jquery-ui.js"></script>
+    <link type="text/css" rel="stylesheet" href="lib/layout-default.css">
+    <script type="text/javascript" src="external/jquery/jquery.js"></script>
+    <script type="text/javascript" src="jquery-ui.js"></script>
+    <script type="text/javascript" src="lib/jquery.layout.js"></script>
+    <script src="acorn_interpreter.js"></script>
+    <script src="blockly_compressed.js"></script>
+    <script src="blocks_compressed.js"></script>
+    <script src="javascript_compressed.js"></script>
+    <script src="RobotControlworkspace.js"></script>
+    <script src="en.js"></script>
+    <!--<script src="ControllerJS.js"></script>-->
+</head>
 <style>
-      .CodeMirror { border: 1px solid black;height: auto; font-family: "微软雅黑 Light";  }
-    </style>
-<body>
-<div id="interface_div">
-    <button id="btn_download">查看配置</button>
-    <button id="btn_upload">修改配置</button>
-    <button id="btn_start">开启</button>
+    body{
+        font-family: "Trebuchet MS", sans-serif;
+        margin: 50px;
+    }
+    .demoHeaders {
+        margin-top: 2em;
+    }
+    #dialog-link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+    #dialog-link span.ui-icon {
+        margin: 0 5px 0 0;
+        position: absolute;
+        left: .2em;
+        top: 50%;
+        margin-top: -8px;
+    }
+    #icons {
+        margin: 0;
+        padding: 0;
+    }
+    #icons li {
+        margin: 2px;
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+        float: left;
+        list-style: none;
+    }
+    #icons span.ui-icon {
+        float: left;
+        margin: 0 4px;
+    }
+    .fakewindowcontain .ui-widget-overlay {
+        position: absolute;
+    }
+    select {
+        width: 200px;
+    }
+    html {
+        box-sizing: border-box;
+    }
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
 
-    <form><textarea id="code" name="code" >
-</textarea></form>
+    #gameContainer {
+        width: 100vw;
+        height: 100vh;
+    }
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .logo {
+        display: block;
+        width: max-width: 80vw;
+        height: max-height: 60vh;
+    }
+
+    .progress {
+        margin: 1.5em;
+        border: 1px solid white;
+        width: 50vw;
+        display: none;
+    }
+    .progress .full {
+        margin: 2px;
+        background: white;
+        height: 1em;
+        transform-origin: top left;
+    }
+
+    #loader {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .spinner,
+    .spinner:after {
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+    }
+    .spinner {
+        margin: 10px;
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+
+        transform: translateZ(0);
+        animation: spinner-spin 1.1s infinite linear;
+    }
+    @keyframes spinner-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    body{
+        font-family: "Trebuchet MS", sans-serif;
+        margin: 50px;
+    }
+    .demoHeaders {
+        margin-top: 2em;
+    }
+    #dialog-link {
+        padding: .4em 1em .4em 20px;
+        text-decoration: none;
+        position: relative;
+    }
+    #dialog-link span.ui-icon {
+        margin: 0 5px 0 0;
+        position: absolute;
+        left: .2em;
+        top: 50%;
+        margin-top: -8px;
+    }
+    #icons {
+        margin: 0;
+        padding: 0;
+    }
+    #icons li {
+        margin: 2px;
+        position: relative;
+        padding: 4px 0;
+        cursor: pointer;
+        float: left;
+        list-style: none;
+    }
+    #icons span.ui-icon {
+        float: left;
+        margin: 0 4px;
+    }
+    .fakewindowcontain .ui-widget-overlay {
+        position: absolute;
+    }
+    select {
+        width: 200px;
+    }
+</style>
+<body id="body">
+<!--<div id="body_1" style="width: 100%;height: 100%">-->
+
 </div>
+<p id="title_id"></p>
+
+<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+    <category name="RobotControl">
+        <block type="robotcontrol_movejr">
+            <field name="m_select">1</field>
+            <field name="jointAngle">90</field>
+        </block>
+        <block type="robotcontrol_movel">
+
+        </block>
+        <block type="robotcontrol_movej">
+
+        </block>
+    </category>
+    <category name="Logic" colour="#5C81A6">
+        <block type="controls_if"></block>
+        <block type="logic_compare">
+            <field name="OP">EQ</field>
+        </block>
+        <block type="logic_operation">
+            <field name="OP">AND</field>
+        </block>
+        <block type="logic_negate"></block>
+        <block type="logic_boolean">
+            <field name="BOOL">TRUE</field>
+        </block>
+        <block type="logic_null"></block>
+        <block type="logic_ternary"></block>
+    </category>
+    <category name="Loops" colour="#5CA65C">
+        <block type="controls_repeat_ext">
+            <value name="TIMES">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_whileUntil">
+            <field name="MODE">WHILE</field>
+        </block>
+        <block type="controls_for">
+            <field name="VAR" id="d=1FvwLL?)zrT3HTa:@[" variabletype="">i</field>
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+            <value name="BY">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_forEach">
+            <field name="VAR" id="j~]MQMCogT4R51qRmfbn" variabletype="">j</field>
+        </block>
+        <block type="controls_flow_statements">
+            <field name="FLOW">BREAK</field>
+        </block>
+    </category>
+    <category name="Math" colour="#5C68A6">
+        <block type="math_number">
+            <field name="NUM">0</field>
+        </block>
+        <block type="math_arithmetic">
+            <field name="OP">ADD</field>
+            <value name="A">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="B">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_single">
+            <field name="OP">ROOT</field>
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">9</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_trig">
+            <field name="OP">SIN</field>
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">45</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_constant">
+            <field name="CONSTANT">PI</field>
+        </block>
+        <block type="math_number_property">
+            <mutation divisor_input="false"></mutation>
+            <field name="PROPERTY">EVEN</field>
+            <value name="NUMBER_TO_CHECK">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_round">
+            <field name="OP">ROUND</field>
+            <value name="NUM">
+                <shadow type="math_number">
+                    <field name="NUM">3.1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_on_list">
+            <mutation op="SUM"></mutation>
+            <field name="OP">SUM</field>
+        </block>
+        <block type="math_modulo">
+            <value name="DIVIDEND">
+                <shadow type="math_number">
+                    <field name="NUM">64</field>
+                </shadow>
+            </value>
+            <value name="DIVISOR">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_constrain">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">50</field>
+                </shadow>
+            </value>
+            <value name="LOW">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="HIGH">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_random_int">
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="math_random_float"></block>
+    </category>
+    <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
+</xml>
+<xml xmlns="http://www.w3.org/1999/xhtml" id="workspaceBlocks" style="display:none"></xml>
 
 
-
+<!--Unity 3D-->
 <script>
-    var editor;
-    // $("#interface_div").hide();
-    $("button").button();
-    var serverIP="ws://127.0.0.1:5866";
-    // var serverIP="ws://192.168.1.26:5866";
-    var ws;
-    var xmlDoc;
-    buildWS();
 
-    editor= CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: "xml",
-        lineNumbers: true,
-        lineWrapping: true,
-        extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
-        foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-    });
-    setTimeout(QueryXml,3500);
-
-    function GetXmlDoc(data){
-        var parser=new DOMParser();
-        xmlDoc=parser.parseFromString(data,"text/xml");
-        editor.setValue(data);
-        console.log("data: "+data);
-        SetUITheme();
+    var show3D=false;
+    var gameInstance;
+    function Show3DView() {
+        gameInstance = UnityLoader.instantiate("gameContainer", "Build/8.json", {onProgress: UnityProgress});
     }
 
-    document.getElementById("btn_upload").onclick=function(){
-        SendCmd("stop");
-        UpLoad();
-    };
+    //unity 加载完成后的回调
+    function AfterUnityShow() {
 
-    document.getElementById("btn_download").onclick=function(){
-        Download();
-    };
+        $("#gameContainer").show();
+        $("#chart_dom").show();
+        setInterval(GetPartPq,100);
+        if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+            if (gameInstance!=null){
+                if (ip_port){
+                    gameInstance.SendMessage("empt","GetUrlFromJs","http://"+ip_addr+":"+ip_port);
+                }
+                else {
+                    gameInstance.SendMessage("empt","GetUrlFromJs","http://"+ip_addr);
+                }
 
-    document.getElementById("btn_start").onclick=function () {
-        SendCmd("start");
-        ws.close();
-        var url="index.html?ServerIp="+escape( serverIP);
-        location.href=url;
-    };
+            }
+            //console.log("send to unity address: "+ip_addr+"/ControllerUI");
+        }
 
-    function SetUITheme(){
-        setTimeout("$(\"button\").button()",2050);
-        setTimeout("$(\"button\").width(80)",2050);
-        setTimeout("$(\"#interface_div\").show()",2050);
+        if (gameInstance!=null&&robotXmlStr!=null&&robotXmlStr!==""){
+            //console.log("send xml to Unity:"+robotXmlStr);
+            gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
+        }
     }
 
-    function Download() {
-        setTimeout(QueryXml,3500);
-    }
+    function UnityProgress(gameInstance, progress) {
+        if (!gameInstance.Module) {
+            return;
+        }
+        const loader = document.querySelector("#loader");
+        if (!gameInstance.progress) {
+            const progress = document.querySelector("#loader .progress");
+            progress.style.display = "block";
+            gameInstance.progress = progress.querySelector(".full");
+            loader.querySelector(".spinner").style.display = "none";
+        }
+        gameInstance.progress.style.transform = `scaleX(${progress})`;
+        if (progress === 1 && !gameInstance.removeTimeout) {
+            gameInstance.removeTimeout = setTimeout(function() {
+                loader.style.display = "none";
+                AfterUnityShow();
+            }, 5000);
 
-    function UpLoad() {
-        // var newXml=document.getElementById("text_area").innerText;
-        var newXml =editor.getValue();
-        console.log("new xml "+newXml);
-        var str= newXml.split('\n').join('');
-        console.log("new xml: "+str);
-        SendCmd("set_xml --xml={"+str+"}","");
-    }
-
-    var dummy = {
-        attrs: {
-            color: ["red", "green", "blue", "purple", "white", "black", "yellow"],
-            size: ["large", "medium", "small"],
-            description: null
-        },
-        children: []
-    };
-
-    var tags = {
-        "!top": ["top"],
-        "!attrs": {
-            id: null,
-            class: ["A", "B", "C"]
-        },
-        top: {
-            attrs: {
-                lang: ["en", "de", "fr", "nl"],
-                freeform: null
-            },
-            children: ["animal", "plant"]
-        },
-        animal: {
-            attrs: {
-                name: null,
-                isduck: ["yes", "no"]
-            },
-            children: ["wings", "feet", "body", "head", "tail"]
-        },
-        plant: {
-            attrs: {name: null},
-            children: ["leaves", "stem", "flowers"]
-        },
-        wings: dummy, feet: dummy, body: dummy, head: dummy, tail: dummy,
-        leaves: dummy, stem: dummy, flowers: dummy
-    };
-
-    function completeAfter(cm, pred) {
-        var cur = cm.getCursor();
-        if (!pred || pred()) setTimeout(function() {
-            if (!cm.state.completionActive)
-                cm.showHint({completeSingle: false});
-        }, 100);
-        return CodeMirror.Pass;
-    }
-
-    function completeIfAfterLt(cm) {
-        return completeAfter(cm, function() {
-            var cur = cm.getCursor();
-            return cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur) == "<";
-        });
-    }
-
-    function completeIfInTag(cm) {
-        return completeAfter(cm, function() {
-            var tok = cm.getTokenAt(cm.getCursor());
-            if (tok.type == "string" && (!/['"]/.test(tok.string.charAt(tok.string.length - 1)) || tok.string.length == 1)) return false;
-            var inner = CodeMirror.innerMode(cm.getMode(), tok.state).state;
-            return inner.tagName;
-        });
+        }
     }
 
 
 </script>
+
+<script src="lib/ControllerJS.js"></script>
+
+<script type="text/javascript">
+    function downloadText(data) {
+        // var blob = new Blob([JSON.stringify(data)], { type: "text/plain;charset=utf-8" });
+        var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "export.txt");
+    }
+    // downloadText("der");
+</script>
+<script type="text/javascript" language="javascript" charset="big5">
+    var showDuodian=false;
+    var language="eng";
+
+    var xmlDoc;
+    var robotXmlStr;
+
+    // var serverIP="ws://192.168.1.4:5866";
+    var serverIP="ws://127.0.0.1:5866";
+
+    var ip_addr = document.location.hostname;
+    var ip_port=window.location.port;
+    if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
+        serverIP="ws://"+ip_addr+":5866";
+        console.log("ip address"+ip_addr+"/ControllerUI");
+    }
+
+    //业务
+    //获得xml后的回调
+    function GetXmlDoc(data){
+        //$("#body").empty();
+
+
+        robotXmlStr=data;
+        var parser=new DOMParser();
+        xmlDoc=parser.parseFromString(data,"text/xml");
+
+        //robot name
+        var root_ele=xmlDoc.getElementsByTagName("ControlServer");
+        var robot_name=root_ele[0].getAttribute("name");
+        console.log("robot name: "+robot_name);
+
+
+        //interface
+        var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");
+        GetUI_ID_List(interface_node[0]);
+
+        var pageNodes=interface_node[0].childNodes;
+        for (var i=0;i<pageNodes.length;i++){
+            if (pageNodes[i].nodeType===1 && pageNodes[i].nodeName=== "Page" && pageNodes[i].getAttribute("name")==="configure") {
+                ShowInterface(pageNodes[i],document.getElementById("body"));
+
+            }
+        }
+
+
+
+
+        //setTimeout(GetEePq(),1000);
+    }
+
+
+    function ReGenerateUI() {
+        $("#interface_div").empty();
+        //setTimeout(QueryXml,3500);
+        QueryXml();
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    var ws;
+    buildWS("get_xml","get_xml");
+
+    //$("button").button();
+    function SetUITheme(){
+        setTimeout("$(\"button\").button()",10);
+        setTimeout("$(\"button\").width(80)",10);
+        setTimeout("$(\"#interface_div\").show()",10);
+
+        setTimeout(function () {
+            if (!show3D){
+                $("#chart_dom").show();
+            }
+        },65);
+    }
+
+</script>
 </body>
-
-
+</html>
