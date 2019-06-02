@@ -66,6 +66,8 @@
         <!--可以设置size，一般center不设置size，会自动浮动-->
         <!--layout 的第一级子节点要么是CmdInterfacePoolObject，要么是View3DInterfacePoolObject-->
         <Layout pos="ui-layout-center"  id="id_1001">
+            <Button function="JumpToPage('Configure.html');" text="Configure"/>
+            <!--页面跳转-->
             <CmdInterfacePoolObject>
                 <!--表格控件-->
                 <Table id="id_1030">
@@ -124,7 +126,7 @@
                         <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
                         <!--rate:cmd send rate 重复发送的间隔ms-->
                         <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
-                        <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI-->
+                        <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI,JumpToPage-->
                         <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
                     </Panel>
                     <Panel>

@@ -846,7 +846,11 @@ function CreateButton(node,father) {
             else if (fun_list[i].indexOf("$")===-1){
 
                 console.log("funtion :"+fun_list[i]);
-                AddClickEvent(btn_cmd,eval(fun_list[i]));
+                // AddClickEvent(btn_cmd,function(){
+                //     eval(fun_list[i]);
+                // } );
+                AddEvalEvent(fun_list[i],btn_cmd);
+                //AddClickEvent(btn_cmd,eval(fun_list[i]));
             }
         }
     }
@@ -2627,6 +2631,12 @@ function DisableUI(id_str) {
 function  EnableUI(id_str) {
     document.getElementById(id_str).disabled=false;
     document.getElementById(id_str).style="color:black";
+}
+
+function AddEvalEvent(funStr,btn) {
+    AddClickEvent(btn,function () {
+        eval(funStr);
+    })
 }
 
 function AddShowEvent(funStr,btn) {
