@@ -1,44 +1,83 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title >Kaanh Intelligence</title>
-    <link rel='stylesheet' href='lib/style.css' />
-    <script src="external/jquery/jquery.js"></script>
-    <script src="lib/jquery-ui.js"></script>
-    <script src="lib/echarts.js"></script>
-    <script src="lib/js.cookie.js"></script>
-    <script src="Build/UnityLoader.js"></script>
-    <script src="lib/FileSaver.js"></script>
-    <title>Servo Press Monitor</title>
-    <link href="lib/jquery-ui.css" rel="stylesheet">
-    <link href="jquery-ui.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <title>jQuery UI Demos</title>
+    <link rel="stylesheet" href="jquery-ui.css" />
     <script src="external/jquery/jquery.js"></script>
     <script src="jquery-ui.js"></script>
-    <!--<script type="text/javascript" src="lib/jquery.layout.js"></script>-->
-    <!--<script src="ControllerJS.js"></script>-->
+    <style>
+        /* IE has layout issues when sorting (see #5413) */
+        .group {
+            zoom: 1;
+        }
+    </style>
+
 </head>
+<body>
 
-<body id="body">
-<checkbox/>
-<table style="background-color: #0074c7">
-    <tr style="background-color: #8e846b;width: 30px;height: 30px">
-        <td style="width: 100px">
-            12
-        </td>
-        <td>
-            23
-        </td>
-    </tr>
-    <tr>
-        <td>
-            34
-        </td>
-        <td>
-            45
-        </td>
-    </tr>
-</table>
+<div id="accordion">
+    <div class="group">
+        <h3>First</h3>
+        <div><p>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p></div>
+    </div>
+    <div class="group">
+        <h3>Second</h3>
+        <div><p>Phasellus mattis tincidunt nibh.</p></div>
+    </div>
+    <div class="group">
+        <h3>Third</h3>
+        <div><p>Nam dui erat, auctor a, dignissim quis.</p></div>
+    </div>
 
+
+
+</div>
+
+<div id="accordion1">
+    <div>Section 1</div>
+    <div>
+        <p>Description 1</p>
+    </div>
+
+    <div>Section 2</div>
+    <div>
+        <p>Description 2</p>
+    </div>
+
+    <div>Section 3</div>
+    <div>
+        <p>Description 3</p>
+        <ul>
+            <li>List item one</li>
+            <li>List item two</li>
+            <li>List item three</li>
+        </ul>
+    </div>
+
+    <div>Section 4</div>
+    <div>
+        <p>Description 4</p>
+    </div>
+
+</div>
+<script>
+
+    // $( "#accordion" ).accordion();
+    $("#accordion").accordion({
+         header: "> div > h3",
+        collapsible: true
+    }).sortable({
+        axis: "y",
+        handle: "h3",
+        stop: function (event, ui) {
+            // IE doesn't register the blur when sorting
+            // so trigger focusout handlers to remove .ui-state-focus
+            // ui.item.children("h3").triggerHandler("focusout");
+            ui.accordion("option","active",active);
+        }
+    });
+
+</script>
 </body>
 </html>

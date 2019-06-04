@@ -1201,14 +1201,27 @@ function CreateEthercatControllerUI(node,father) {
     father.appendChild(e_div);
     e_div.id=ReturnUI_ID(node.getAttribute("id"));
     var master_node=xmlDoc.getElementsByTagName("EthercatController");
-    //console.log("master_node :" +new XMLSerializer().serializeToString(master_node[0]) );
-    //CreateEthercatControllerUI(master_node[0],e_div);
     setTimeout("$( \"#"+e_div.id+"\" ).accordion({\n" +
         "        heightStyle:\"content\",\n" +
+        "header: \"> div > h3\"," +
         "active:\"false\",\n"+
         "        collapsible: \"true\"\n" +
         "\n" +
+        "    }).sortable({\n" +
+        "        axis: \"y\",\n" +
+        "        handle: \"h3\",\n" +
+        "        stop: function (event, ui) {\n" +
+        "            // IE doesn't register the blur when sorting\n" +
+        "            // so trigger focusout handlers to remove .ui-state-focus\n" +
+        "            // ui.item.children(\"h3\").triggerHandler(\"focusout\");\n" +
+        "        }\n" +
         "    });",6);
+    // setTimeout("$( \"#"+e_div.id+"\" ).accordion({\n" +
+    //     "        heightStyle:\"content\",\n" +
+    //     "active:\"false\",\n"+
+    //     "        collapsible: \"true\"\n" +
+    //     "\n" +
+    //     "    });",6);
 
 
     Ecc=new EthercatController_Element();
@@ -1242,10 +1255,10 @@ function CreaterSlavePoolObjectUI(slavePool,father) {
 
 
     for (var i=0;i<slavePool.motionList.length;i++){
-        CreateEthercatMotionUI(slavePool,slavePool.motionList[i],father,i);
+        CreateEthercatMotionUI(slavePool,slavePool.motionList[i],father,slavePool.motionList[i].phy_id);
     }
     for (var j=0;j<slavePool.slaveList.length;j++){
-        CreateEthercatSlaveUI(slavePool,slavePool.slaveList[j],father,j);
+        CreateEthercatSlaveUI(slavePool,slavePool.slaveList[j],father,slavePool.slaveList[j].phy_id);
     }
 
     // setTimeout(function () {
@@ -1272,11 +1285,15 @@ function CreaterSlavePoolObjectUI(slavePool,father) {
 }
 
 function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
-    var head_div=document.createElement("div");
-    head_div.innerText="Motion_"+ethercat_id_local.toString();
-    father.appendChild(head_div);
+    var group_div=document.createElement("div");
+    group_div.class="group";
+    father.appendChild(group_div);
+    var head_div=document.createElement("h3");
+     head_div.innerText="Motion_"+ethercat_id_local.toString();
+    //head_div.innerText="Motion_"+emEle.phy_id.toString();
+    group_div.appendChild(head_div);
     var content_div=document.createElement("div");
-    father.appendChild(content_div);
+    group_div.appendChild(content_div);
 
     var btn=document.createElement("button");
     btn.innerText="Del Motion";
@@ -1288,7 +1305,7 @@ function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
     var motion_table=document.createElement("table");
     var motion_table_row=motion_table.insertRow(-1);
     var id_str=ReturnUI_ID("");
-    motion_table_row.innerHTML+="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 150px' /></td>";
+    motion_table_row.innerHTML+="<td>phy_id</td><td><input onchange='UpdatePhyId(this.value,this)' id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 150px' /></td>";
     emEle.phy_id_UI=id_str+"_phy_id";
     motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 150px' /></td>";
     emEle.vendor_id_UI=id_str+"_vendor_id";
@@ -1361,20 +1378,23 @@ function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
         $("#"+father.id).accordion("refresh");
         $("#"+father.id).accordion("option","active",active);
     },6);
-   // setTimeout("$( \"#"+father.id+"\" ).accordion(\"refresh\");",6);
+
 }
 
 function CreateEthercatSlaveUI(spEle,emEle,father,ethercat_id_local) {
-    var head_div=document.createElement("div");
+    var group_div=document.createElement("div");
+    group_div.class="group";
+    father.appendChild(group_div);
+    var head_div=document.createElement("h3");
     head_div.innerText="Slave_"+ethercat_id_local.toString();
-    father.appendChild(head_div);
+    group_div.appendChild(head_div);
     var content_div=document.createElement("div");
-    father.appendChild(content_div);
+    group_div.appendChild(content_div);
 
     var motion_table=document.createElement("table");
     var motion_table_row=motion_table.insertRow(-1);
     var id_str=ReturnUI_ID("");
-    motion_table_row.innerHTML+="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 150px' /></td>";
+    motion_table_row.innerHTML+="<td>phy_id</td><td><input onchange='UpdatePhyId(this.value,this)' id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 150px' /></td>";
     emEle.phy_id_UI=id_str+"_phy_id";
     motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 150px' /></td>";
     emEle.vendor_id_UI=id_str+"_vendor_id";
@@ -1624,6 +1644,28 @@ function CreatePdoEntryUI(pdoEle,pdoEntryEle,father) {
     };
     c.appendChild(btn_del_pdoEntry);
 
+}
+
+function UpdatePhyId(value,ui) {
+    console.log("valude: "+value);
+    var group_div=ui.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+    console.log("parent name :"+group_div.nodeName+"; id: "+group_div.id+"; class: "+group_div.class);
+    var sons= group_div.childNodes;
+    for (var i=0;i<sons.length;i++){
+        console.log("son name :"+sons[i].nodeName);
+        if (sons[i].nodeName==="h3"||sons[i].nodeName==="H3"){
+            var str= sons[i].innerText;
+            var str_list=str.split('_');
+            str_list[str_list.length-1]=value;
+            sons[i].innerText=str_list.join('_');
+
+            setTimeout(function () {
+                var active=$("#"+group_div.parentNode.id).accordion("option","active");
+                $("#"+group_div.parentNode.id).accordion("refresh");
+                $("#"+group_div.parentNode.id).accordion("option","active",active);
+            },6);
+        }
+    }
 }
 
 function AddEthercatMotion(spEle,father,ethercat_id) {
