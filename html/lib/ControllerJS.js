@@ -1919,12 +1919,21 @@ function GenerateXmlNode_EthercatController(eccEle) {
 function GenerateXmlNode_SlavePool(spEle) {
     var node=xmlDoc.createElement("SlavePoolObject");
     node.setAttribute("name",spEle.name);
-    for (var i=0;i<spEle.motionList.length;i++){
-        node.appendChild(GenerateXmlNode_EthercatMotion(spEle.motionList[i]));
+    for (var i=0;i<spEle.motionList.length+spEle.slaveList.length;i++){
+        for (var i_1=0;i_1<spEle.motionList.length;i_1++){
+            if (spEle.motionList[i_1].phy_id===i.toString()){
+                node.appendChild(GenerateXmlNode_EthercatMotion(spEle.motionList[i_1]));
+            } 
+        }
+        for (var j_1=0;j_1<spEle.slaveList.length;j_1++){
+            if (spEle.slaveList[j_1].phy_id===i.toString()){
+                node.appendChild(GenerateXmlNode_EthercatSlave(spEle.slaveList[j_1]));
+            }
+        }
+
     }
-    for (var j=0;j<spEle.slaveList.length;j++){
-        node.appendChild(GenerateXmlNode_EthercatSlave(spEle.slaveList[j]));
-    }
+    // for (var j=0;j<spEle.slaveList.length;j++){
+    // }
     return node;
 }
 
