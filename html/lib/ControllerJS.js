@@ -1602,18 +1602,18 @@ function CreatePdoEntryUI(pdoEle,pdoEntryEle,father) {
     var c=r.insertCell(0);
     // c.innerHTML = node.nodeName;
     var id_str=ReturnUI_ID("");
-    c.innerHTML ="<input id=" + id_str+"_name"+" value="+pdoEntryEle.name+" style='width: 80px'/>";
+    c.innerHTML ="<input id=" + id_str+"_name"+" value="+pdoEntryEle.name+" style='width: 160px'/>";
     pdoEntryEle.nameUI=id_str+"_name";
 
     c = r.insertCell(1);
-    c.innerHTML ="<input id=" + id_str+"_index"+" value="+pdoEntryEle.index+" style='width: 80px'/>";
+    c.innerHTML ="<input id=" + id_str+"_index"+" value="+pdoEntryEle.index+" style='width: 120px'/>";
     pdoEntryEle.indexUI=id_str+"_index";
     // console.log(c.innerHTML);
     c = r.insertCell(-1);
     c.innerHTML ="<input id="+id_str+"_subindex"+" value="+pdoEntryEle.subindex+" style='width: 80px'/>";
     pdoEntryEle.subindexUI=id_str+"_subindex";
     c = r.insertCell(-1);
-    c.innerHTML ="<input id="+id_str+"_size"+" value="+pdoEntryEle.size+" style='width: 60px'/>";
+    c.innerHTML ="<input id="+id_str+"_size"+" value="+pdoEntryEle.size+" style='width: 80px'/>";
     pdoEntryEle.sizeUI=id_str+"_size";
 
     c=r.insertCell(-1);
