@@ -1229,14 +1229,14 @@ function CreaterSlavePoolObjectUI(slavePool,father) {
     var btn_addMotion=document.createElement("button");
     btn_addMotion.innerText="Add Motion";
     btn_addMotion.onclick=function () {
-        AddEthercatMotion(slavePool,father,i);
+        AddEthercatMotion(slavePool,father,slavePool.motionList.length);
     };
     father.parentNode.appendChild(btn_addMotion);
 
     var btn_addSlave=document.createElement("button");
     btn_addSlave.innerText="Add Slave";
     btn_addSlave.onclick=function () {
-        AddEthercatSlave(slavePool,father,i);
+        AddEthercatSlave(slavePool,father,slavePool.slaveList.length);
     };
     father.parentNode.appendChild(btn_addSlave);
 
@@ -1288,48 +1288,55 @@ function CreateEthercatMotionUI(spEle,emEle,father,ethercat_id_local) {
     var motion_table=document.createElement("table");
     var motion_table_row=motion_table.insertRow(-1);
     var id_str=ReturnUI_ID("");
-    motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 150px' /></td>";
     emEle.phy_id_UI=id_str+"_phy_id";
-    motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 150px' /></td>";
     emEle.vendor_id_UI=id_str+"_vendor_id";
-    motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+emEle.product_code+" style='width: 100px' /></td>";
+
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML+="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+emEle.dc_assign_activate+" style='width: 150px' /></td>";
+    emEle.dc_assign_activate_UI=id_str+"_dc_assign_activate";
+    motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+emEle.product_code+" style='width: 150px' /></td>";
     emEle.product_code_UI=id_str+"_product_code";
 
 
     motion_table_row=motion_table.insertRow(-1);
-    motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+emEle.dc_assign_activate+" style='width: 100px' /></td>";
-    emEle.dc_assign_activate_UI=id_str+"_dc_assign_activate";
-    motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+emEle.revision_num+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+emEle.revision_num+" style='width: 150px' /></td>";
     emEle.revision_num_UI=id_str+"_revision_num";
-    motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+emEle.max_pos+" style='width: 100px' /></td>";
-    emEle.max_pos_UI=id_str+"_max_pos";
 
     motion_table_row=motion_table.insertRow(-1);
-    motion_table_row.innerHTML="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+emEle.min_pos+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>max_pos</td><td><input id="+id_str+"_max_pos"+" value="+emEle.max_pos+" style='width: 150px' /></td>";
+    emEle.max_pos_UI=id_str+"_max_pos";
+    motion_table_row.innerHTML+="<td>min_pos</td><td><input id="+id_str+"_min_pos"+" value="+emEle.min_pos+" style='width: 150px' /></td>";
     emEle.min_pos_UI=id_str+"_min_pos";
-    motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+emEle.max_vel+" style='width: 100px' /></td>";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML+="<td>max_vel</td><td><input id="+id_str+"_max_vel"+" value="+emEle.max_vel+" style='width: 150px' /></td>";
     emEle.max_vel_UI=id_str+"_max_vel";
-    motion_table_row.innerHTML+="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+emEle.min_vel+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>min_vel</td><td><input id="+id_str+"_min_vel"+" value="+emEle.min_vel+" style='width: 150px' /></td>";
     emEle.min_vel_UI=id_str+"_min_vel";
 
     motion_table_row=motion_table.insertRow(-1);
-    motion_table_row.innerHTML="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+emEle.max_pos_following_error+" style='width: 100px' /></td>";
-    emEle.max_pos_following_error_UI=id_str+"_max_pos_following_error";
-    motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+emEle.max_acc+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>max_acc</td><td><input id="+id_str+"_max_acc"+" value="+emEle.max_acc+" style='width: 150px' /></td>";
     emEle.max_acc_UI=id_str+"_max_acc";
-    motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+emEle.min_acc+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>min_acc</td><td><input id="+id_str+"_min_acc"+" value="+emEle.min_acc+" style='width: 150px' /></td>";
     emEle.min_acc_UI=id_str+"_min_acc";
 
     motion_table_row=motion_table.insertRow(-1);
-    motion_table_row.innerHTML="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+emEle.max_vel_following_error+" style='width: 100px' /></td>";
-    emEle.max_vel_following_error_UI=id_str+"_max_vel_following_error";
-    motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+emEle.pos_factor+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>max_pos_following_error</td><td><input id="+id_str+"_max_pos_following_error"+" value="+emEle.max_pos_following_error+" style='width: 150px' /></td>";
+    emEle.max_pos_following_error_UI=id_str+"_max_pos_following_error";
+    motion_table_row.innerHTML+="<td>pos_factor</td><td><input id="+id_str+"_pos_factor"+" value="+emEle.pos_factor+" style='width: 150px' /></td>";
     emEle.pos_factor_UI=id_str+"_pos_factor";
-    motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+emEle.pos_offset+" style='width: 100px' /></td>";
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML+="<td>max_vel_following_error</td><td><input id="+id_str+"_max_vel_following_error"+" value="+emEle.max_vel_following_error+" style='width: 150px' /></td>";
+    emEle.max_vel_following_error_UI=id_str+"_max_vel_following_error";
+    motion_table_row.innerHTML+="<td>pos_offset</td><td><input id="+id_str+"_pos_offset"+" value="+emEle.pos_offset+" style='width: 150px' /></td>";
     emEle.pos_offset_UI=id_str+"_pos_offset";
 
     motion_table_row=motion_table.insertRow(-1);
-    motion_table_row.innerHTML="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+emEle.home_pos+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>home_pos</td><td><input id="+id_str+"_home_pos"+" value="+emEle.home_pos+" style='width: 150px' /></td>";
     emEle.home_pos_UI=id_str+"_home_pos";
 
     content_div.appendChild(motion_table);
@@ -1367,17 +1374,21 @@ function CreateEthercatSlaveUI(spEle,emEle,father,ethercat_id_local) {
     var motion_table=document.createElement("table");
     var motion_table_row=motion_table.insertRow(-1);
     var id_str=ReturnUI_ID("");
-    motion_table_row.innerHTML="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>phy_id</td><td><input id="+id_str+"_phy_id"+" value="+emEle.phy_id+" style='width: 150px' /></td>";
     emEle.phy_id_UI=id_str+"_phy_id";
-    motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>vendor_id</td><td><input id="+id_str+"_vendor_id"+" value="+emEle.vendor_id+" style='width: 150px' /></td>";
     emEle.vendor_id_UI=id_str+"_vendor_id";
-    motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+emEle.product_code+" style='width: 100px' /></td>";
-    emEle.product_code_UI=id_str+"_product_code";
+
 
     motion_table_row=motion_table.insertRow(-1);
-    motion_table_row.innerHTML="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+emEle.dc_assign_activate+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>dc_assign_activate</td><td><input id="+id_str+"_dc_assign_activate"+" value="+emEle.dc_assign_activate+" style='width: 150px' /></td>";
     emEle.dc_assign_activate_UI=id_str+"_dc_assign_activate";
-    motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+emEle.revision_num+" style='width: 100px' /></td>";
+    motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+emEle.product_code+" style='width: 150px' /></td>";
+    emEle.product_code_UI=id_str+"_product_code";
+
+
+    motion_table_row=motion_table.insertRow(-1);
+    motion_table_row.innerHTML+="<td>revision_num</td><td><input id="+id_str+"_revision_num"+" value="+emEle.revision_num+" style='width: 150px' /></td>";
     emEle.revision_num_UI=id_str+"_revision_num";
     // motion_table_row.innerHTML+="<td>product_code</td><td><input id="+id_str+"_product_code"+" value="+node.getAttribute('product_code')+" style='width: 100px' /></td>";
     //
@@ -1634,9 +1645,11 @@ function AddEthercatSlave(spEle,father,ethercat_id) {
     spEle.slaveList.push(emEle);
     var smPoolEle=new SyncManagerPool_Element();
     emEle.smPool=smPoolEle;
+    smPoolEle.smList=[];
     for (var i=0;i<4;i++){
         var smEle=new SyncManager_Element();
         smPoolEle.smList.push(smEle);
+        smEle.pdoList=[];
     }
     CreateEthercatSlaveUI(spEle,emEle,father,ethercat_id);
 }
@@ -2467,7 +2480,7 @@ function AnalizeBotData(buffer) {
 
                 if (code_return_str.indexOf("$BinaryLabel")!==-1){
                     // $("#" + id_str).val(return_str);
-                    var pq=AnalizeBinaryDataReturn(dataView);
+                    var pq=AnalizeBinaryDataReturn(buffer);
                     // var data_1;
                     // // console.log("data view length:"+buffer.byteLength)
                     // for(var i=0;i<(buffer.byteLength-40)/8;i++){
