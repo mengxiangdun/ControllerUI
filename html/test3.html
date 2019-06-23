@@ -16,6 +16,13 @@
 </head>
 <body>
 
+<select id="mySelect" onchange="var value_1=$(this).val();console.log(value_1); if (value_1==='1'){console.log(1);$('#').hide();} if (value_1==='2'){ console.log(2);$('#').hide();} ">
+    <option value="1">Apple</option>
+    <option value="2">Orange</option>
+    <option value="3">Pineapple</option>
+    <option value="4">Banana</option>
+</select>
+
 <div id="accordion">
     <div class="group">
         <h3>First</h3>

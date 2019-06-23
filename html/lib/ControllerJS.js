@@ -11,6 +11,7 @@ var dataMap_chartID=[];
 var dataMap_dataIndex=[];
 var id_list=0;//自动添加的id，++
 var demoWorkspace;
+var pageNode;
 
 
 function GetUI_ID_List(node) {
@@ -63,6 +64,63 @@ function ShowInterface(node,father) {
     // GetUI_ID_List(node);
     // CreateLayout(node,father);
     CreateUI(node,father);
+    pageNode=node;
+}
+
+function SavePageUI() {
+    SaveUIValue(pageNode);
+    var text = (new XMLSerializer()).serializeToString(xmlDoc);
+    text=text.split('\n').join('');
+    //console.log(text);
+    SendCmd("set_xml --xml={"+text+"}","");
+}
+
+function SaveUIValue(node) {
+    // var input_nodes=node.getElementsByTagName("Input");
+    var sonNodes=node.childNodes;
+
+    for (var i=0;i<sonNodes.length;i++){
+        if (sonNodes[i].nodeType===1){
+            var id_str=sonNodes[i].getAttribute("id");
+            if (id_str){
+                var id_value;
+                if (sonNodes[i].nodeName===("Input")){
+                    id_value = ($("#" + id_str).val()).replace(/ /g,"");
+                    sonNodes[i].setAttribute("default",id_value);
+                }
+                else if (sonNodes[i].nodeName===("Slider")){
+                    id_value = $("#" + id_str).slider("value");
+                    sonNodes[i].setAttribute("default",id_value);
+                }
+                else if (sonNodes[i].nodeName===("Select")){
+                    var objS = document.getElementById(id_str);
+                    var grade = objS.options[objS.selectedIndex].value;
+                    id_value=grade;
+                    var itemNodes=sonNodes[i].childNodes;
+                    for (var j = 0; j < itemNodes.length;j++){
+                        if (itemNodes[j].nodeType===1){
+                            if (itemNodes[j].getAttribute("value")===id_value){
+                                itemNodes[j].setAttribute("selected","selected");
+                            } else {
+                                itemNodes[j].setAttribute("selected","false");
+                            }
+                        }
+
+                    }
+
+                }
+                else if (sonNodes[i].nodeName===("Spinner")){
+                    id_value=$("#"+id_str).spinner("value");
+                    sonNodes[i].setAttribute("default",id_value);
+                }
+
+                console.log(";save value of Id "+id_str+" : "+id_value);
+            }
+            SaveUIValue(sonNodes[i]);
+        }
+
+        }
+
 }
 
 //region CreateUI
@@ -944,6 +1002,7 @@ function GetInnerID(str) {
         return null;
     }
 }
+
 //#endregion
 
 //region Ethercat Controller
@@ -1176,6 +1235,7 @@ class PdoEntry_Element {
 }
 
 var Ecc;
+
 
 function CreateEthercatControllerUI(node,father) {
     var btn=document.createElement("button");

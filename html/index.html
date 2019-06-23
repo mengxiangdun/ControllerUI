@@ -431,8 +431,6 @@
     var showDuodian=false;
     var language="eng";
 
-
-
     // if (Cookies.get("var")!=null){
     //     language=Cookies.get("var");
     // }
@@ -446,6 +444,7 @@
     //     Cookies.set("var",language);
     //     location.reload();
     // });
+
     var xmlDoc;
     var robotXmlStr;
 
@@ -474,8 +473,6 @@
     //获得xml后的回调
     function GetXmlDoc(data){
         //$("#body").empty();
-
-
         robotXmlStr=data;
         var parser=new DOMParser();
         xmlDoc=parser.parseFromString(data,"text/xml");
@@ -505,10 +502,6 @@
 
             }
         }
-
-
-
-
         //setTimeout(GetEePq(),1000);
     }
 

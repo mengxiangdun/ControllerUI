@@ -61,143 +61,151 @@
             <Id name="id_1028" value="id_1028"/>
             <Id name="id_1029" value="id_1029"/>
         </UiIdPoolObject>
-        <!--layout 为页面布局，必须包括ui-layout-center。布局可相互嵌套-->
-        <!--layout id必须有-->
-        <!--可以设置size，一般center不设置size，会自动浮动-->
-        <!--layout 的第一级子节点要么是CmdInterfacePoolObject，要么是View3DInterfacePoolObject-->
-        <Layout pos="ui-layout-center"  id="id_1001">
-            <Button function="JumpToPage('Configure.html');" text="Configure"/>
-            <!--页面跳转-->
-            <CmdInterfacePoolObject>
-                <!--表格控件-->
-                <Table id="id_1030">
-                    <tr style="width: 100px;height: 30px">
-                        <td>
-                            <Button id="" text="SaveConfig1" cmd="" return_attached="" function=""/>
-                        </td>
-                        <td>
-                            <Figure src="images/logo.PNG" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <Button id="" text="SaveConfig3" cmd="" return_attached="" function=""/>
-                        </td>
-                        <td>
-                            <Button id="" text="SaveConfig4" cmd="" return_attached="" function=""/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <Button id="" text="SaveConfig5" cmd="" return_attached="" function=""/>
-                        </td>
-                        <td>
-                            <Button id="" text="SaveConfig6" cmd="" return_attached="" function=""/>
-                        </td>
-                    </tr>
-                </Table>
-                <B id="" text="show me"/>
-                <!--显示纯字符-->
-                <Panel text="My CMD|CMD" id="id_1">
+        <Page name="index" lang="eng">
+            <!--layout 为页面布局，必须包括ui-layout-center。布局可相互嵌套-->
+            <!--layout id必须有-->
+            <!--可以设置size，一般center不设置size，会自动浮动-->
+            <!--layout 的第一级子节点要么是CmdInterfacePoolObject，要么是View3DInterfacePoolObject-->
+            <Layout pos="ui-layout-center"  id="id_1001">
+                <Button function="JumpToPage('Configure.html');" text="Configure"/>
+                <!--页面跳转-->
+                <Button function="SavePageUI()" text="SaveUI"/>
+                <!--保存页面UI当前状态，包括输入值-->
+                <CmdInterfacePoolObject>
+                    <!--表格控件-->
+                    <Table id="id_1030">
+                        <tr style="width: 100px;height: 30px">
+                            <td>
+                                <Button id="" text="SaveConfig1" cmd="" return_attached="" function=""/>
+                            </td>
+                            <td>
+                                <Figure src="images/logo.PNG" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <Button id="" text="SaveConfig3" cmd="" return_attached="" function=""/>
+                            </td>
+                            <td>
+                                <Button id="" text="SaveConfig4" cmd="" return_attached="" function=""/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <Button id="" text="SaveConfig5" cmd="" return_attached="" function=""/>
+                            </td>
+                            <td>
+                                <Button id="" text="SaveConfig6" cmd="" return_attached="" function=""/>
+                            </td>
+                        </tr>
+                    </Table>
+                    <B id="" text="show me"/>
+                    <!--显示纯字符-->
+                    <Panel text="My CMD|CMD" id="id_1">
+                        <Panel>
+                            <EthercatControllerUI id=""/>
+                            <!--Controller 配置界面-->
+                        </Panel>
+                        <Panel text="mvaj|CMD" id="id_2">
+                            <Input id="id_3" default="" parameter="m" style="width:30px"/>
+                            <!--default：input内的默认值-->
+                            <!--parameter:所对应的参数名称，会显示在输入框的前面-->
+                            <!--<Input id="id_4" default="" parameter="pos"/>-->
+                            <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
+                            <Select id="id_6" parameter="vel">
+                                <Option value="1" selected="selected">world</Option>
+                                <Option value="2">end</Option>
+                                <Option value="3">abc</Option>
+                            </Select>
+                            <!--Select:下拉选择框;显示text，取值用value-->
+                            <Br/>
+                            <!--Br插入一个换行-->
+                            <Spinner id="id_7" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
+                            <!--spinner:点动输入-->
+                            <Button id="id_5" text="mvaj" style="width: 100px;background-color: #8e846b;color: #a45b13" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6} --acc=$Spinner{id_7}" function="Disable(${id_1023})" return_attached=""/>
+                            <Button id="id_8" text="Hide" function="HideUI(${id_5});HideUI(${id_7});" return_attached=""/>
+                            <!--text:显示在UI上的文字-->
+                            <!---->
+                            <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
+                            <!--rate:cmd send rate 重复发送的间隔ms-->
+                            <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
+                            <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI,JumpToPage-->
+                            <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
+                        </Panel>
+                        <Panel>
+                            <Button  text="b" cmd="b" return_attached="$Label{id_7}"/>
+                            <Label id="id_7"/>
+                            <!--Label：返回的数据为字符串-->
+                        </Panel>
+                        <Panel text="Get EE Pq|">
+                            <Button id="" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
+                            <BinaryLabel id="id_27"/>
+                            <!--BinaryLabel:返回的数据为二进制：float类型-->
+                        </Panel>
+                        <Panel text="" id="id_24">
+                            <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
+                            <Chart id="id_26" text="" length="100"/>
+                            <!--length:图表显示的数据的长度，默认为1000-->
+                            <!--chart 的返回数据需要两个，前一个显示在X轴，后一个显示在Y轴-->
+                        </Panel>
+                    </Panel>
                     <Panel>
-                        <EthercatControllerUI id=""/>
-                        <!--Controller 配置界面-->
+                        <!--可拖动排序的控件-->
+                        <Sortable id="id_1017" style="width: 100px;height: 200px;background-color: #0074c7"/>
                     </Panel>
-                    <Panel text="mvaj|CMD" id="id_2">
-                        <Input id="id_3" default="" parameter="m" style="width:30px"/>
-                        <!--default：input内的默认值-->
-                        <!--parameter:所对应的参数名称，会显示在输入框的前面-->
-                        <!--<Input id="id_4" default="" parameter="pos"/>-->
-                        <Slider id="id_4" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
-                        <Select id="id_6" parameter="vel">
-                            <Option value="1" selected="selected">world</Option>
-                            <Option value="2">end</Option>
-                            <Option value="3">abc</Option>
-                        </Select>
-                        <!--Select:下拉选择框;显示text，取值用value-->
-                        <Br/>
-                        <!--Br插入一个换行-->
-                        <Spinner id="id_7" default="0.5" max="1" min="0" step="0.1" parameter="pos"/>
-                        <!--spinner:点动输入-->
-                        <Button id="id_5" text="mvaj" style="width: 100px;background-color: #8e846b;color: #a45b13" cmd="mvaj -m=${id_3} --pos=$Slider{id_4} --vel=$Select{id_6} --acc=$Spinner{id_7}" function="Disable(${id_1023})" return_attached=""/>
-                        <Button id="id_8" text="Hide" function="HideUI(${id_5});HideUI(${id_7});" return_attached=""/>
-                        <!--text:显示在UI上的文字-->
-                        <!---->
-                        <!--repeat:-1:one time click单次按钮，不重复发送;0: mouse down repeat鼠标左键按下重复发送，松开停止发送; 1:mouse click repeat按钮单击后重复发送，再次单击停止发送;-->
-                        <!--rate:cmd send rate 重复发送的间隔ms-->
-                        <!--cmd:命令的内容，多条命令以";"隔开参数可以按id索引控件的内容-->
-                        <!--function：回调函数，点击按钮后触发，ShowUI,HideUI,DisableUI,EnableUI,JumpToPage-->
-                        <!--return_attached：返回值绑定的UI或处理的方式，label直接显示，chart绘制图表-->
-                    </Panel>
-                    <Panel>
-                        <Button  text="b" cmd="b" return_attached="$Label{id_7}"/>
-                        <Label id="id_7"/>
-                        <!--Label：返回的数据为字符串-->
-                    </Panel>
-                    <Panel text="Get EE Pq|">
-                        <Button id="" text="Get EE" cmd="get_ee_pq" return_attached="$BinaryLabel{id_27}"/>
-                        <BinaryLabel id="id_27"/>
-                        <!--BinaryLabel:返回的数据为二进制：float类型-->
-                    </Panel>
-                    <Panel text="" id="id_24">
-                        <Button id="id_25" text="current_1" repeat="1" rate="50"  cmd="get_ee_pq" return_attached="$Chart{id_26}"/>
-                        <Chart id="id_26" text="" length="100"/>
-                        <!--length:图表显示的数据的长度，默认为1000-->
-                        <!--chart 的返回数据需要两个，前一个显示在X轴，后一个显示在Y轴-->
-                    </Panel>
-                </Panel>
-                <Panel>
-                    <!--可拖动排序的控件-->
-                    <Sortable id="id_1017" style="width: 100px;height: 200px;background-color: #0074c7"/>
-                </Panel>
-            </CmdInterfacePoolObject>
-        </Layout>
-        <Layout pos="ui-layout-north" size="100" id="id_1002">
-            <CmdInterfacePoolObject>
-                <Figure text="logo" src="images/logo.png" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
-                <!--Figure，显示图片-->
-            </CmdInterfacePoolObject>
+                </CmdInterfacePoolObject>
+            </Layout>
+            <Layout pos="ui-layout-north" size="100" id="id_1002">
+                <CmdInterfacePoolObject>
+                    <Figure text="logo" src="images/logo.png" alt="" style="width: 200px;height: 60px;margin-left:0px;margin-top: 0px"/>
+                    <!--Figure，显示图片-->
+                </CmdInterfacePoolObject>
 
-        </Layout>
-        <Layout pos="ui-layout-south" size="100" id="id_1003">
-            <CmdInterfacePoolObject>
-                <Tabs id="">
-                    <TabItem text="tab_1">
-                        <Panel text="">
-                            <Button text="abc"/>
-                        </Panel>
-                    </TabItem>
-                    <TabItem text="tab_2">
-                        <Panel text="">
-                            <Button text="def"/>
-                        </Panel>
-                    </TabItem>
-                </Tabs>
-            </CmdInterfacePoolObject>
-        </Layout>
-        <Layout pos="ui-layout-west" size="100" id="id_1004">
-            <CmdInterfacePoolObject>
-                <Accordion id="">
-                    <AccordionItem text="拖动" id="">
-                        <Panel>
-                            <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="abc"/>
-                            <!--可拖动控件-->
-                            <!--connectToSortable：连接到可接受的目标区域-->
-                            <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="def"/>
-                            <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="ghi"/>
-                        </Panel>
-                    </AccordionItem>
-                    <AccordionItem text="def" id="">
-                        <Panel>
-                            <Button id="" text="defg"/>
-                        </Panel>
-                    </AccordionItem>
-                </Accordion>
-                <!--可折叠控件，-->
-            </CmdInterfacePoolObject>
-        </Layout>
-        <Layout pos="ui-layout-east" size="100"  id="id_1005">
-            <View3DInterfacePoolObject show="true" rate="50"/>
-        </Layout>
+            </Layout>
+            <Layout pos="ui-layout-south" size="100" id="id_1003">
+                <CmdInterfacePoolObject>
+                    <Tabs id="">
+                        <TabItem text="tab_1">
+                            <Panel text="">
+                                <Button text="abc"/>
+                            </Panel>
+                        </TabItem>
+                        <TabItem text="tab_2">
+                            <Panel text="">
+                                <Button text="def"/>
+                            </Panel>
+                        </TabItem>
+                    </Tabs>
+                </CmdInterfacePoolObject>
+            </Layout>
+            <Layout pos="ui-layout-west" size="100" id="id_1004">
+                <CmdInterfacePoolObject>
+                    <Accordion id="">
+                        <AccordionItem text="拖动" id="">
+                            <Panel>
+                                <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="abc"/>
+                                <!--可拖动控件-->
+                                <!--connectToSortable：连接到可接受的目标区域-->
+                                <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="def"/>
+                                <Dragable id="" dragable="true" cmd="" connectToSortable="id_1017" text="ghi"/>
+                            </Panel>
+                        </AccordionItem>
+                        <AccordionItem text="def" id="">
+                            <Panel>
+                                <Button id="" text="defg"/>
+                            </Panel>
+                        </AccordionItem>
+                    </Accordion>
+                    <!--可折叠控件，-->
+                </CmdInterfacePoolObject>
+            </Layout>
+            <Layout pos="ui-layout-east" size="100"  id="id_1005">
+                <View3DInterfacePoolObject show="true" rate="50"/>
+            </Layout>
+        </Page>
+        <Page name="configure" lang="eng">
+
+        </Page>
+
     </InterfaceRoot>
 </ContrlServer>
