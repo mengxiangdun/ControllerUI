@@ -2644,101 +2644,101 @@ function AnalizeBotData(buffer) {
             // console.log("cmd_code_index: "+cmd_code_index);
             code_return_str=cmd_code_return_list[cmd_code_index];
 
-            if (code_return_str.indexOf("$")!==-1){
-                var list_1=code_return_str.split(',');
-                var list_id_str=[];
-                for (var i=0;i<list_1.length;i++){
-                    var index_1=list_1[i].indexOf("{");
-                    var index_2=list_1[i].indexOf("}");
-                    list_id_str[list_id_str.length]=list_1[i].substr(index_1+1,index_2-index_1-1);
-
-                }
-                if (code_return_str.indexOf("Label")!==-1&&code_return_str.indexOf("Binary")===-1){
-                    $("#" + list_id_str[0]).val(return_str);
-                    console.log("receive mess:"+return_str);
-                }
-
-                if (code_return_str.indexOf("$BinaryLabel")!==-1){
-                    // $("#" + id_str).val(return_str);
-                    var pq=AnalizeBinaryDataReturn(buffer);
-                    // var data_1;
-                    // // console.log("data view length:"+buffer.byteLength)
-                    // for(var i=0;i<(buffer.byteLength-40)/8;i++){
-                    //     data_1=dataView.getFloat64(40+i*8,true).toString();
-                    //     //SendDataToWinForm(data_1);
-                    //     $("#"+list_id_str[i]).val(data_1);
-                    //     if (i!==0){
-                    //         pq+=","+data_1;
-                    //     }
-                    //     if (i===0){
-                    //         pq+=data_1;
-                    //     }
-                    // }
-                    console.log("receive mess:"+pq);
-                    $("#" + list_id_str[0]).val(pq);
-                }
-
-                if (code_return_str.indexOf("$BinaryVariable")!==-1){
-                    // $("#" + id_str).val(return_str);
-                    var pq=AnalizeBinaryDataReturn(buffer);
-                    // var data_1;
-                    // // console.log("data view length:"+buffer.byteLength)
-                    // for(var i=0;i<(buffer.byteLength-40)/8;i++){
-                    //     data_1=dataView.getFloat64(40+i*8,true).toString();
-                    //     //SendDataToWinForm(data_1);
-                    //     $("#"+list_id_str[i]).val(data_1);
-                    //     if (i!==0){
-                    //         pq+=","+data_1;
-                    //     }
-                    //     if (i===0){
-                    //         pq+=data_1;
-                    //     }
-                    // }
-                    console.log("receive mess:"+pq);
-                    var run_str=list_id_str[0]+"=\'"+pq+"\';";
-                    console.log("run str :" +run_str);
-                    eval(run_str);
-
-                }
-                if (code_return_str.indexOf("Chart")!==-1){
-                    var data_index=dataMap_dataIndex[dataMap_chartID.indexOf(list_id_str[0])];
-
-                    var count=dataView.getFloat64(40,true);
-                    var count_data=dataView.getFloat64(48,true);
-                    // console.log("data view length:"+buffer.byteLength)
-                    // for(var i=0;i<(buffer.byteLength-40)/8;i++){
-                    //     if (i!==0){
-                    //         pq+="&"+dataView.getFloat64(40+i*8,true).toString();
-                    //     }
-                    //     if (i===0){
-                    //         pq+=dataView.getFloat64(40+i*8,true).toString();
-                    //     }
-                    // }
-                    // console.log("receive chart data count :"+count+" data: "+count_data+"; chart length: "+dataSet[data_index].length);
-
-                    dataSet[data_index].push([count,count_data]);
-                    dataSet_Count[data_index].push(count);
-                    console.log("rceive data : "+dataSet[data_index]);
-                    if (dataSet[data_index].length>dataSetLength[data_index]){
-                        dataSet[data_index].shift();
-                        dataSet_Count[data_index].shift();
-                    }
-                }
-            }
-
-            if (code_return_str.indexOf("get_xml")!==-1) {
-                getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
-                console.log(getMess);
-                GetXmlDoc(getMess);
-
-            }
-
-            if (code_return_str.indexOf("UpdateUi")!==-1) {
-                // getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
-                console.log("update_UI");
-                var return_xml=return_str.split('@')[1];
-                GetXmlDoc(return_xml);
-            }
+            // if (code_return_str.indexOf("$")!==-1){
+            //     var list_1=code_return_str.split(',');
+            //     var list_id_str=[];
+            //     for (var i=0;i<list_1.length;i++){
+            //         var index_1=list_1[i].indexOf("{");
+            //         var index_2=list_1[i].indexOf("}");
+            //         list_id_str[list_id_str.length]=list_1[i].substr(index_1+1,index_2-index_1-1);
+            //
+            //     }
+            //     if (code_return_str.indexOf("Label")!==-1&&code_return_str.indexOf("Binary")===-1){
+            //         $("#" + list_id_str[0]).val(return_str);
+            //         console.log("receive mess:"+return_str);
+            //     }
+            //
+            //     if (code_return_str.indexOf("$BinaryLabel")!==-1){
+            //         // $("#" + id_str).val(return_str);
+            //         var pq=AnalizeBinaryDataReturn(buffer);
+            //         // var data_1;
+            //         // // console.log("data view length:"+buffer.byteLength)
+            //         // for(var i=0;i<(buffer.byteLength-40)/8;i++){
+            //         //     data_1=dataView.getFloat64(40+i*8,true).toString();
+            //         //     //SendDataToWinForm(data_1);
+            //         //     $("#"+list_id_str[i]).val(data_1);
+            //         //     if (i!==0){
+            //         //         pq+=","+data_1;
+            //         //     }
+            //         //     if (i===0){
+            //         //         pq+=data_1;
+            //         //     }
+            //         // }
+            //         console.log("receive mess:"+pq);
+            //         $("#" + list_id_str[0]).val(pq);
+            //     }
+            //
+            //     if (code_return_str.indexOf("$BinaryVariable")!==-1){
+            //         // $("#" + id_str).val(return_str);
+            //         var pq=AnalizeBinaryDataReturn(buffer);
+            //         // var data_1;
+            //         // // console.log("data view length:"+buffer.byteLength)
+            //         // for(var i=0;i<(buffer.byteLength-40)/8;i++){
+            //         //     data_1=dataView.getFloat64(40+i*8,true).toString();
+            //         //     //SendDataToWinForm(data_1);
+            //         //     $("#"+list_id_str[i]).val(data_1);
+            //         //     if (i!==0){
+            //         //         pq+=","+data_1;
+            //         //     }
+            //         //     if (i===0){
+            //         //         pq+=data_1;
+            //         //     }
+            //         // }
+            //         console.log("receive mess:"+pq);
+            //         var run_str=list_id_str[0]+"=\'"+pq+"\';";
+            //         console.log("run str :" +run_str);
+            //         eval(run_str);
+            //
+            //     }
+            //     if (code_return_str.indexOf("Chart")!==-1){
+            //         var data_index=dataMap_dataIndex[dataMap_chartID.indexOf(list_id_str[0])];
+            //
+            //         var count=dataView.getFloat64(40,true);
+            //         var count_data=dataView.getFloat64(48,true);
+            //         // console.log("data view length:"+buffer.byteLength)
+            //         // for(var i=0;i<(buffer.byteLength-40)/8;i++){
+            //         //     if (i!==0){
+            //         //         pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+            //         //     }
+            //         //     if (i===0){
+            //         //         pq+=dataView.getFloat64(40+i*8,true).toString();
+            //         //     }
+            //         // }
+            //         // console.log("receive chart data count :"+count+" data: "+count_data+"; chart length: "+dataSet[data_index].length);
+            //
+            //         dataSet[data_index].push([count,count_data]);
+            //         dataSet_Count[data_index].push(count);
+            //         console.log("rceive data : "+dataSet[data_index]);
+            //         if (dataSet[data_index].length>dataSetLength[data_index]){
+            //             dataSet[data_index].shift();
+            //             dataSet_Count[data_index].shift();
+            //         }
+            //     }
+            // }
+            //
+            // if (code_return_str.indexOf("get_xml")!==-1) {
+            //     getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+            //     console.log(getMess);
+            //     GetXmlDoc(getMess);
+            //
+            // }
+            //
+            // if (code_return_str.indexOf("UpdateUi")!==-1) {
+            //     // getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
+            //     console.log("update_UI");
+            //     var return_xml=return_str.split('@')[1];
+            //     GetXmlDoc(return_xml);
+            // }
 
             if (code_return_str.indexOf("get_data_RT")!==-1){
                 var start_bytes=40;
@@ -2798,12 +2798,12 @@ function AnalizeBotData(buffer) {
                 console.log("motion pos: "+ motion_pos.toString());
             }
 
-            if (return_str.indexOf("UpdateUI")!==-1){
-
-                var return_xml=return_str.split('@')[1];
-                console.log("UpdateUI"+return_xml);
-                GetXmlDoc(return_xml);
-            }
+            // if (return_str.indexOf("UpdateUI")!==-1){
+            //
+            //     var return_xml=return_str.split('@')[1];
+            //     console.log("UpdateUI"+return_xml);
+            //     GetXmlDoc(return_xml);
+            // }
             cmd_code_list.splice(cmd_code_index,1);
             cmd_code_return_list.splice(cmd_code_index,1);
         }
