@@ -1,6 +1,6 @@
 {
 "companyName": "DefaultCompany",
-"productName": "RobotShow_1",
+"productName": "RobotShow_webgl",
 "dataUrl": "8.data.unityweb",
 "wasmCodeUrl": "8.wasm.code.unityweb",
 "wasmFrameworkUrl": "8.wasm.framework.unityweb",

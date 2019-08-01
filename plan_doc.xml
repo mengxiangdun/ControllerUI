@@ -61,6 +61,16 @@
             <Id name="id_1028" value="id_1028"/>
             <Id name="id_1029" value="id_1029"/>
         </UiIdPoolObject>
+        <Page>
+            <Tab name="Manual Operattion">
+                <ControlPanel>
+                </ControlPanel>
+
+                <TDView/>
+
+
+            </Tab>
+        </Page>
         <Page name="index" lang="eng">
             <!--layout 为页面布局，必须包括ui-layout-center。布局可相互嵌套-->
             <!--layout id必须有-->

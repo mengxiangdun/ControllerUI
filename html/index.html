@@ -185,8 +185,7 @@
 <body id="body">
 <!--<div id="body_1" style="width: 100%;height: 100%">-->
 
-</div>
-<p id="title_id"></p>
+
 
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
     <category name="RobotControl">
@@ -388,6 +387,7 @@
         if (gameInstance!=null&&robotXmlStr!=null&&robotXmlStr!==""){
             //console.log("send xml to Unity:"+robotXmlStr);
             gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
+            gameInstance.SendMessage("empt","SetFPS","20");
         }
     }
 
@@ -448,9 +448,10 @@
     var xmlDoc;
     var robotXmlStr;
 
+    var anyRobot=new Robot_U();
     // var serverIP="ws://192.168.1.4:5866";
-    var serverIP="ws://127.0.0.1:5866";
-
+    //var serverIP="ws://127.0.0.1:5866";
+    var serverIP="ws://120.27.231.59:5866";
     var ip_addr = document.location.hostname;
     var ip_port=window.location.port;
     if (ip_addr!==""&&ip_addr.indexOf("localhost")<0 && ip_addr.indexOf("file")<0){
@@ -485,6 +486,11 @@
         //     showDuodian=true;
         //     ShowDuodianInterface();
         // }
+
+        //Define Robot
+        var robot_node=xmlDoc.getElementsByTagName("Model");
+        anyRobot.LoadFromXML(robot_node[0]);
+        console.log("robot part numb: "+anyRobot.partList.length);
 
         //interface
         var interface_node=xmlDoc.getElementsByTagName("InterfaceRoot");

@@ -1005,6 +1005,69 @@ function GetInnerID(str) {
 
 //#endregion
 
+//region Robot Definition
+
+class Robot_U{
+    constructor(){
+        this.name;
+        this.partList;
+        this.motionList;
+    }
+    LoadFromXML(node){
+        var sonNodes=node.childNodes;
+        for (var i=0;i<sonNodes.length;i++){
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="PartPoolElement") {
+                this.partList=[];
+                var partNodes=sonNodes[i].childNodes;
+                for (var j=0;j<partNodes.length;j++){
+                    if (partNodes[j].nodeType===1&&partNodes[j].nodeName==="Part"){
+                        var newPart=new Part_U();
+                        newPart.LoadFromXML(partNodes[j]);
+                        this.partList.push(newPart);
+                    }
+                }
+            }
+
+            if (sonNodes[i].nodeType===1 && sonNodes[i].nodeName==="MotionPoolElement") {
+                this.motionList=[];
+                var motionNodes=sonNodes[i].childNodes;
+                for (var k=0;k<motionNodes.length;k++){
+                    if (motionNodes[k].nodeType===1&& motionNodes[k].nodeName==="Motion") {
+                        var newMotion=new Motion_U();
+                        newMotion.LoadFromXML(motionNodes[k]);
+                        this.motionList.push(newMotion);
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+class Part_U {
+    constructor(){
+        this.name;
+    }
+    LoadFromXML(node){
+        if (node.nodeType===1&&node.nodeName ==="Part" ){
+            this.name=node.getAttribute("name");
+        }
+    }
+}
+
+class Motion_U {
+    constructor(){
+        this.name;
+    }
+    LoadFromXML(node){
+        if (node.nodeType===1&&node.nodeName ==="Motion" ){
+            this.name=node.getAttribute("name");
+        }
+    }
+}
+//endregion
+
+
 //region Ethercat Controller
 class EthercatController_Element{
     constructor(){
@@ -1672,7 +1735,7 @@ function CreatePdoUI(smEle,pdoEle,father) {
     btn_DelPdo.innerHTML="<button>Del Pdo</button>";
     btn_DelPdo.onclick=function () {
         DelPdo(smEle,pdoEle,div_pdo);
-    }
+    };
     div_pdo.appendChild(btn_DelPdo);
 }
 
@@ -2069,7 +2132,6 @@ function GenerateXmlNode_PdoEntry(pdoEntryEle) {
     node.setAttribute("index",pdoEntryEle.index);
     node.setAttribute("subindex",pdoEntryEle.subindex);
     node.setAttribute("size",pdoEntryEle.size);
-
     return node;
 }
 
@@ -2196,6 +2258,8 @@ function CreateBlockProgram(node,father) {
     demoWorkspace.addChangeListener(onCreateVariable);
     father.appendChild(document.createElement("br"));
     var btn=document.createElement("button");
+
+
     btn.innerText="Run";
     btn.id=ReturnUI_ID("");
     btn.onclick=function () {
@@ -2552,6 +2616,11 @@ function SendCmd(cmd,code_return_str){
     }
 }
 
+var part_pq_data=[];
+var ee_pq=[];
+var ee_pe=[];
+var motion_pos=[];
+
 function AnalizeBotData(buffer) {
 
     var dataView=new DataView(buffer);
@@ -2661,7 +2730,7 @@ function AnalizeBotData(buffer) {
                 getMess=Utf8ArrayToStr(new Uint8Array(buffer,40));
                 console.log(getMess);
                 GetXmlDoc(getMess);
-                SendDataToWinForm("get_xml@"+getMess);
+
             }
 
             if (code_return_str.indexOf("UpdateUi")!==-1) {
@@ -2671,23 +2740,62 @@ function AnalizeBotData(buffer) {
                 GetXmlDoc(return_xml);
             }
 
-            if (code_return_str.indexOf("get_part_pq")!==-1){
-                var pq="";
-                // console.log("data view length:"+buffer.byteLength)
-                for(var i=0;i<(buffer.byteLength-40)/8;i++){
+            if (code_return_str.indexOf("get_data_RT")!==-1){
+                var start_bytes=40;
+                //part pq
+                var part_pq="";
+
+
+                for(var i=0;i<anyRobot.partList.length*7;i++){
+                    part_pq_data.push(dataView.getFloat64(40+i*8,true));
+                    if (part_pq_data.length>1000){
+                        part_pq_data.shift();
+                    }
                     if (i!==0){
-                        pq+="&"+dataView.getFloat64(40+i*8,true).toString();
+                        part_pq+="&"+dataView.getFloat64(40+i*8,true).toString();
                     }
                     if (i===0){
-                        pq+=dataView.getFloat64(40+i*8,true).toString();
+                        part_pq+=dataView.getFloat64(40+i*8,true).toString();
                     }
                 }
-                // console.log("send PQ to UNity:"+pq);
-                SendDataToWinForm("get_part_pq@"+pq);
+                //console.log("send PQ to UNity:"+pq);
                 if (gameInstance!=null){
-                    gameInstance.SendMessage("empt","ReceiveDataFromJs",pq);
-                    //console.log("get part pq: "+pq);
+                    gameInstance.SendMessage("empt","ReceiveDataFromJs",part_pq);
                 }
+                console.log("part pq data: "+part_pq_data.toString()+"part pq data length: " +part_pq_data.length);
+
+                //ee pq
+                start_bytes=40+anyRobot.partList.length*7*8;
+
+                for (var k=0;k<7;k++){
+                    ee_pq.push(dataView.getFloat64(start_bytes+k*8,true));
+                    if (ee_pq.length>1000){
+                        ee_pq.shift();
+                    }
+                }
+                console.log("ee pq: " + ee_pq.toString());
+
+                //ee pe
+                start_bytes+=7*8;
+
+                for (var k=0;k<6;k++){
+                    ee_pe.push(dataView.getFloat64(start_bytes+k*8,true));
+                    if (ee_pe.length>1000){
+                        ee_pe.shift();
+                    }
+                }
+                console.log("ee pe: "+ee_pe.toString());
+
+                //joint pos
+
+                start_bytes += 6*8;
+                for (var j=0;j<anyRobot.motionList.length;j++){
+                    motion_pos.push(dataView.getFloat64(start_bytes+j*8,true));
+                    if (motion_pos.length>1000){
+                        motion_pos.shift();
+                    }
+                }
+                console.log("motion pos: "+ motion_pos.toString());
             }
 
             if (return_str.indexOf("UpdateUI")!==-1){
@@ -2727,7 +2835,8 @@ function  QueryXml() {
 }
 
 function GetPartPq(){
-    SendCmd("get_part_pq","get_part_pq");
+    //SendCmd("get_part_pq","get_part_pq");
+    SendCmd("get","get_data_RT");
 }
 //#endregion
 
