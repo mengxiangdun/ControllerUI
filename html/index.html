@@ -388,6 +388,7 @@
             //console.log("send xml to Unity:"+robotXmlStr);
             gameInstance.SendMessage("empt","GetRobotXmlFromJS",robotXmlStr);
             gameInstance.SendMessage("empt","SetFPS","20");
+            gameInstance.SendMessage("empt","SetCameraBackGround","0&0&100");//use rgb to set unity background
         }
     }
 
